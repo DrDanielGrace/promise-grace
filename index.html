@@ -406,22 +406,57 @@
     <p>Add it a drop at a time and watch the flask rather than the burette.</p>
 
     <figure class="fig" id="fig-titration">
-      <div class="titration" data-lab="titration">
-        <canvas class="titration-canvas" width="300" height="380"
-          aria-label="Titration apparatus. A burette above a conical flask. Adding drops moves the indicator colour toward the endpoint, and adding too many turns the flask deep pink."></canvas>
-        <div class="titration-side">
-          <p class="mono readout-line"><span>ADDED</span> <b data-out="vol">24.50 cm³</b></p>
-          <p class="mono readout-line"><span>pH</span> <b data-out="ph">3.0</b></p>
-          <div class="controls">
-            <button type="button" data-act="drop">Add one drop</button>
-            <button type="button" data-act="reset">Rinse and restart</button>
+      <div class="lab" data-lab="titration">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">THE CURVE</p>
+            <canvas data-view="curve" width="300" height="240"
+              aria-label="pH against volume of base added. Nearly flat for most of the titration, then almost vertical at the equivalence point. A shaded band shows the pH range over which the chosen indicator changes colour, so you can see whether it overlaps the steep part or misses it."></canvas>
           </div>
-          <p class="titration-msg" data-out="msg" role="status" aria-live="polite"></p>
+          <div class="lab-view">
+            <p class="mono view-tag">THE FLASK</p>
+            <canvas data-view="flask" width="300" height="240"
+              aria-label="The conical flask, coloured by how far the chosen indicator has turned at the current pH."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="mono">ACID</span>
+          <button type="button" data-acid="strong" aria-pressed="true">Strong</button>
+          <button type="button" data-acid="weak" aria-pressed="false">Weak</button>
+          <span class="mono">INDICATOR</span>
+          <button type="button" data-ind="phenolphthalein" aria-pressed="true">Phenolphthalein</button>
+          <button type="button" data-ind="methylorange" aria-pressed="false">Methyl orange</button>
+          <button type="button" data-ind="bromothymol" aria-pressed="false">Bromothymol blue</button>
+          <span class="slider-row">
+            <label class="mono" for="t-vb">ADDED</label>
+            <input id="t-vb" type="range" min="0" max="50" step="0.05" value="0" data-vb>
+          </span>
+          <button type="button" data-act="drop">Add one drop</button>
+          <button type="button" data-act="rinse">Rinse and restart</button>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line"><span>ADDED</span> <b data-out="vol">0.00</b> cm³</p>
+          <p class="mono readout-line"><span>pH</span> <b data-out="ph">1.00</b></p>
+          <p class="mono readout-line depth-not-picture"><span>EQUIVALENCE AT</span> <b data-out="equiv">25.00</b> cm³</p>
+          <p class="mono readout-line depth-not-picture"><span>INDICATOR TURNS AT</span> <b data-out="endpoint">25.00</b> cm³</p>
+          <p class="mono readout-line depth-only-maths"><span>TITRATION ERROR</span> <b data-out="terror">0.00%</b></p>
+          <p class="verdict" data-out="tmsg" role="status" aria-live="polite"></p>
         </div>
       </div>
-      <p class="nojs-note">A burette above a conical flask. Each drop moves the indicator a little
-      further, and one drop past the endpoint turns the whole flask deep pink and keeps it there.</p>
-      <figcaption class="mono">FIG. 4 · Strong acid against strong base, phenolphthalein.</figcaption>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">Adding base to acid barely changes the pH for most of the way, then
+      changes it enormously over about one drop, then flattens off again. That steep part is the
+      equivalence point, and it is why one drop too many is so easy and so obvious. An indicator is
+      just a dye that changes colour over its own narrow pH range, so it only tells you the truth if
+      that range sits inside the steep part. Against a weak acid the equivalence point lands well
+      above pH 7, because the salt left behind is itself slightly basic, and an indicator chosen for
+      a strong acid will turn far too early and give an answer that is wrong without ever looking
+      wrong.</p>
+      <figcaption class="mono">FIG. 4 · Strong and weak acid against a strong base. Every pH here is computed.</figcaption>
     </figure>
 
     <p>There it is. This is the mistake I want students to make early, in a practice run, with cheap
@@ -1412,5 +1447,6 @@
 <script src="lab-crystal.js" defer></script>
 <script src="lab-diffraction.js" defer></script>
 <script src="lab-solidify.js" defer></script>
+<script src="lab-titration.js" defer></script>
 </body>
 </html>
