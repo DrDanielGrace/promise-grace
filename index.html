@@ -1249,6 +1249,58 @@
     The node, the linker, and the hole in the middle that does the actual work. I can talk about
     this properly.</p>
 
+    <p>One of these is easy to show, so here it is rather than described. A soap bubble has no
+    pigment in it at all. The colours are the same wave arriving twice, once off the front of the
+    film and once off the back, agreeing at some wavelengths and cancelling at others.</p>
+
+    <figure class="fig" id="fig-thinfilm">
+      <div class="lab" data-lab="thinfilm">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">WHAT COMES BACK</p>
+            <canvas data-view="spectrum" width="300" height="240"
+              aria-label="Reflectance against wavelength across the visible spectrum. Peaks and troughs move as the film thickness changes, so the colour reflected sweeps through the spectrum."></canvas>
+          </div>
+          <div class="lab-view">
+            <p class="mono view-tag">THE COLOUR</p>
+            <canvas data-view="film" width="300" height="240"
+              aria-label="A patch showing the colour the film reflects at this thickness."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="slider-row">
+            <label class="mono" for="tf-d">THICKNESS <b data-out="d">320</b> nm</label>
+            <input id="tf-d" type="range" min="40" max="900" step="5" value="320" data-d>
+          </span>
+          <span class="mono">BEHIND IT</span>
+          <button type="button" data-sub="1.00" aria-pressed="true">Air, a bubble</button>
+          <button type="button" data-sub="1.52" aria-pressed="false">Glass, a lens coating</button>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line depth-not-picture"><span>STRONGEST AT</span> <b data-out="peak">0</b> nm</p>
+          <p class="mono readout-line depth-not-picture"><span>REFLECTED AT 550 nm</span> <b data-out="r550">0</b>%</p>
+          <p class="mono readout-line depth-only-maths"><span>IDEAL FILM INDEX</span> <b data-out="ideal">0</b></p>
+          <p class="mono readout-line depth-only-maths"><span>QUARTER WAVE AT 550</span> <b data-out="qw">0</b> nm</p>
+          <p class="verdict" data-out="tfmsg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">Light hitting a thin film reflects twice, once off the top surface and
+      once off the bottom, and the second one travels a little further. Whether those two agree or
+      cancel depends on the wavelength and on how thick the film is, so some colours come back
+      strongly and others barely at all. That is why a soap bubble is coloured and why the colours
+      run as it drains and thins. Turn it around and you get anti reflection coatings: pick the
+      thickness and the material so that the two reflections cancel instead, and almost nothing
+      comes back. Perfect cancellation on glass would need a film with a refractive index of about
+      1.23, and no durable material has one, so real lens coatings use magnesium fluoride at 1.38
+      and settle for nearly nothing.</p>
+      <figcaption class="mono">FIG. 5 · Two beam interference in a thin film. Reflectance is exact, the colour patch is approximate.</figcaption>
+    </figure>
+
     <h3>What I am drawn to and have not earned yet</h3>
 
     <p><u class="term">Electrochemical materials and energy storage.</u> I have the surrounding
@@ -1448,5 +1500,6 @@
 <script src="lab-diffraction.js" defer></script>
 <script src="lab-solidify.js" defer></script>
 <script src="lab-titration.js" defer></script>
+<script src="lab-thinfilm.js" defer></script>
 </body>
 </html>
