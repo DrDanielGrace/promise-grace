@@ -299,7 +299,59 @@
       <p class="nojs-note">The diagram maps temperature against composition. Above the liquidus
       everything is liquid. Below the solidus everything is solid. Between the two you are holding
       liquid and solid at the same time, and the lever rule tells you how much of each.</p>
-      <figcaption class="mono">FIG. 3 · Binary system, schematic. Temperatures are illustrative.</figcaption>
+      <figcaption class="mono">FIG. 3a · Binary system, schematic. Temperatures are illustrative.</figcaption>
+    </figure>
+
+    <p>None of that tells you what the metal actually looks like afterwards, which is the reason
+    anyone reads one of these. So pick a composition, cool it, and watch the structure arrive.</p>
+
+    <figure class="fig" id="fig-solidify">
+      <div class="lab" data-lab="solidify">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">THE PATH DOWN</p>
+            <canvas data-view="diagram" width="300" height="240"
+              aria-label="A binary eutectic diagram with the chosen composition marked as a vertical cooling path. The marker travels down the path as the mixture cools, crossing the liquidus and then the eutectic line."></canvas>
+          </div>
+          <div class="lab-view">
+            <p class="mono view-tag">WHAT YOU GET</p>
+            <canvas data-view="micro" width="300" height="240"
+              aria-label="The microstructure forming. Primary dendrites grow first for any composition away from the eutectic, and the liquid trapped between them finishes as fine alternating lamellae."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="slider-row">
+            <label class="mono" for="s-c">COMPOSITION <b data-out="c">20</b>% B</label>
+            <input id="s-c" type="range" min="0.02" max="0.95" step="0.01" value="0.20" data-c>
+          </span>
+          <span class="slider-row">
+            <label class="mono" for="s-v">COOLING RATE</label>
+            <input id="s-v" type="range" min="0.1" max="4" step="0.1" value="1" data-v>
+          </span>
+          <button type="button" data-act="cool">Cool it</button>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line"><span>TEMPERATURE</span> <b data-out="temp">900</b> °C</p>
+          <p class="mono readout-line depth-not-picture"><span>FREEZING STARTS</span> <b data-out="tliq">0</b> °C</p>
+          <p class="mono readout-line depth-not-picture"><span>PRIMARY PHASE</span> <b data-out="primary">0</b>%</p>
+          <p class="mono readout-line depth-only-maths"><span>EUTECTIC</span> <b data-out="eutectic">0</b>%</p>
+          <p class="mono readout-line depth-only-maths"><span>LAMELLAR SPACING</span> <b data-out="spacing">0</b> µm</p>
+          <p class="verdict" data-out="kind" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">Cooling a mixture that is not at the eutectic composition happens in two
+      stages. First one phase freezes out on its own as branching crystals called dendrites, and
+      because it takes mostly one component with it, the liquid left behind drifts towards the
+      eutectic composition. When it gets there the whole remainder freezes at once as fine
+      alternating layers of both phases. Sit exactly at the eutectic and you skip the first stage
+      entirely: no dendrites, just layers, all at one temperature. Pull the heat out faster and the
+      layers come out finer, because the spacing goes as one over the square root of the rate.</p>
+      <figcaption class="mono">FIG. 3b · Solidification. Fractions and spacings are computed, the shapes are drawn.</figcaption>
     </figure>
 
     <h3>Reading one in plain words</h3>
@@ -1359,5 +1411,6 @@
 <script src="lab-nucleation.js" defer></script>
 <script src="lab-crystal.js" defer></script>
 <script src="lab-diffraction.js" defer></script>
+<script src="lab-solidify.js" defer></script>
 </body>
 </html>
