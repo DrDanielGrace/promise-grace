@@ -1,0 +1,37 @@
+# Deploy the site with the Actions based Pages pipeline.
+#
+# The legacy Pages builder failed seven times in a row on this repo, hanging
+# and being cancelled at about fifteen minutes each time, on commits that
+# build fine locally. This path uploads the folder as an artifact and deploys
+# it directly, so nothing tries to process the files on the way through.
+name: Deploy to Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
