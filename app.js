@@ -438,7 +438,18 @@
     return ctx;
   }
 
-  /* Runs a draw loop only while the container is on screen. */
+  /* Runs a draw loop for the two labs not yet rewritten on the engine.
+
+     These already paused when off screen, so they were never the ten-live-
+     canvases problem. What they did do is own independent loops, so two of
+     them could run at the same time, and the guarantee the engine exists to
+     give is that exactly one does.
+
+     So this now hands the step function to the scheduler in sim.js instead
+     of holding its own requestAnimationFrame. Same API for the callers, and
+     the one-at-a-time rule becomes structural here too rather than merely
+     observed. The old path is kept for the case where sim.js is absent, so
+     the page still degrades rather than breaking. */
   function ticker(container, step, onStop) {
     var raf = null, running = false, t = 0;
 
@@ -459,6 +470,23 @@
       raf = null;
       if (onStop) onStop();
     }
+
+    if (window.Sim && container) {
+      var name = container.getAttribute("data-lab") || ("legacy" + Math.random().toString(36).slice(2, 6));
+      window.Sim.register(name, container, {
+        update: function () { t += 1; step(t); },
+        still:  function () { t += 1; step(t); },
+        quality: function () {}
+      });
+      return {
+        reset: function () { t = 0; },
+        get t() { return t; },
+        set t(v) { t = v; },
+        stop: function () { if (onStop) onStop(); },
+        start: function () {}
+      };
+    }
+
     if ("IntersectionObserver" in window) {
       new IntersectionObserver(function (entries) {
         if (entries[0].isIntersecting) start(); else stop();
