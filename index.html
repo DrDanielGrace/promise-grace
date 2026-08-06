@@ -1301,6 +1301,56 @@
       <figcaption class="mono">FIG. 5 · Two beam interference in a thin film. Reflectance is exact, the colour patch is approximate.</figcaption>
     </figure>
 
+    <figure class="fig" id="fig-mof">
+      <div class="lab" data-lab="mof">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">ONE FACE OF THE NET</p>
+            <canvas data-view="cell" width="300" height="240"
+              aria-label="One face of a cubic framework. Metal nodes sit at the corners and organic linkers form the edges between them. The pore in the middle grows as the linker is made longer."></canvas>
+          </div>
+          <div class="lab-view depth-not-picture">
+            <p class="mono view-tag">WHAT FITS THROUGH</p>
+            <canvas data-view="fit" width="300" height="240"
+              aria-label="Gas molecules drawn at their kinetic diameters against the pore aperture. Those smaller than the aperture pass, those larger do not, which is how a framework separates one gas from another."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="slider-row">
+            <label class="mono" for="mof-l">LINKER LENGTH <b data-out="linker">6.9</b> Å</label>
+            <input id="mof-l" type="range" min="3" max="16" step="0.1" value="6.9" data-l>
+          </span>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line depth-not-picture"><span>CELL EDGE</span> <b data-out="edge">0</b> Å</p>
+          <p class="mono readout-line"><span>APERTURE</span> <b data-out="aperture">0</b> Å</p>
+          <p class="mono readout-line"><span>GETS THROUGH</span> <b data-out="fits"></b></p>
+          <p class="verdict" data-out="mofmsg" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="depth-not-picture">
+          <p class="mono quiet">MEASURED, NOT MODELLED. There is no surface area computed anywhere
+          in this one, because a slider cannot know it. These came from nitrogen adsorption:</p>
+          <ul class="record" data-real></ul>
+        </div>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">A metal organic framework is metal clusters held apart by organic struts,
+      and the useful part is the empty space left between them. Swap the strut for a longer one and
+      the pore grows, which is unusual: you can design the hole. The number that matters is the
+      aperture, the clear width once you account for the size of the atoms lining it, because a gas
+      only enters if it is smaller than that. Make the aperture sit between two gases and the
+      framework separates them. Surface areas are not calculated here, because they are measured
+      quantities that depend on things geometry cannot see. The reported ones are listed instead,
+      and the largest of them, near 7000 square metres in a single gram, is about one and a half
+      football pitches.</p>
+      <figcaption class="mono">FIG. 7 · Framework geometry. Aperture is computed, surface areas are measured values quoted from the literature.</figcaption>
+    </figure>
+
     <h3>What I am drawn to and have not earned yet</h3>
 
     <p><u class="term">Electrochemical materials and energy storage.</u> I have the surrounding
@@ -1551,5 +1601,6 @@
 <script src="lab-titration.js" defer></script>
 <script src="lab-thinfilm.js" defer></script>
 <script src="lab-thermo.js" defer></script>
+<script src="lab-mof.js" defer></script>
 </body>
 </html>
