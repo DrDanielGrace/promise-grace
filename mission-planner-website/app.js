@@ -693,6 +693,7 @@ var PREDICT={
   ph:{right:'a',yes:'Right. It collapses to nothing and you cannot read it, which is the whole problem the log solves.',no:'Not quite. It shrinks until you cannot see it at all. Fourteen powers of ten do not fit on a linear axis, and that is exactly why the log exists.'},
   arr:{right:'b',yes:'Right, roughly double for many reactions. That is the rule of thumb, and the exponential is why.',no:'It roughly doubles for many reactions. Ten degrees sounds small, but the relationship is exponential, so small changes in temperature do a lot.'},
   bg:{right:'a',yes:'Right, just about. Red at 700nm carries about 1.77 eV, comfortably over silicon at 1.1.',no:'It does, just about. Red at 700nm carries about 1.77 eV, and silicon needs 1.1. It is the infrared past roughly 1100nm that silicon cannot use.'},
+  bud:{right:'b',yes:'Right, and it is worse than most people guess. 19.2 percent never gets absorbed and 31.7 percent is thrown away as heat the instant it does. Half the sunlight, before a single electron has gone anywhere.',no:'About half. 19.2 percent of the light is too weak for silicon to use at all, and 31.7 percent is the excess energy of photons that were strong enough, dumped as heat straight away. That leaves 49.1 percent still on the table.'},
   sq:{right:'b',yes:'Right. Both extremes lose, so the answer sits in the middle, near 1.34 eV.',no:'It is in the middle, near 1.34 eV. Small gaps catch everything but each photon gives little voltage. Large gaps give voltage but miss most of the light.'},
   bragg:{right:'b',yes:'Right, a bright peak. In step means they add together.',no:'A bright peak. In step means they reinforce each other, and that is the peak the detector records.'}
 };
@@ -713,6 +714,7 @@ $$('.predict').forEach(function(p){
       var ann=$('.annotation',art); if(ann) ann.hidden=false;
       S.predicts[key]=pick;
       if(key==='arr') drawArr();
+      if(key==='bud') drawBudget();
       if(key==='sq') drawSQ();
       if(key==='bragg') drawBragg();
     });
@@ -800,53 +802,323 @@ function bgUpdate(){
 }
 if($('#bg-wl')){ $('#bg-wl').addEventListener('input',bgUpdate); bgUpdate(); }
 
-/* ---------------- Shockley-Queisser ---------------- */
-function sqEff(g){
-  /* illustrative shape, peak 33.7 at 1.34 */
-  var d=g-1.34;
-  var e=33.7-(d>0?15.5:29)*d*d;
-  return Math.max(0,e);
-}
-function drawSQ(){
-  var c=$('#sq-canvas'); if(!c) return;
-  var g=c.getContext('2d'), W=640,H=380;
+/* ---------------- where the sunlight goes ----------------
+   The measured AM1.5G spectrum with the two losses shaded. Every number is
+   integrated from the published table in solar.js. Nothing here is a shape
+   chosen to look right. */
+function budGap(){ return $('#bud-gap') ? +$('#bud-gap').value/100 : 1.12; }
+
+function drawBudget(){
+  var c=$('#bud-canvas'); if(!c||!window.Solar) return;
+  var g=c.getContext('2d'), W=640, H=300;
+  var L=54, R=W-16, T=18, B=H-44;
+  var eg=budGap();
+  var E_LO=0.4, E_HI=3.6;
+  function X(e){ return L+((e-E_LO)/(E_HI-E_LO))*(R-L); }
+  var peak=0, i, e;
+  for(e=E_LO;e<=E_HI;e+=0.01) peak=Math.max(peak,Solar.spectral(e));
+  peak*=1.08;
+  function Y(v){ return B-(v/peak)*(B-T); }
+
   g.clearRect(0,0,W,H);
-  g.strokeStyle='#33303F'; g.lineWidth=1;
-  g.beginPath(); g.moveTo(56,18); g.lineTo(56,H-42); g.lineTo(W-18,H-42); g.stroke();
 
-  g.fillStyle='#615A6E'; g.font='11px "IBM Plex Mono",monospace';
-  for(var e=0;e<=35;e+=10){ var yy=(H-42)-(e/38)*(H-70); g.fillText(e+'%',22,yy+4);
-    g.strokeStyle='#2A2836'; g.beginPath(); g.moveTo(56,yy); g.lineTo(W-18,yy); g.stroke(); }
-  for(var gg=0.5;gg<=3.0;gg+=0.5){ var xx=56+((gg-0.5)/2.5)*(W-80); g.fillText(gg.toFixed(1),xx-8,H-24); }
-
-  g.strokeStyle='#E9C978'; g.lineWidth=2.5; g.beginPath();
-  for(var i=0;i<=250;i++){
-    var gv=0.5+(i/250)*2.5, ev=sqEff(gv);
-    var x=56+(i/250)*(W-80), y=(H-42)-(ev/38)*(H-70);
-    i?g.lineTo(x,y):g.moveTo(x,y);
+  /* the two loss areas, filled under the real curve */
+  function area(from,to,fill){
+    g.beginPath(); g.moveTo(X(from),B);
+    for(e=from;e<=to+1e-9;e+=0.01) g.lineTo(X(e),Y(Solar.spectral(e)));
+    g.lineTo(X(to),B); g.closePath(); g.fillStyle=fill; g.fill();
   }
+  /* below the gap: none of it is usable at all */
+  area(E_LO,Math.min(eg,E_HI),'rgba(216,154,127,0.30)');
+  /* above the gap: only the gap's worth is kept, the rest goes to heat.
+     The kept part is a rectangle of height Eg under each photon, which in
+     these axes is the curve scaled by Eg/E at every energy. */
+  if(eg<E_HI){
+    g.beginPath(); g.moveTo(X(eg),B);
+    for(e=eg;e<=E_HI+1e-9;e+=0.01) g.lineTo(X(e),Y(Solar.spectral(e)));
+    for(e=E_HI;e>=eg-1e-9;e-=0.01) g.lineTo(X(e),Y(Solar.spectral(e)*eg/e));
+    g.closePath(); g.fillStyle='rgba(233,201,120,0.26)'; g.fill();
+
+    g.beginPath(); g.moveTo(X(eg),B);
+    for(e=eg;e<=E_HI+1e-9;e+=0.01) g.lineTo(X(e),Y(Solar.spectral(e)*eg/e));
+    g.lineTo(X(E_HI),B); g.closePath();
+    g.fillStyle='rgba(127,168,216,0.30)'; g.fill();
+  }
+
+  /* the spectrum itself */
+  g.strokeStyle='#F1EFF5'; g.lineWidth=1.6; g.beginPath();
+  for(e=E_LO,i=0;e<=E_HI+1e-9;e+=0.01,i++){ var xx=X(e), yy=Y(Solar.spectral(e)); i?g.lineTo(xx,yy):g.moveTo(xx,yy); }
   g.stroke();
 
-  MATS.forEach(function(m){
-    if(m.g<0.5||m.g>3)return;
-    var x=56+((m.g-0.5)/2.5)*(W-80), y=(H-42)-(sqEff(m.g)/38)*(H-70);
-    g.fillStyle='#7FA8D8'; g.beginPath(); g.arc(x,y,3.5,0,7); g.fill();
-    g.fillStyle='#B9B4C4'; g.font='10px "IBM Plex Mono",monospace';
-    g.fillText(m.n,x-14,y-9);
-  });
+  /* axes last, over the fills */
+  g.strokeStyle='#4A4757'; g.lineWidth=1;
+  g.beginPath(); g.moveTo(L,T); g.lineTo(L,B); g.lineTo(R,B); g.stroke();
+  g.fillStyle='#B9B4C4'; g.font='10px "IBM Plex Mono",monospace';
+  for(var ee=0.5;ee<=3.5;ee+=0.5){ g.fillText(ee.toFixed(1),X(ee)-8,B+15); }
+  g.fillText('photon energy, eV',L,H-8);
+  g.save(); g.translate(14,B); g.rotate(-Math.PI/2);
+  g.fillText('W m-2 eV-1',0,0); g.restore();
 
-  var sel=+$('#sq-gap').value/100;
-  var sx=56+((sel-0.5)/2.5)*(W-80), sy=(H-42)-(sqEff(sel)/38)*(H-70);
+  /* the gap line */
   g.strokeStyle='#8C2F45'; g.lineWidth=1.5;
-  g.beginPath(); g.moveTo(sx,18); g.lineTo(sx,H-42); g.stroke();
+  g.beginPath(); g.moveTo(X(eg),T); g.lineTo(X(eg),B); g.stroke();
+  g.fillStyle='#8C2F45'; g.font='500 11px "IBM Plex Mono",monospace';
+  g.fillText('the gap', X(eg)+5, T+11);
+
+  /* every region named as well as coloured, because colour alone is not
+     allowed to be the thing carrying the meaning */
+  var L2=Solar.losses(eg);
+  g.font='10px "IBM Plex Mono",monospace';
+  g.fillStyle='#D89A7F';
+  if(eg>0.62) g.fillText('passes through', X(E_LO)+8, B-10);
+  g.fillStyle='#E9C978'; g.fillText('lost as heat', X(Math.min(eg+0.12,E_HI-0.9)), Y(peak*0.55));
+  g.fillStyle='#7FA8D8'; g.fillText('kept', X(Math.min(eg+0.28,E_HI-0.5)), B-12);
+
+  $('#bud-gap-val').textContent=eg.toFixed(2)+' eV';
+  $('#bud-below').textContent=L2.below.toFixed(1)+'%';
+  $('#bud-therm').textContent=L2.thermal.toFixed(1)+'%';
+  $('#bud-ult').textContent=L2.ultimate.toFixed(1)+'%';
+  $('#bud-flux').innerHTML=(Solar.fluxAbove(eg)*1.602176634e-19/10).toFixed(1)+' mA cm<sup>-2</sup> worth';
+  var msg=$('#bud-msg');
+  if(msg){
+    /* They add to a hundred by construction. The three figures shown above
+       are each rounded to one decimal, so the visible ones can land a tenth
+       out, and saying so is cheaper than pretending they do not. */
+    var shown=(+L2.below.toFixed(1))+(+L2.thermal.toFixed(1))+(+L2.ultimate.toFixed(1));
+    msg.textContent='Those three are the whole of the sunlight, cut into the part that never gets absorbed, the part that gets absorbed and immediately wasted, and the part still worth arguing about. They add to exactly one hundred at every gap.'+
+      (Math.abs(shown-100)>0.049 ? ' The three figures above are each rounded to one decimal, which is why they read '+shown.toFixed(1)+' rather than 100.0.' : '');
+  }
+}
+if($('#bud-gap')) $('#bud-gap').addEventListener('input',drawBudget);
+
+/* ---------------- Shockley-Queisser ----------------
+   Detailed balance, run here, on the measured spectrum. */
+var sqTandem=false;
+var sqCurve=null;                 /* cached, the single junction line never moves */
+
+function sqGap(){ return +$('#sq-gap').value/100; }
+function sqGap2(){ return +$('#sq-gap2').value/100; }
+
+function sqSingleCurve(){
+  if(sqCurve) return sqCurve;
+  sqCurve=[];
+  for(var i=0;i<=200;i++){
+    var gv=0.4+(i/200)*2.6;
+    var s=Solar.single(gv), l=Solar.losses(gv);
+    sqCurve.push({g:gv,eta:s.eta,ult:l.ultimate,below:l.below});
+  }
+  return sqCurve;
+}
+
+/* The same four way split as the single junction, for a series pair. The
+   bottom cell only gets what the top one let past. */
+function sqTandemSplit(top,bot){
+  var q=1.602176634e-19;
+  var t=Solar.tandem(top,bot);
+  var harvest=(top*q*Solar.fluxAbove(top)+bot*q*(Solar.fluxAbove(bot)-Solar.fluxAbove(top)))/Solar.PIN*100;
+  var below=(Solar.PIN-Solar.powerAbove(bot))/Solar.PIN*100;
+  return {eta:t.eta, ult:harvest, below:below, t:t};
+}
+
+function drawSQ(){
+  var c=$('#sq-canvas'); if(!c||!window.Solar) return;
+  var g=c.getContext('2d'), W=640, H=400;
+  var L=54, R=W-16, T=16, B=H-44;
+  var G_LO=0.4, G_HI=3.0;
+  function X(v){ return L+((v-G_LO)/(G_HI-G_LO))*(R-L); }
+  function Y(p){ return B-(p/100)*(B-T); }
+
+  g.clearRect(0,0,W,H);
+
+  var bot=sqTandem?sqGap2():null;
+  var pts=[];
+  var i,row;
+  if(sqTandem){
+    for(i=0;i<=200;i++){
+      var gv=G_LO+(i/200)*(G_HI-G_LO);
+      if(gv<=bot+0.02){ pts.push(null); continue; }
+      var s=sqTandemSplit(gv,bot);
+      pts.push({g:gv,eta:s.eta,ult:s.ult,below:s.below});
+    }
+  }else{
+    sqSingleCurve().forEach(function(p){ pts.push(p); });
+  }
+
+  /* stacked bands, bottom up: what you get, what the voltage costs you,
+     what heat takes, what never came in. They add to a hundred everywhere. */
+  function band(lo,hi,fill){
+    g.beginPath();
+    var started=false, k;
+    for(k=0;k<pts.length;k++){ row=pts[k]; if(!row) continue;
+      var x=X(row.g), y=Y(lo(row)); started?g.lineTo(x,y):(g.moveTo(x,y),started=true); }
+    for(k=pts.length-1;k>=0;k--){ row=pts[k]; if(!row) continue; g.lineTo(X(row.g),Y(hi(row))); }
+    if(!started) return;
+    g.closePath(); g.fillStyle=fill; g.fill();
+  }
+  band(function(r){return 0;},        function(r){return r.eta;},               'rgba(127,168,216,0.34)');
+  band(function(r){return r.eta;},    function(r){return r.ult;},               'rgba(140,47,69,0.30)');
+  band(function(r){return r.ult;},    function(r){return 100-r.below;},         'rgba(233,201,120,0.24)');
+  band(function(r){return 100-r.below;}, function(r){return 100;},              'rgba(216,154,127,0.18)');
+
+  /* grid and axes over the bands */
+  g.fillStyle='#8A8496'; g.font='10px "IBM Plex Mono",monospace';
+  for(var p=0;p<=100;p+=20){
+    var yy=Y(p);
+    g.strokeStyle='rgba(255,255,255,0.06)'; g.beginPath(); g.moveTo(L,yy); g.lineTo(R,yy); g.stroke();
+    g.fillText(p+'%',22,yy+4);
+  }
+  g.strokeStyle='#4A4757'; g.lineWidth=1;
+  g.beginPath(); g.moveTo(L,T); g.lineTo(L,B); g.lineTo(R,B); g.stroke();
+  for(var gg=0.5;gg<=3.0;gg+=0.5) g.fillText(gg.toFixed(1),X(gg)-8,B+15);
+  g.fillText(sqTandem?'top cell band gap, eV':'band gap, eV',L,H-8);
+
+  /* the limit line itself, drawn heavy because it is the point */
+  g.strokeStyle='#E9C978'; g.lineWidth=2.5; g.beginPath();
+  var open=false;
+  pts.forEach(function(r){ if(!r){ open=false; return; }
+    var x=X(r.g), y=Y(r.eta); open?g.lineTo(x,y):(g.moveTo(x,y),open=true); });
+  g.stroke();
+
+  /* the single junction ceiling stays visible while the tandem is on, so the
+     climb past it is something you watch rather than something I claim */
+  if(sqTandem){
+    g.strokeStyle='rgba(233,201,120,0.42)'; g.lineWidth=1.2; g.setLineDash([4,4]);
+    g.beginPath();
+    sqSingleCurve().forEach(function(r,k){ var x=X(r.g), y=Y(r.eta); k?g.lineTo(x,y):g.moveTo(x,y); });
+    g.stroke(); g.setLineDash([]);
+    g.fillStyle='rgba(233,201,120,0.75)';
+    g.fillText('one junction alone', X(2.35), Y(Solar.single(2.35).eta)-8);
+  }
+
+  /* labels inside the bands, so the reading does not depend on colour */
+  g.font='10px "IBM Plex Mono",monospace';
+  function at(gv,lo,hi,txt,col){
+    var r=null;
+    pts.forEach(function(p){ if(p&&(!r||Math.abs(p.g-gv)<Math.abs(r.g-gv))) r=p; });
+    if(!r) return;
+    var y=(Y(lo(r))+Y(hi(r)))/2;
+    g.fillStyle=col; g.fillText(txt,X(gv),y+3);
+  }
+  at(2.10,function(r){return 0;},function(r){return r.eta;},'the limit','#9CC0E8');
+  at(2.10,function(r){return r.eta;},function(r){return r.ult;},'voltage and fill factor','#C77E90');
+  at(0.95,function(r){return r.ult;},function(r){return 100-r.below;},'lost as heat','#E9C978');
+  at(2.10,function(r){return 100-r.below;},function(r){return 100;},'passes through','#D89A7F');
+
+  var sel=sqGap();
+  var cur=sqTandem?sqTandemSplit(sel,bot):null;
+  var eta=sqTandem?cur.eta:Solar.single(sel).eta;
+  var sx=X(sel), sy=Y(eta);
+  g.strokeStyle='#8C2F45'; g.lineWidth=1.5;
+  g.beginPath(); g.moveTo(sx,T); g.lineTo(sx,B); g.stroke();
   g.fillStyle='#8C2F45'; g.beginPath(); g.arc(sx,sy,5,0,7); g.fill();
 
-  $('#sq-gap-val').textContent=sel.toFixed(2)+' eV';
-  $('#sq-eff-val').textContent=sqEff(sel).toFixed(1)+'%';
-  var near=MATS.slice().sort(function(a,b){return Math.abs(a.g-sel)-Math.abs(b.g-sel);})[0];
-  $('#sq-mat').textContent=near.n;
+  if(!sqTandem){
+    /* Four of these sit within 0.15 eV of each other and the labels piled up
+       on top of one another. Stack them by gap order instead. */
+    var sorted=MATS.slice().filter(function(m){return m.g>=G_LO&&m.g<=G_HI;})
+                          .sort(function(a,b){return a.g-b.g;});
+    sorted.forEach(function(m,k){
+      var x=X(m.g), y=Y(Solar.single(m.g).eta);
+      g.fillStyle='#F1EFF5'; g.beginPath(); g.arc(x,y,3,0,7); g.fill();
+      g.strokeStyle='rgba(241,239,245,0.35)'; g.lineWidth=1;
+      var ly=y-11-(k%3)*13;
+      g.beginPath(); g.moveTo(x,y-4); g.lineTo(x,ly+3); g.stroke();
+      g.fillStyle='#D8D4E2'; g.font='10px "IBM Plex Mono",monospace';
+      g.fillText(m.n,x-g.measureText(m.n).width/2,ly);
+    });
+  }
+
+  sqReadout(sel,bot,cur);
 }
+
+function sqReadout(sel,bot,cur){
+  var q=1.602176634e-19;
+  $('#sq-gap-val').textContent=sel.toFixed(2)+' eV';
+  if(sqTandem){
+    var t=cur.t;
+    $('#sq-gap2-val').textContent=bot.toFixed(2)+' eV';
+    $('#sq-eff-val').textContent=cur.eta.toFixed(1)+'%';
+    $('#sq-j').innerHTML=(t.j/10).toFixed(1)+' mA cm<sup>-2</sup> matched';
+    $('#sq-v').textContent=t.v.toFixed(3)+' V total';
+    var mismatch=Math.abs(t.jtop-t.jbot)/Math.max(t.jtop,t.jbot)*100;
+    $('#sq-mat').textContent = t.limited+', by '+mismatch.toFixed(0)+' percent';
+    var best=Solar.tandem(1.60,0.94).eta;
+    $('#sq-msg').textContent='A single junction cannot pass 33.7 percent. Two can reach '+best.toFixed(1)+
+      ' percent, at 1.60 eV over 0.94 eV. The heat band is what shrank: the photons the top cell would have wasted are now being caught lower down, at a voltage that suits them. '+
+      (Math.abs(t.jtop-t.jbot)/Math.max(t.jtop,t.jbot)<0.03
+        ? 'These two are close to current matched, which is where a series pair wants to be.'
+        : 'These two are badly current matched. In series the weaker one sets the current for both, so the stronger one is being throttled.');
+  }else{
+    var s=Solar.single(sel);
+    $('#sq-eff-val').textContent=s.eta.toFixed(1)+'%';
+    $('#sq-j').innerHTML=(s.jsc/10).toFixed(1)+' mA cm<sup>-2</sup>';
+    $('#sq-v').textContent=s.voc.toFixed(3)+' V';
+    var near=MATS.slice().sort(function(a,b){return Math.abs(a.g-sel)-Math.abs(b.g-sel);})[0];
+    $('#sq-mat').textContent=near.n;
+    $('#sq-msg').textContent='The peak is 33.7 percent at 1.34 eV. The red band above the line is everything the diode itself costs you: the open circuit voltage comes out at '+
+      s.voc.toFixed(2)+' V rather than '+sel.toFixed(2)+
+      ' V, because a warm cell glows and that glow is a current flowing the wrong way.';
+  }
+}
+
 if($('#sq-gap')) $('#sq-gap').addEventListener('input',drawSQ);
+if($('#sq-gap2')) $('#sq-gap2').addEventListener('input',drawSQ);
+if($('#sq-add')) $('#sq-add').addEventListener('click',function(){
+  sqTandem=!sqTandem;
+  this.setAttribute('aria-pressed',String(sqTandem));
+  this.textContent=sqTandem?'Back to one junction':'Add a second junction underneath';
+  $('#sq-second').hidden=!sqTandem;
+  $('#sq-row2').hidden=!sqTandem;
+  $('#sq-lab1').textContent=sqTandem?'Band gap, top cell':'Band gap';
+  $('#sq-lab-gap').textContent=sqTandem?'TOP GAP':'BAND GAP';
+  $('#sq-lab-j').textContent=sqTandem?'CURRENT THROUGH BOTH':'SHORT CIRCUIT CURRENT';
+  $('#sq-lab-v').textContent=sqTandem?'VOLTAGE, THE TWO ADDED':'OPEN CIRCUIT VOLTAGE';
+  $('#sq-lab-m').textContent=sqTandem?'WHICH CELL HOLDS THE PAIR BACK':'NEAREST MATERIAL';
+  /* Start at the pair that actually wins, 1.60 over 0.94, because landing on
+     a badly matched pair would show the limit falling and teach the opposite
+     of the thing. Dragging away from it afterwards is the lesson. */
+  if(sqTandem){ $('#sq-gap').value='160'; $('#sq-gap2').value='94'; }
+  else { $('#sq-gap').value='134'; }
+  drawSQ();
+});
+
+/* ---------------- the handoff ----------------
+   The gap chosen on the spectrum is the same gap the limit is evaluated at.
+   It is a real number travelling, not a mood, and it is named at both ends. */
+if($('#bud-send')) $('#bud-send').addEventListener('click',function(){
+  var eg=budGap();
+  $('#sq-gap').value=String(Math.round(eg*100));
+  var from=$('#sq-from');
+  if(from){
+    var l=Solar.losses(eg);
+    from.textContent='Arrived from the spectrum above: a gap of '+eg.toFixed(2)+' eV, where '+
+      l.below.toFixed(1)+' percent passes straight through and '+l.thermal.toFixed(1)+
+      ' percent goes to heat, leaving '+l.ultimate.toFixed(1)+' percent. That '+l.ultimate.toFixed(1)+
+      ' percent is the top of the blue and red bands below, at this gap. The limit is what survives underneath it.';
+    from.hidden=false;
+  }
+  drawSQ();
+  var art=$('#sq-canvas').closest('.viz');
+  if(art) art.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});
+});
+
+/* Steppers, so a value can be set exactly with a thumb rather than aimed at */
+$$('.stepper').forEach(function(sp){
+  var input=$('#'+sp.getAttribute('data-step-for'));
+  if(!input) return;
+  [['−',-1],['+',1]].forEach(function(pair){
+    var b=el('button','',pair[0]);
+    b.type='button';
+    b.setAttribute('aria-label',(pair[1]<0?'Decrease ':'Increase ')+(input.previousElementSibling?'value':'value'));
+    b.addEventListener('click',function(){
+      var step=parseFloat(input.step)||1;
+      var v=parseFloat(input.value)+pair[1]*step;
+      input.value=String(Math.min(parseFloat(input.max),Math.max(parseFloat(input.min),v)));
+      input.dispatchEvent(new Event('input',{bubbles:true}));
+    });
+    sp.appendChild(b);
+  });
+});
 
 /* ---------------- Bragg ---------------- */
 function drawBragg(){

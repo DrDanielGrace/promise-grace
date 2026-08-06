@@ -218,7 +218,7 @@ p{margin:0 0 var(--baseline);max-width:66ch}
   display:block;font-family:var(--f-mono);font-size:.68rem;
   letter-spacing:.06em;color:var(--ink-soft);margin-bottom:.35rem;
 }
-.burette input[type=range]{width:110px}
+.burette input[type=range]{width:110px;height:44px}
 
 /* lab arithmetic */
 .calc{
@@ -297,21 +297,25 @@ p{margin:0 0 var(--baseline);max-width:66ch}
   letter-spacing:.1em;text-transform:uppercase;color:var(--dark-soft);
   margin:1.2rem 0 .4rem;
 }
+/* 44px tall, because 20px of track and a 12px thumb is not something a thumb
+   can hit. The bar reads as a heavier instrument at this size, which suits a
+   dark panel better anyway. */
 .wl-slider{
-  width:100%;-webkit-appearance:none;appearance:none;height:20px;
+  width:100%;-webkit-appearance:none;appearance:none;height:44px;
   background:linear-gradient(to right,
     #000 0%,#4B0082 8%,#3F2AC4 16%,#2E6FE0 25%,
     #35C4C4 36%,#4FD14F 46%,#E4E44A 58%,#E88A2E 70%,
     #C0392B 80%,#5A1E18 90%,#000 100%);
-  border:1px solid #3A3746;outline-offset:3px;
+  border:1px solid #3A3746;outline-offset:3px;box-sizing:border-box;
 }
 .wl-slider.plain{background:linear-gradient(to right,#2A2838,#5F5B72)}
 .wl-slider::-webkit-slider-thumb{
-  -webkit-appearance:none;width:12px;height:28px;
+  -webkit-appearance:none;width:16px;height:52px;
   background:#F3F1F7;border:1px solid #16151C;cursor:pointer;
 }
 .wl-slider::-moz-range-thumb{
-  width:12px;height:28px;background:#F3F1F7;border:1px solid #16151C;cursor:pointer;
+  width:16px;height:52px;background:#F3F1F7;border:1px solid #16151C;cursor:pointer;
+  border-radius:0;
 }
 
 .tele-dark{
@@ -322,6 +326,9 @@ p{margin:0 0 var(--baseline);max-width:66ch}
   display:flex;justify-content:space-between;gap:1rem;
   padding:.18rem 0;color:var(--dark-soft);
 }
+/* display:flex above beats the browser's own rule for the hidden attribute,
+   which left a row on screen that was meant to be gone. */
+.tele-dark .tel-row[hidden]{display:none}
 .tele-dark .tel-row b{color:#F1EFF5;font-weight:500}
 
 /* energy levels */
@@ -348,6 +355,51 @@ p{margin:0 0 var(--baseline);max-width:66ch}
   border:1px solid #3A3746;padding:.24rem .6rem;color:var(--dark-soft);
 }
 .mat-chip.on{border-color:#E9C978;color:#E9C978}
+
+/* ---------- a slider you can actually hit with a thumb ----------
+   A range input is 20px of target and a thumb is 12px wide. Neither is
+   reachable on a phone, so the slider gets a 44px row of its own and a pair
+   of steppers beside it for setting a value exactly rather than aiming. */
+.slider-row{display:flex;align-items:center;gap:.6rem}
+.slider-row .wl-slider{flex:1 1 auto;min-width:0}
+.stepper{display:flex;gap:.4rem;flex-shrink:0}
+.stepper button{
+  min-width:44px;min-height:44px;
+  background:none;border:1px solid #4A4757;color:#F1EFF5;
+  font-family:var(--f-mono);font-size:1rem;line-height:1;cursor:pointer;
+}
+.stepper button:hover{border-color:#E9C978;color:#E9C978}
+
+.panel-note{
+  margin:1rem 0 0;font-size:.9rem;line-height:1.55;color:var(--dark-soft);
+  max-width:60ch;
+}
+.handoff{
+  margin:1rem 0 0;padding:.7rem .9rem;border-left:3px solid #7FA8D8;
+  background:rgba(127,168,216,0.08);
+  font-family:var(--f-mono);font-size:.74rem;line-height:1.6;color:#CFE0F2;
+  max-width:66ch;
+}
+.spectral-panel .btn-quiet{margin-top:1.1rem;min-height:44px}
+
+/* ---------- show the working ---------- */
+.working{margin:1.1rem 0 0;border-top:1px solid var(--rule);padding-top:.6rem}
+.working>summary{
+  font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-soft);cursor:pointer;
+  padding:.7rem 0;min-height:44px;display:flex;align-items:center;
+}
+.working>summary:hover{color:var(--sage)}
+.assume-title{
+  font-family:var(--f-mono);font-size:.66rem;letter-spacing:.11em;
+  color:var(--ink-soft);margin:.9rem 0 .35rem;
+}
+.working .code{
+  background:var(--dark);color:#D8D4E2;padding:1rem;overflow-x:auto;
+  font-family:var(--f-mono);font-size:.72rem;line-height:1.65;margin:0;
+}
+.working .assumptions{margin:0;padding-left:1.1rem;font-size:.92rem;max-width:62ch}
+.working .assumptions li{margin:.4rem 0}
 
 /* ==========================================================
    ENVIRONMENT · SOLAR LAB · instrument housings and telemetry
@@ -403,7 +455,7 @@ p{margin:0 0 var(--baseline);max-width:66ch}
   letter-spacing:.08em;color:var(--ink-soft);margin:.9rem 0 .25rem;
   text-transform:uppercase;
 }
-.telemetry input[type=range]{width:100%}
+.telemetry input[type=range]{width:100%;height:44px}
 
 .lab-grid{display:grid;gap:1.5rem}
 @media(min-width:840px){.lab-grid{grid-template-columns:1fr 230px}}
@@ -678,3 +730,21 @@ p{margin:0 0 var(--baseline);max-width:66ch}
   line-height:1.5;padding:.6rem .7rem;border:1px solid var(--rule);
   background:var(--paper);margin-bottom:.6rem;
 }
+
+/* ==========================================================
+   TOUCH TARGETS
+   Nothing you are meant to press is allowed to be smaller than
+   44px in its short direction. Some of the audience for this page
+   is reading it on a phone, one handed, and a 33px button is a
+   button you miss.
+   ========================================================== */
+.btn,.btn-quiet{
+  min-height:44px;display:inline-flex;align-items:center;justify-content:center;
+}
+.predict-opts button{min-height:44px;text-align:left}
+.phase-head{min-height:44px}
+summary{min-height:44px;display:flex;align-items:center;gap:.5rem}
+summary::marker{content:''}
+summary::-webkit-details-marker{display:none}
+summary::before{content:'+';font-family:var(--f-mono);opacity:.65}
+details[open]>summary::before{content:'\2212'}

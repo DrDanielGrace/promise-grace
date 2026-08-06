@@ -252,6 +252,70 @@
     </div>
   </article>
 
+  <!-- WHERE THE SUNLIGHT GOES -->
+  <article class="viz" data-topic="4-3">
+    <h3>Where the sunlight actually goes</h3>
+    <p class="viz-lead">One photon at a time is the wrong question. Sunlight arrives as all of them at once. This is the real measured spectrum, and a band gap cuts it into pieces.</p>
+
+    <div class="predict" data-viz="bud">
+      <p class="predict-q">Silicon's gap is 1.12 eV. Before any electrical loss at all, before voltage or resistance or anything, what share of the sunlight is already gone to those two losses alone?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">About a quarter</button>
+        <button type="button" data-a="b">About half</button>
+        <button type="button" data-a="c">About three quarters</button>
+      </div>
+      <p class="predict-result" hidden></p>
+    </div>
+
+    <noscript><p class="fallback">Without JavaScript this shades the measured AM1.5G solar spectrum into two loss regions either side of a chosen band gap. Everything to the left of the gap is infrared too weak to lift an electron across, and passes straight through. Everything to the right is absorbed, but only the gap's worth of energy is kept and the excess is lost immediately as heat. For silicon at 1.12 eV those two losses take 19.2 percent and 31.7 percent of the incoming 1000.4 watts per square metre, leaving 49.0 percent still on the table before any electrical loss is counted.</p></noscript>
+    <div class="viz-body" hidden>
+      <div class="spectral-panel">
+        <canvas id="bud-canvas" width="640" height="300" aria-label="The measured solar spectrum plotted against photon energy, with the light below the band gap and the energy wasted as heat above it both shaded"></canvas>
+        <label for="bud-gap" class="wl-label">Band gap</label>
+        <div class="slider-row">
+          <input type="range" id="bud-gap" min="40" max="300" value="112" step="1" class="wl-slider plain" aria-describedby="bud-readout">
+          <span class="stepper" data-step-for="bud-gap"></span>
+        </div>
+        <div class="tele-dark" id="bud-readout">
+          <div class="tel-row"><span>BAND GAP</span><b id="bud-gap-val">1.12 eV</b></div>
+          <div class="tel-row"><span>PASSES STRAIGHT THROUGH</span><b id="bud-below">19.2%</b></div>
+          <div class="tel-row"><span>LOST AS HEAT</span><b id="bud-therm">31.7%</b></div>
+          <div class="tel-row"><span>STILL ON THE TABLE</span><b id="bud-ult">49.0%</b></div>
+          <div class="tel-row"><span>PHOTONS CAUGHT</span><b id="bud-flux">43.8 mA cm<sup>-2</sup> worth</b></div>
+        </div>
+        <p class="panel-note" id="bud-msg"></p>
+        <button type="button" class="btn-quiet" id="bud-send">Send this gap to the efficiency limit below</button>
+      </div>
+      <p class="viz-cap">FIG · ASTM G173-03 global tilt, the standard one sun spectrum, integrating to 1000.4 W m<sup>-2</sup>. The two shaded areas are integrated from that table, not sketched.</p>
+
+      <details class="working">
+        <summary>Show the working</summary>
+        <p class="assume-title">WHAT IS COMPUTED</p>
+        <pre class="code"><code>// The spectrum is the published ASTM G173-03 table, rebinned to 5 meV.
+// P(E) is the power carried by all light above energy E.
+// N(E) is the photon count carried by all light above energy E.
+
+below      = (Pin - P(Eg)) / Pin          // never absorbed at all
+harvested  = Eg * q * N(Eg)               // one gap's worth per photon
+thermal    = (P(Eg) - harvested) / Pin    // the excess, gone as heat
+ultimate   = harvested / Pin              // what is still available
+
+// The three add to exactly one, at every gap, by construction.</code></pre>
+        <p class="assume-title">WHAT THIS ASSUMES</p>
+        <ul class="assumptions">
+          <li>Every photon above the gap is absorbed and every photon below it is not. Real absorption has a soft edge and real cells are not infinitely thick.</li>
+          <li>One photon lifts exactly one electron. Carrier multiplication exists in a few materials and would break this.</li>
+          <li>The excess energy above the gap is lost instantly to heat. That is what thermalisation means and it is fast, but it is not literally instant.</li>
+          <li>The spectrum is rebinned from 2002 published wavelengths onto a 5 meV energy grid. Running the whole efficiency calculation both ways, the largest disagreement anywhere is 0.0003 percentage points.</li>
+        </ul>
+      </details>
+    </div>
+
+    <div class="annotation" hidden>
+      <p><b>What I would tell someone starting this.</b> I had read the sentence "solar cells waste most of the light" a dozen times before I sat down and integrated it. Half of it is gone at silicon before you have built anything. Not to bad engineering, to the fact that a gap is a single fixed size and sunlight is not. That is the whole reason the next graph has a peak in it.</p>
+    </div>
+  </article>
+
   <!-- SHOCKLEY-QUEISSER -->
   <article class="viz" data-topic="4-2">
     <h3>Why a single solar cell cannot beat about 33 percent</h3>
@@ -267,23 +331,74 @@
       <p class="predict-result" hidden></p>
     </div>
 
-    <noscript><p class="fallback">Without JavaScript this is the Shockley-Queisser limit. Efficiency plotted against band gap peaks at about 33.7 percent near 1.34 eV. Below that, each photon gives too little voltage. Above it, too much of the sunlight passes straight through. Silicon sits at 1.12 eV, a little left of ideal.</p></noscript>
+    <noscript><p class="fallback">Without JavaScript this is the Shockley-Queisser limit, computed from the measured solar spectrum by detailed balance. Efficiency plotted against band gap peaks at 33.7 percent at 1.34 eV. Below that, each photon gives too little voltage. Above it, too much of the sunlight passes straight through. Silicon sits at 1.12 eV and reaches 33.4 percent, a little left of ideal. Stacking a second junction underneath a first lifts the ceiling to 45.7 percent, with a top gap of 1.60 eV over a bottom gap of 0.94 eV, because the two cells between them waste far less as heat.</p></noscript>
     <div class="viz-body" hidden>
       <div class="spectral-panel">
-        <canvas id="sq-canvas" width="640" height="380" aria-label="Efficiency limit against band gap, peaking near 1.34 electron volts"></canvas>
-        <label for="sq-gap" class="wl-label">Band gap</label>
-        <input type="range" id="sq-gap" min="50" max="300" value="134" step="1" class="wl-slider plain" aria-describedby="sq-readout">
-        <div class="tele-dark" id="sq-readout">
-          <div class="tel-row"><span>BAND GAP</span><b id="sq-gap-val">1.34</b></div>
-          <div class="tel-row"><span>LIMIT</span><b id="sq-eff-val">33.7</b></div>
-          <div class="tel-row"><span>NEAREST MATERIAL</span><b id="sq-mat">Perovskite</b></div>
+        <canvas id="sq-canvas" width="640" height="400" aria-label="A stacked energy budget against band gap. From the bottom, the efficiency limit itself, then the voltage and fill factor loss, then the energy lost as heat, then the light that passes straight through. The limit peaks at 33.7 percent at 1.34 electron volts."></canvas>
+
+        <p class="handoff" id="sq-from" hidden></p>
+
+        <label for="sq-gap" class="wl-label"><span id="sq-lab1">Band gap</span></label>
+        <div class="slider-row">
+          <input type="range" id="sq-gap" min="40" max="300" value="134" step="1" class="wl-slider plain" aria-describedby="sq-readout">
+          <span class="stepper" data-step-for="sq-gap"></span>
         </div>
+
+        <div id="sq-second" hidden>
+          <label for="sq-gap2" class="wl-label">Band gap, bottom cell</label>
+          <div class="slider-row">
+            <input type="range" id="sq-gap2" min="40" max="280" value="94" step="1" class="wl-slider plain" aria-describedby="sq-readout">
+            <span class="stepper" data-step-for="sq-gap2"></span>
+          </div>
+        </div>
+
+        <div class="tele-dark" id="sq-readout">
+          <div class="tel-row"><span id="sq-lab-gap">BAND GAP</span><b id="sq-gap-val">1.34 eV</b></div>
+          <div class="tel-row" id="sq-row2" hidden><span>BOTTOM GAP</span><b id="sq-gap2-val">0.94 eV</b></div>
+          <div class="tel-row"><span>LIMIT</span><b id="sq-eff-val">33.7%</b></div>
+          <div class="tel-row"><span id="sq-lab-j">SHORT CIRCUIT CURRENT</span><b id="sq-j">35.0 mA cm<sup>-2</sup></b></div>
+          <div class="tel-row"><span id="sq-lab-v">OPEN CIRCUIT VOLTAGE</span><b id="sq-v">1.082 V</b></div>
+          <div class="tel-row"><span id="sq-lab-m">NEAREST MATERIAL</span><b id="sq-mat">Perovskite</b></div>
+        </div>
+
+        <p class="panel-note" id="sq-msg"></p>
+        <button type="button" class="btn-quiet" id="sq-add" aria-pressed="false">Add a second junction underneath</button>
       </div>
-      <p class="viz-cap">FIG · Shockley-Queisser limit under one sun. Illustrative shape, peak at 1.34 eV.</p>
+      <p class="viz-cap">FIG · Detailed balance on the ASTM G173-03 spectrum. Every number here is computed on this page, not fitted to a published curve.</p>
+
+      <details class="working">
+        <summary>Show the working</summary>
+        <p class="assume-title">WHAT IS COMPUTED</p>
+        <pre class="code"><code>// Every photon above the gap gives one electron.
+Jsc = q * N(Eg);
+
+// The cell is warm, so it glows, and that glow is the only loss allowed.
+// This is the integral of the 300 K blackbody above the gap, in closed form.
+x0 = Eg / VT;
+J0 = K * sum over k of exp(-k*x0) * (x0*x0/k + 2*x0/(k*k) + 2/(k*k*k));
+
+// An ideal diode, and the best power you can pull out of it.
+J(V) = Jsc - J0 * (exp(V / VT) - 1);
+eta  = max over V of (J * V) / 1000.371;
+
+// Two junctions in series pass the same current, so the pair is solved
+// for the one current that gives the most total power, not each on its own.
+V(J) = VT * log((Jph_top - J)/J0_top + 1)
+     + VT * log((Jph_bot - J)/J0_bot + 1);</code></pre>
+        <p class="assume-title">WHAT THIS ASSUMES</p>
+        <ul class="assumptions">
+          <li>One sun, no concentration, and the cell held at 300 K. Concentrating the light raises the limit, which is a separate argument.</li>
+          <li>Radiative recombination only. Every other loss a real cell has is set to zero, which is why this is a ceiling and not a prediction.</li>
+          <li>Emission into a hemisphere from the front face. A perfect mirror behind the cell is assumed.</li>
+          <li>No series resistance, no shunt, no reflection off the front, no parasitic absorption.</li>
+          <li>For the tandem, the two cells are wired in series and current matched, which is how nearly every real tandem is built. Light coupling between the two junctions is ignored, so the tandem number is slightly conservative.</li>
+          <li>The peak this produces is 33.69 percent at 1.336 eV, and the published Shockley-Queisser figure for this spectrum is 33.7 percent at 1.34 eV. The two junction optimum comes out at 45.71 percent for 1.60 over 0.94 eV, against a literature figure of about 45.7 percent.</li>
+        </ul>
+      </details>
     </div>
 
     <div class="annotation" hidden>
-      <p><b>What I would tell someone starting this.</b> Make a small gap and you catch nearly every photon, but each one only gives you a tiny voltage. Make a large gap and each photon gives you plenty of voltage, but most of the sunlight sails straight past. The peak is the compromise. Silicon sits at 1.1, a little to the left of ideal, and we use it anyway because it is cheap and we are very good at making it.</p>
+      <p><b>What I would tell someone starting this.</b> Make a small gap and you catch nearly every photon, but each one only gives you a tiny voltage. Make a large gap and each photon gives you plenty of voltage, but most of the sunlight sails straight past. The peak is the compromise. Silicon sits at 1.1, a little to the left of ideal, and we use it anyway because it is cheap and we are very good at making it. The way past the peak is not a better single material. It is two of them, one behind the other, so the second gets the light the first could only have wasted.</p>
     </div>
   </article>
 </section>
@@ -448,6 +563,7 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="solar.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
