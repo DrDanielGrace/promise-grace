@@ -182,6 +182,72 @@
       change happens as it passes one.</p>
       <figcaption class="mono">FIG. 1b · Growth of one crystal against gravity. Size is computed, the defect figure is illustrative.</figcaption>
     </figure>
+
+    <p>All of that is still a claim until someone measures it. So take the crystal you just grew and
+    put it in front of an X ray beam. Grow one at 1 g and the peaks come out broad. Grow one at
+    almost nothing and they come out sharp. That difference is the argument, and it is a number
+    rather than an impression.</p>
+
+    <p class="correction">One thing I had to be careful about here. Both crystals finish the same
+    size, because one crystal drawing on a fixed amount of solute ends up the same size whatever
+    gravity is doing. What gravity changes is the rate, how evenly it grows, and how much disorder
+    gets trapped inside. The peaks broaden because a crystal full of dislocations stops scattering
+    coherently across its whole width, so what the pattern measures is the domain rather than the
+    grain. Size differences between real samples come from how many nuclei survived, which is the
+    panel further up.</p>
+
+    <figure class="fig" id="fig-diffraction">
+      <div class="lab" data-lab="diffraction">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">THE PATTERN</p>
+            <canvas data-view="pattern" width="300" height="240"
+              aria-label="A powder diffraction pattern, intensity against two theta. Peaks sit at the angles Bragg's law allows for the chosen lattice, and reflections forbidden by that lattice are missing entirely. Smaller crystals give broader peaks."></canvas>
+          </div>
+          <div class="lab-view depth-not-picture">
+            <p class="mono view-tag">WILLIAMSON-HALL</p>
+            <canvas data-view="wh" width="300" height="240"
+              aria-label="Beta cos theta plotted against sin theta. The intercept of the fitted line gives the crystallite size and its slope gives the strain, which is how the two kinds of broadening are told apart."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="mono">LATTICE</span>
+          <button type="button" data-lattice="P" aria-pressed="false">Simple</button>
+          <button type="button" data-lattice="I" aria-pressed="false">Body centred</button>
+          <button type="button" data-lattice="F" aria-pressed="true">Face centred</button>
+          <span class="slider-row">
+            <label class="mono" for="d-size">SIZE</label>
+            <input id="d-size" type="range" min="4" max="200" step="1" value="45" data-size>
+          </span>
+          <button type="button" data-act="quiz">Guess the lattice</button>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line"><span>LATTICE</span> <b data-out="lattice">face centred</b></p>
+          <p class="mono readout-line"><span>CRYSTALLITE</span> <b data-out="size">45</b> nm</p>
+          <p class="mono readout-line depth-not-picture"><span>STRAIN</span> <b data-out="strain">0.400%</b></p>
+          <p class="mono readout-line depth-not-picture"><span>REFLECTIONS</span> <b data-out="peaks"></b></p>
+          <p class="mono readout-line depth-not-picture"><span>ABSENT</span> <b data-out="absent"></b></p>
+          <p class="mono readout-line depth-only-maths"><span>SIZE FROM W-H</span> <b data-out="whsize"></b> nm</p>
+          <p class="mono readout-line depth-only-maths"><span>STRAIN FROM W-H</span> <b data-out="whstrain"></b></p>
+          <p class="mono readout-line quiet"><span>SOURCE</span> <b data-out="origin"></b></p>
+          <p class="verdict" data-out="quiz" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">A crystal is a repeating grid, and X rays scattering off it only add up
+      at particular angles, which is Bragg's law. Where the peaks sit tells you the spacing. Which
+      peaks are missing tells you the lattice, because some reflections cancel out exactly. And how
+      wide the peaks are tells you two separate things at once: small crystals broaden every peak,
+      and internal strain broadens the ones at high angle much more than the ones at low angle.
+      Because those two do not scale together, plotting the width against angle pulls them apart.
+      Below both of them sits the instrument's own width, which is why you can never read a size
+      straight off a single peak.</p>
+      <figcaption class="mono">FIG. 1c · Powder diffraction. Positions and widths are computed, peak heights are indicative.</figcaption>
+    </figure>
   </div>
 </article>
 
@@ -1292,5 +1358,6 @@
 <script src="app.js" defer></script>
 <script src="lab-nucleation.js" defer></script>
 <script src="lab-crystal.js" defer></script>
+<script src="lab-diffraction.js" defer></script>
 </body>
 </html>

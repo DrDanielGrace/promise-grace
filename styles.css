@@ -1052,3 +1052,13 @@ html:not([data-depth="maths"]) .depth-only-maths { display: none; }
   cursor: pointer;
 }
 .lab-controls button:hover, .lab [data-act]:hover { border-color: var(--sage); }
+
+/* The diffraction row carries a label, a slider and a stepper, which does not
+   fit on one line at 320. Let the row wrap and let the slider give way first,
+   so the stepper stays reachable rather than being pushed off the edge. */
+.slider-row { flex-wrap: wrap; max-width: 100%; }
+.slider-row input[type="range"] { flex: 1 1 8rem; min-width: 0; }
+@media (max-width: 26rem) {
+  .slider-row input[type="range"] { width: 100%; flex-basis: 100%; }
+  .lab-controls { gap: 0.5rem 0.6rem; }
+}
