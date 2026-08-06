@@ -1311,6 +1311,55 @@
     carry charge well and heat badly, and in most materials those two travel together, so the whole
     field is an argument with that. I have not studied it.</p>
 
+    <figure class="fig" id="fig-thermo">
+      <div class="lab" data-lab="thermo">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">ZT AGAINST CARRIERS</p>
+            <canvas data-view="zt" width="300" height="240"
+              aria-label="The thermoelectric figure of merit against carrier concentration. It rises, peaks and falls, and the peak sits where every real thermoelectric material sits."></canvas>
+          </div>
+          <div class="lab-view depth-not-picture">
+            <p class="mono view-tag">THE THREE, DISAGREEING</p>
+            <canvas data-view="bars" width="300" height="240"
+              aria-label="Seebeck coefficient, electrical conductivity and the heat carried by the carriers, shown side by side. Adding carriers raises two of them and lowers the one you most want."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="slider-row">
+            <label class="mono" for="th-n">CARRIERS <b data-out="n">10^19.5</b> /cm³</label>
+            <input id="th-n" type="range" min="16" max="22" step="0.05" value="19.5" data-n>
+          </span>
+          <span class="slider-row">
+            <label class="mono" for="th-t">TEMPERATURE</label>
+            <input id="th-t" type="range" min="300" max="900" step="10" value="600" data-t>
+          </span>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line"><span>ZT</span> <b data-out="zt">0</b></p>
+          <p class="mono readout-line depth-not-picture"><span>BEST AT</span> <b data-out="ztpeak">0</b> /cm³</p>
+          <p class="mono readout-line depth-only-maths"><span>SEEBECK</span> <b data-out="seebeck">0</b> µV/K</p>
+          <p class="mono readout-line depth-only-maths"><span>CONDUCTIVITY</span> <b data-out="sigma">0</b> S/cm</p>
+          <p class="mono readout-line depth-only-maths"><span>HEAT VIA CARRIERS</span> <b data-out="kappae">0</b> W/mK</p>
+          <p class="verdict" data-out="thmsg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">Heat one end of certain materials and a voltage appears across them, which
+      turns waste heat into electricity with no moving parts. The reason it is not everywhere is a
+      real conflict. You want a large voltage per degree, a high electrical conductivity, and a low
+      thermal conductivity, and adding carriers helps the second while hurting the first. Worse, the
+      same electrons that carry charge also carry heat, so pushing the conductivity up drags the
+      thermal conductivity up with it, and that link is not something you can engineer away. The
+      result is that the figure of merit peaks rather than climbing, and every real thermoelectric
+      sits near that peak.</p>
+      <figcaption class="mono">FIG. 6 · Thermoelectric figure of merit. Every quantity here is computed.</figcaption>
+    </figure>
+
     <p><u class="term">Thin films.</u> Same answer. Interested, not trained. It sits next to the
     crystal growth work closely enough that I expect to meet it either way.</p>
 
@@ -1501,5 +1550,6 @@
 <script src="lab-solidify.js" defer></script>
 <script src="lab-titration.js" defer></script>
 <script src="lab-thinfilm.js" defer></script>
+<script src="lab-thermo.js" defer></script>
 </body>
 </html>
