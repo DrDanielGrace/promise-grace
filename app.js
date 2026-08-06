@@ -25,6 +25,43 @@
   var root = document.documentElement;
   root.classList.add("js");
 
+
+  /* =====================================================================
+     LEGACY ANCHORS
+
+     The entries were numbered e01 to e12 for one day before the ids became
+     subject based, so inserting an entry can never move a link again. Any
+     link that went out in that window still lands in the right place.
+
+     DELETE ME after February 2027.
+     ===================================================================== */
+  var LEGACY_ANCHORS = {
+    e01: "question",   e02: "phase-diagrams", e03: "titration",
+    e04: "the-study",  e05: "stalactite",     e06: "explaining",
+    e07: "projects",   e08: "bench",          e09: "long-way-round",
+    e10: "currently",  e11: "notes",          e12: "contact"
+  };
+
+  (function () {
+    var old = location.hash.slice(1);
+    if (!old || !Object.prototype.hasOwnProperty.call(LEGACY_ANCHORS, old)) return;
+    var id = LEGACY_ANCHORS[old];
+
+    /* The browser restores the previous scroll position after scripts run, so
+       taking that over is the only way the jump survives a reload. */
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+
+    if (history.replaceState) history.replaceState(null, "", "#" + id);
+    else location.hash = id;
+
+    function land() {
+      var target = document.getElementById(id);
+      if (target) target.scrollIntoView();
+    }
+    if (document.readyState === "complete") land();
+    else window.addEventListener("load", land);
+  })();
+
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   function $(sel, ctx) { return (ctx || document).querySelector(sel); }

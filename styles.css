@@ -552,9 +552,104 @@ em { font-style: italic; }
 .citation cite { font-style: italic; }
 
 
+/* A verifiable record. The link carries the name, because the link is the
+   whole point: every one of these opens the certificate itself. */
+.record { list-style: none; margin: var(--baseline) 0; padding: 0; max-width: 42rem; }
+.record li {
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--rule);
+  margin-bottom: calc(var(--baseline) * 0.55);
+}
+.record-name {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 1.0625rem;
+}
+.record-meta {
+  display: block;
+  font-family: var(--f-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  margin-top: 0.2rem;
+}
+
+
 /* -------------------------------------------------------------------------
    SCANS
    ------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------
+   TRANSCRIPTIONS
+
+   The handwriting is the evidence. The transcription is what makes it usable,
+   and it is the same text a screen reader gets, so both audiences read the
+   same page. Built on <details> so it opens with no JavaScript, is keyboard
+   operable without being taught how, and sits in the DOM where the browser's
+   own find can reach it.
+
+   Her three pens carry straight over. The main thread is --ink, a correction
+   is --correction, and anything squeezed in afterwards is --aside.
+   ------------------------------------------------------------------------- */
+
+.transcript { margin: calc(var(--baseline) * 0.4) 0 var(--baseline); }
+
+.transcript > summary {
+  font-family: var(--f-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--sage);
+  cursor: pointer;
+  padding: 0.35rem 0;
+}
+.transcript > summary:hover { text-decoration: underline; }
+
+.transcript-body {
+  border-left: 2px solid var(--rule);
+  padding-left: 1rem;
+  margin-top: calc(var(--baseline) * 0.4);
+  max-width: 46rem;
+}
+.transcript-body p { margin: 0 0 calc(var(--baseline) * 0.45); }
+.transcript-body p:last-child { margin-bottom: 0; }
+
+.t-part {
+  font-family: var(--f-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  font-weight: 400;
+  color: var(--ink-soft);
+  margin: var(--baseline) 0 calc(var(--baseline) * 0.4);
+}
+.transcript-body > .t-part:first-child { margin-top: 0; }
+
+.t-key { color: var(--ink-soft); font-size: 0.9375rem; }
+
+/* Already bordered by .transcript-body, so the correction carries on colour
+   alone in here rather than stacking a second rule inside the first. */
+.transcript-body .correction { padding-left: 0; border-left: 0; }
+
+/* Squeezed in above a line or out in the margin, after the fact. */
+.t-ins { color: var(--aside); font-family: var(--f-hand); font-size: 1.05rem; }
+
+/* Struck out on the page. Kept, because what she rejected is also evidence. */
+.t-del { text-decoration: line-through; color: var(--ink-soft); }
+
+/* Unreadable, or running off the edge of the photograph. Never guessed. */
+.t-gap { color: var(--ink-soft); font-style: italic; }
+
+
+/* Three links downloaded the CV and none of them showed it. This one does. */
+.cv-preview { margin: var(--baseline) 0; max-width: 19rem; }
+.cv-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+.cv-preview figcaption { margin-top: 0.45rem; color: var(--ink-soft); }
+
 
 .scan-figure { margin: var(--baseline) 0; max-width: 32rem; }
 .scan-figure.sm { max-width: none; margin: 0; }
