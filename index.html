@@ -78,28 +78,63 @@
     <p>That difference is not a curiosity. It changes what we can learn about how materials assemble
     themselves, and it changes what we can build.</p>
 
+    <p>You can turn gravity down yourself below. Watch the shaded ring around the crystal, because
+    that ring is the answer.</p>
+
     <figure class="fig" id="fig-crystal">
-      <div class="two-panel" data-lab="crystal">
-        <div class="panel">
-          <p class="mono panel-tag tag-correction">1 g · EARTH</p>
-          <canvas class="stage" width="420" height="300"
-            aria-label="Simulation of crystal growth under Earth gravity. Convection currents stir the solution, crystals nucleate unevenly, drift downward and finish small with trapped inclusions."></canvas>
+      <div class="lab" data-lab="crystal">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">THE CRYSTAL</p>
+            <canvas data-view="crystal" width="300" height="240"
+              aria-label="The growing crystal. At high gravity its faces come out uneven. As gravity falls it grows smooth and even."></canvas>
+          </div>
+          <div class="lab-view">
+            <p class="mono view-tag">CONCENTRATION</p>
+            <canvas data-view="conc" width="300" height="240"
+              aria-label="Solute concentration around the crystal. A depleted shell builds up as gravity falls, shown as a dashed ring that grows thicker."></canvas>
+          </div>
+          <div class="lab-view depth-not-picture">
+            <p class="mono view-tag">FLOW</p>
+            <canvas data-view="flow" width="300" height="240"
+              aria-label="Convection around the crystal. Strong at full gravity, and it disappears as gravity is reduced."></canvas>
+          </div>
+          <div class="lab-view depth-not-picture">
+            <p class="mono view-tag">GROWTH RATE</p>
+            <canvas data-view="rate" width="300" height="240"
+              aria-label="Growth rate against time. Under gravity it stays high. Without it the rate falls away as the crystal feeds itself more slowly."></canvas>
+          </div>
         </div>
-        <div class="panel">
-          <p class="mono panel-tag tag-sage">≈0 g · MICROGRAVITY</p>
-          <canvas class="stage" width="420" height="300"
-            aria-label="Simulation of crystal growth in near zero gravity. With convection absent, growth is diffusion limited and a single crystal grows larger, cleaner and more symmetrical."></canvas>
+
+        <div class="lab-controls">
+          <label class="mono" for="g-slider">GRAVITY <b data-out="g">1</b> g</label>
+          <span class="slider-row">
+            <input id="g-slider" type="range" min="0" max="1" step="0.001" value="1" data-g
+              aria-describedby="g-help">
+          </span>
+          <button type="button" data-act="replay">Grow it again</button>
+          <p class="mono quiet" id="g-help">Drag, or use the arrow keys, or the plus and minus for an exact value.</p>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line depth-not-picture"><span>PÉCLET</span> <b data-out="pe">0</b></p>
+          <p class="mono readout-line depth-only-maths"><span>SHERWOOD</span> <b data-out="sh">1</b></p>
+          <p class="mono readout-line"><span>RADIUS</span> <b data-out="r">12</b> µm</p>
+          <p class="mono readout-line depth-only-maths"><span>dR/dt</span> <b data-out="rate">0</b> µm/s</p>
+          <p class="mono readout-line depth-not-picture"><span>SHELL</span> <b data-out="shell">0</b> µm</p>
+          <p class="verdict" data-out="verdict" role="status" aria-live="polite"></p>
         </div>
       </div>
-      <div class="controls" data-controls="crystal">
-        <button type="button" data-act="replay">Replay</button>
-        <button type="button" data-act="slow" aria-pressed="false">Slow motion</button>
-      </div>
-      <p class="nojs-note">Two panels compare the same crystallisation twice. Under 1 g the solution
-      keeps moving, so crystals nucleate unevenly, settle, collide, and finish small with defects
-      trapped inside. Near 0 g there is almost no convection, so one crystal grows steadily outward
-      and finishes larger and cleaner.</p>
-      <figcaption class="mono">FIG. 1 · Nucleation and growth under 1 g and near zero g. Illustrative.</figcaption>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">Move gravity from 1 g down towards zero and the reason for the difference
+      appears. Under gravity, convection keeps sweeping fresh solution past the crystal, so it grows
+      fast and unevenly. Take gravity away and nothing stirs, so a depleted shell builds up around
+      the crystal, growth slows, and because it is now limited by how fast solute can diffuse in, it
+      becomes steady and even. The Péclet number is the ratio of the two kinds of transport, and the
+      change happens as it passes one.</p>
+      <figcaption class="mono">FIG. 1 · Growth of one crystal against gravity. Size is computed, the defect figure is illustrative.</figcaption>
     </figure>
   </div>
 </article>
@@ -1206,6 +1241,9 @@
   </figure>
 </div>
 
+<!-- defer keeps these in order: the engine, then the page, then the labs it drives -->
+<script src="sim.js" defer></script>
 <script src="app.js" defer></script>
+<script src="lab-crystal.js" defer></script>
 </body>
 </html>

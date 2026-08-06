@@ -262,6 +262,31 @@ function totals(){
 
 /* ---------------- crystal ---------------- */
 var CR = {};
+/* -------------------------------------------------------------------------
+   VISIBILITY GATE
+
+   Both three.js views used to render every frame forever, whether they were
+   on screen or not. RM stopped the rotation but not the render, so two WebGL
+   contexts drew continuously on a phone that could not afford one.
+
+   drive() renders only while the host element is on screen and the tab is
+   visible, and it stops the loop rather than skipping work inside it.
+   ------------------------------------------------------------------------- */
+function drive(host, render){
+  var id=null, on=false;
+  function frame(){ id=null; if(!on) return; render(); id=requestAnimationFrame(frame); }
+  function go(){ if(on||document.hidden) return; on=true; if(id===null) id=requestAnimationFrame(frame); }
+  function halt(){ on=false; if(id!==null){ cancelAnimationFrame(id); id=null; } }
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){
+      es.forEach(function(e){ e.isIntersecting ? go() : halt(); });
+    },{rootMargin:'80px 0px',threshold:0.01}).observe(host);
+  } else { go(); }
+  document.addEventListener('visibilitychange', function(){ document.hidden ? halt() : go(); });
+  render();   // one still frame so it is never blank before it is reached
+  return {stop:halt};
+}
+
 function initCrystal(){
   if(!window.THREE) return;
   var host=$('#crystal-canvas'); if(!host) return;
@@ -314,11 +339,10 @@ function initCrystal(){
 
   buildCrystal();
   initDefectHover();
-  (function loop(){
-    requestAnimationFrame(loop);
+  drive(host, function(){
     if(CR.spin && !RM && !drag) CR.group.rotation.y += 0.0022;
     CR.ren.render(CR.scene,CR.cam);
-  })();
+  });
 }
 
 function buildCrystal(){
@@ -903,9 +927,10 @@ function initCell(){
     if(e.key==='ArrowDown'){UC.g.rotation.x+=0.15;e.preventDefault();}
   });
 
-  (function loop(){ requestAnimationFrame(loop);
+  drive(host, function(){
     if(!RM && !drag) UC.g.rotation.y+=0.004;
-    UC.ren.render(UC.scene,UC.cam); })();
+    UC.ren.render(UC.scene,UC.cam);
+  });
 }
 function setCell(kind){
   if(!UC.g) return;

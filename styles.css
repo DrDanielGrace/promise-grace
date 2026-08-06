@@ -891,3 +891,164 @@ em { font-style: italic; }
   body { background: #fff; }
   .entry-main, .cover { background-image: none; }
 }
+
+
+/* =========================================================================
+   THE LABS
+
+   Every interactive on this site is one of these. The engine in sim.js drives
+   them, one at a time, and drops their backing resolution before it drops
+   their frame rate. Nothing here changes the CSS size of a canvas, so a
+   device stepping down a quality tier never moves the layout.
+   ========================================================================= */
+
+.lab { margin: var(--baseline) 0; }
+
+.lab-views {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: calc(var(--baseline) * 0.6);
+}
+.lab-view { min-width: 0; }
+.lab-view canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 5 / 4;
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-radius: 3px 7px 4px 6px;   /* taped in, never quite square */
+  touch-action: none;               /* dragging a field is not scrolling */
+}
+.view-tag {
+  color: var(--ink-soft);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.3rem;
+}
+
+/* ---- controls ---------------------------------------------------------- */
+
+.lab-controls {
+  margin-top: var(--baseline);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+}
+.lab-controls label { color: var(--ink-soft); letter-spacing: 0.06em; }
+.lab-controls label b { color: var(--ink); font-style: normal; }
+.lab-controls > .mono.quiet { flex-basis: 100%; margin: 0; font-size: 0.6875rem; }
+
+.slider-row { display: inline-flex; align-items: center; gap: 0.4rem; }
+.slider-row input[type="range"] {
+  width: min(15rem, 52vw);
+  accent-color: var(--sage);
+  height: 2.75rem;                  /* 44px, a thumb sized target */
+}
+
+/* A slider alone cannot be set exactly, and on a phone it cannot be set
+   precisely at all, so every one of them gets these. */
+.stepper { display: inline-flex; gap: 0.25rem; }
+.stepper button {
+  min-width: 2.75rem;    /* 44px, the size a thumb actually needs */
+  min-height: 2.75rem;
+  font-family: var(--f-mono);
+  font-size: 1rem;
+  line-height: 1;
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.stepper button:hover { border-color: var(--sage); }
+
+.lab-readout { margin-top: var(--baseline); }
+.verdict {
+  color: var(--correction);
+  border-left: 2px solid var(--correction);
+  padding-left: 0.9rem;
+  margin: calc(var(--baseline) * 0.6) 0 0;
+  max-width: 46ch;
+}
+.verdict.is-diffusive { color: var(--sage); border-left-color: var(--sage); }
+
+/* ---- depth ------------------------------------------------------------- */
+
+.lab-chrome {
+  margin-top: calc(var(--baseline) * 0.75);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1rem;
+}
+.depth { display: inline-flex; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+.depth-btn {
+  font-family: var(--f-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.07em;
+  padding: 0.5rem 0.8rem;
+  min-height: 2.75rem;   /* 44px */
+  background: none;
+  border: 0;
+  border-right: 1px solid var(--rule);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.depth-btn:last-child { border-right: 0; }
+.depth-btn[aria-pressed="true"] { background: var(--sage); color: var(--paper); }
+
+/* Picture hides the quantities. Maths adds the ones only it needs. */
+html[data-depth="picture"] .depth-not-picture { display: none; }
+html:not([data-depth="maths"]) .depth-only-maths { display: none; }
+
+/* ---- show the code ----------------------------------------------------- */
+
+.showcode > summary {
+  font-family: var(--f-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.07em;
+  color: var(--sage);
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+.assumptions-title { color: var(--correction); font-size: 0.6875rem; margin: 0.5rem 0 0.3rem; }
+.assumptions { margin: 0 0 var(--baseline); padding-left: 1.1rem; color: var(--ink-soft); font-size: 0.9375rem; }
+.assumptions li { margin-bottom: 0.3rem; }
+.code {
+  font-family: var(--f-mono);
+  font-size: 0.75rem;
+  line-height: 1.55;
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 0.8rem 0.9rem;
+  overflow-x: auto;                 /* long lines scroll here, not the page */
+  max-width: 100%;
+}
+
+/* Said in her handwriting when a device gives up on animating something. */
+.sim-note { color: var(--aside); font-family: var(--f-hand); margin-top: 0.6rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-view canvas { transition: none; }
+}
+
+
+/* Anything in a lab that a thumb has to hit clears 44px. The older labs
+   rebuilt in later steps still carry 21 to 28px buttons and are noted. */
+.lab-controls button,
+.lab [data-act] {
+  min-height: 2.75rem;
+  padding: 0.5rem 0.9rem;
+  font-family: var(--f-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.lab-controls button:hover, .lab [data-act]:hover { border-color: var(--sage); }
