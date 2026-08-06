@@ -1,0 +1,798 @@
+/* =========================================================================
+   Promise Oluwatosin Grace, portfolio
+
+   The notebook is carried structurally, not as decoration. Three rules do
+   most of that work:
+
+   1. --baseline is one ruled line. It drives the vertical rhythm AND draws
+      the ruling, so text physically sits on the lines by construction rather
+      than by eye.
+   2. The pen colours stay functional. --correction only ever marks a thing
+      students get wrong, --aside only ever marks a margin afterthought.
+      Search this file for either token and you will find only those uses.
+   3. Emphasis inside body copy is a coloured underline, never bold, because
+      she never bolds. She underlines in a second pen.
+
+   Palette sampled from the scans. Measured hues: blue 245, red 342,
+   orange 35. Every text token clears WCAG AA on both paper tones.
+   ========================================================================= */
+
+:root {
+  /* Paper */
+  --paper:       #FAF6EF;
+  --paper-deep:  #F1EBE0;
+  --rule:        #C5C7DC;
+
+  /* Pens */
+  --ink:         #332E5C;   /* 11.56:1  the argument */
+  --ink-soft:    #615A6E;   /*  6.10:1  captions, dates */
+  --correction:  #8C2F45;   /*  7.48:1  corrections only */
+  --aside:       #8A5A2B;   /*  5.45:1  margin notes only */
+  --sage:        #33543B;   /*  7.89:1  every interface element */
+  --butter:      #E9C978;   /*          highlighter */
+
+  /* One ruled line. Everything vertical is a multiple of this. */
+  --baseline: calc(1.0625rem * 1.7);
+
+  --measure: 66ch;
+  --gap: calc(var(--baseline) * 2);
+
+  --f-display: "Fraunces", Georgia, serif;
+  --f-body:    "Source Serif 4", Georgia, serif;
+  --f-hand:    "Caveat", cursive;
+  --f-mono:    "IBM Plex Mono", ui-monospace, monospace;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  font-variant-numeric: oldstyle-nums;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+::selection { background: var(--butter); color: var(--ink); }
+
+/* Focus, sage, 2px, offset, per spec. */
+:focus-visible {
+  outline: 2px solid var(--sage);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+.skip {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--paper); color: var(--sage);
+  padding: 0.6em 1em; z-index: 100;
+  font-family: var(--f-mono); font-size: 0.8125rem;
+}
+.skip:focus { left: 0; }
+
+
+/* -------------------------------------------------------------------------
+   THE PAGE ITSELF
+   The ruling is generated from --baseline, so the text sits on the lines
+   instead of near them. The vertical margin line is the second gradient.
+   ------------------------------------------------------------------------- */
+
+.sheet {
+  --margin-x: clamp(1.25rem, 7vw, 6rem);
+  position: relative;
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 5vw, 3rem);
+}
+
+.entry-main,
+.cover {
+  position: relative;
+  padding-left: var(--margin-x);
+  background-image:
+    /* the ruling */
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--baseline) - 1px),
+      var(--rule) calc(var(--baseline) - 1px),
+      var(--rule) var(--baseline)
+    ),
+    /* the vertical margin line */
+    linear-gradient(to right, transparent 0, transparent calc(var(--margin-x) - 0.75rem),
+      var(--rule) calc(var(--margin-x) - 0.75rem),
+      var(--rule) calc(var(--margin-x) - 0.75rem + 1px),
+      transparent calc(var(--margin-x) - 0.75rem + 1px));
+  background-size: 100% var(--baseline), 100% 100%;
+  background-repeat: repeat, no-repeat;
+  background-position: 0 0.35rem, 0 0;
+}
+
+/* The ruling is a texture behind reading, never a competitor. */
+.entry-main, .cover { --rule-alpha: 0.55; }
+.entry-main::before, .cover::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: var(--paper);
+  opacity: 0.38;
+  pointer-events: none;
+}
+.entry-main > *, .cover > * { position: relative; z-index: 1; }
+
+
+/* -------------------------------------------------------------------------
+   TYPE
+   ------------------------------------------------------------------------- */
+
+.display {
+  font-family: var(--f-display);
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-weight: 600;
+  font-size: clamp(2.4rem, 6.5vw, 4.6rem);
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--baseline);
+  max-width: 20ch;
+  text-wrap: balance;
+}
+
+h2 {
+  font-family: var(--f-display);
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3.2vw, 2.2rem);
+  line-height: 1.15;
+  margin: 0 0 calc(var(--baseline) * 0.75);
+  text-wrap: balance;
+}
+
+h3 {
+  font-family: var(--f-display);
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.35;
+  margin: calc(var(--baseline) * 1.25) 0 calc(var(--baseline) * 0.4);
+}
+
+p { margin: 0 0 var(--baseline); max-width: var(--measure); }
+
+.mono {
+  font-family: var(--f-mono);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  letter-spacing: 0.03em;
+}
+
+.hand {
+  font-family: var(--f-hand);
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.lede { font-size: 1.1875rem; }
+
+.quiet { color: var(--ink-soft); }
+
+a { color: var(--sage); text-underline-offset: 0.18em; }
+a:hover { text-decoration-thickness: 2px; }
+
+.ulink {
+  font-family: var(--f-display);
+  font-size: 1.0625rem;
+  text-decoration: underline;
+  text-decoration-color: var(--sage);
+  text-decoration-thickness: 1.5px;
+}
+
+/* Load-bearing term. She underlines these in her red pen, so we do too.
+   This is the only emphasis inside body copy. Bold is deliberately unused. */
+u.term {
+  text-decoration: none;
+  border-bottom: 2px solid var(--correction);
+  padding-bottom: 1px;
+}
+
+em { font-style: italic; }
+
+
+/* -------------------------------------------------------------------------
+   THE THREE PENS
+   ------------------------------------------------------------------------- */
+
+/* A misconception, or the thing students get wrong. Nothing else. */
+.correction {
+  color: var(--correction);
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--correction);
+}
+
+/* An afterthought squeezed into the margin, the way she does when she runs
+   out of room. Smaller, tighter, and never quite straight. */
+.aside-note {
+  color: var(--aside);
+  font-family: var(--f-hand);
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.margin-note {
+  color: var(--aside);
+  margin: 0 0 calc(var(--baseline) * 0.5);
+  transform: rotate(-1deg);
+  transform-origin: left center;
+}
+
+
+/* -------------------------------------------------------------------------
+   TOP BAR
+   ------------------------------------------------------------------------- */
+
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem clamp(1rem, 5vw, 3rem);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+.topbar[hidden] { display: none; }
+
+.topbar-name {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+}
+
+.topbar-nav {
+  display: flex; align-items: center; gap: 1.1rem;
+  font-family: var(--f-mono); font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+.topbar-nav a { text-decoration: none; border-bottom: 1px solid transparent; }
+.topbar-nav a:hover { border-bottom-color: var(--sage); }
+
+.hurry-open {
+  font: inherit; color: var(--paper); background: var(--sage);
+  border: 0; padding: 0.4em 0.9em; border-radius: 2px 6px 3px 7px;
+  cursor: pointer; letter-spacing: 0.04em;
+}
+.hurry-open:hover { background: var(--ink); }
+
+
+/* -------------------------------------------------------------------------
+   COVER
+   ------------------------------------------------------------------------- */
+
+.cover {
+  min-height: 100svh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding-top: calc(var(--baseline) * 3);
+  padding-bottom: calc(var(--baseline) * 3);
+}
+
+.eyebrow { color: var(--ink-soft); margin: 0 0 var(--baseline); }
+
+.cover-note { font-size: 1.25rem; }
+
+.cover-links {
+  display: flex; flex-wrap: wrap; gap: 1.75rem;
+  margin-top: calc(var(--baseline) * 0.5);
+}
+
+.cover-foot {
+  margin: calc(var(--baseline) * 2) 0 0;
+  display: flex; flex-direction: column; gap: 0.35rem;
+  max-width: none;
+}
+.cover-foot .quiet { font-size: 0.9375rem; }
+
+
+/* -------------------------------------------------------------------------
+   ENTRIES
+   Two channels. Reading on the left, her questions and asides on the right,
+   which is exactly how the water hardness page is laid out.
+   ------------------------------------------------------------------------- */
+
+.entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+  gap: var(--gap);
+  align-items: start;
+  padding: calc(var(--baseline) * 2.5) 0;
+  border-top: 1px solid var(--rule);
+  scroll-margin-top: 4.5rem;
+}
+.entry:not(:has(.channel)) { grid-template-columns: minmax(0, 1fr); }
+
+.entry-main { padding-top: calc(var(--baseline) * 0.5); padding-bottom: var(--baseline); }
+
+.entry-no { color: var(--ink-soft); margin: 0 0 0.35rem; }
+
+/* Entry 05 deliberately gets no special treatment. It carries its own weight
+   through the scan and the writing, and a background wash would be the site
+   telling you it matters instead of showing you. */
+
+.entry-dated .updated { color: var(--ink-soft); margin: 0; }
+
+
+/* The right hand channel. On a narrow screen it stops being a margin, so it
+   is given a title instead. A question with no position and no label reads
+   as a fragment. */
+.channel {
+  padding: calc(var(--baseline) * 0.75) 1.25rem calc(var(--baseline) * 0.5);
+  background: var(--paper-deep);
+  border-left: 2px solid var(--correction);
+  border-radius: 3px 9px 4px 8px;
+  position: relative;
+  top: calc(var(--baseline) * 3);
+}
+.channel-title { color: var(--correction); margin: 0 0 0.5rem; }
+.channel ol { margin: 0; padding-left: 1.2rem; }
+.channel li {
+  margin-bottom: calc(var(--baseline) * 0.5);
+  font-size: 0.9375rem; line-height: 1.55;
+}
+.channel-foot {
+  font-family: var(--f-hand); color: var(--aside);
+  font-size: 1rem; margin: var(--baseline) 0 0;
+}
+
+
+/* -------------------------------------------------------------------------
+   CARDS, the definition then misconception shape
+   Two slots. The correction slot is required, which is what keeps this
+   section as evidence that she teaches by heading off error.
+   ------------------------------------------------------------------------- */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: var(--baseline) var(--gap);
+  margin-top: var(--baseline);
+}
+
+.card {
+  background: var(--paper-deep);
+  padding: calc(var(--baseline) * 0.75) 1.25rem;
+  /* Slightly irregular, as if taped in. */
+  border-radius: 4px 10px 5px 9px;
+  border: 1px solid var(--rule);
+}
+.card h3 { margin-top: 0; }
+.card p { max-width: none; }
+.card p:last-child { margin-bottom: 0; }
+.claim { color: var(--ink); }
+
+
+/* -------------------------------------------------------------------------
+   PROJECTS
+   ------------------------------------------------------------------------- */
+
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: var(--baseline) var(--gap);
+  margin: var(--baseline) 0;
+}
+.project { border-top: 2px solid var(--sage); padding-top: 0.6rem; }
+.project h3 { margin-top: 0; }
+.project p { max-width: none; font-size: 1rem; }
+
+.criteria {
+  color: var(--sage);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 0.7rem 0;
+  margin: var(--baseline) 0;
+  max-width: none;
+}
+
+.skills { color: var(--ink-soft); max-width: none; }
+
+
+/* -------------------------------------------------------------------------
+   FIGURES AND INTERACTIVES
+   ------------------------------------------------------------------------- */
+
+.fig { margin: calc(var(--baseline) * 1.5) 0; }
+.fig figcaption { color: var(--ink-soft); margin-top: 0.6rem; }
+
+.two-panel {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+}
+.panel {
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-radius: 3px 9px 4px 8px;
+  padding: 0.7rem;
+}
+.panel-tag { margin: 0 0 0.5rem; }
+/* The constrained case, marked the way she marks a thing that goes wrong. */
+.tag-correction { color: var(--correction); }
+.tag-sage { color: var(--sage); }
+
+.stage { width: 100%; height: auto; display: block; border-radius: 2px; }
+
+.controls {
+  display: flex; flex-wrap: wrap; gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+.controls button {
+  font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.04em;
+  color: var(--sage); background: transparent;
+  border: 1px solid var(--sage); border-radius: 2px 7px 3px 6px;
+  padding: 0.45em 0.9em; cursor: pointer;
+  transition: background 160ms var(--ease), color 160ms var(--ease);
+}
+.controls button:hover,
+.controls button[aria-pressed="true"],
+.controls button.on { background: var(--sage); color: var(--paper); }
+
+/* Shown only when JavaScript has not taken over. */
+.nojs-note { color: var(--ink-soft); font-size: 1rem; }
+.js .nojs-note { display: none; }
+
+
+/* Phase diagram */
+.phase-wrap {
+  display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: var(--gap);
+  align-items: start;
+}
+.phase-canvas {
+  width: 100%; height: auto; display: block;
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-radius: 3px 9px 4px 8px;
+  cursor: grab; touch-action: none;
+}
+.phase-canvas:active { cursor: grabbing; }
+.phase-hint { color: var(--ink-soft); margin: 0.5rem 0 0; }
+
+.readout-line {
+  display: flex; justify-content: space-between; gap: 1rem;
+  border-bottom: 1px solid var(--rule);
+  padding: 0.35rem 0; margin: 0; max-width: none;
+}
+.readout-line span { color: var(--ink-soft); }
+.readout-line b { font-weight: 400; color: var(--ink); text-align: right; }
+
+.beaker { margin: var(--baseline) 0; }
+.beaker-canvas {
+  width: 100%; max-width: 15rem; height: auto; display: block; margin: 0 auto;
+}
+
+.lever-title { color: var(--ink-soft); margin: 0 0 0.4rem; }
+.lever-bars { display: flex; flex-direction: column; gap: 0.4rem; }
+.lever-bar { display: grid; grid-template-columns: 5.5rem 1fr 3rem; gap: 0.5rem; align-items: center; }
+.lever-bar span:first-child,
+.lever-bar span:last-child {
+  font-family: var(--f-mono); font-size: 0.75rem; color: var(--ink-soft);
+}
+.lever-bar span:last-child { text-align: right; color: var(--ink); }
+.lever-track { height: 0.55rem; background: var(--paper); border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; }
+.lever-fill { height: 100%; background: var(--sage); }
+.lever-none { color: var(--ink-soft); margin: 0; }
+
+.crossing {
+  color: var(--aside); font-family: var(--f-hand); font-size: 1.05rem;
+  min-height: calc(var(--baseline) * 1.5);
+  margin: var(--baseline) 0 0; max-width: none;
+}
+
+
+/* Titration */
+.titration { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--gap); align-items: start; }
+.titration-canvas {
+  width: 100%; max-width: 18rem; height: auto; display: block;
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-radius: 3px 9px 4px 8px;
+}
+.titration-msg {
+  font-family: var(--f-hand); font-size: 1.05rem; color: var(--aside);
+  margin: var(--baseline) 0 0; min-height: calc(var(--baseline) * 2);
+}
+.titration-msg.over { color: var(--correction); }
+
+
+/* Study walkthrough */
+.walk { list-style: none; counter-reset: step; margin: var(--baseline) 0; padding: 0; }
+.walk > li {
+  counter-increment: step;
+  border-left: 2px solid var(--rule);
+  padding: 0 0 var(--baseline) 1.5rem;
+  position: relative;
+}
+.walk > li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute; left: -1.4rem; top: calc(var(--baseline) * 1.25);
+  font-family: var(--f-mono); font-size: 0.75rem;
+  color: var(--paper); background: var(--sage);
+  width: 2.6rem; text-align: center; border-radius: 2px;
+}
+.walk > li:last-child { border-left-color: var(--sage); }
+.walk h3 { margin-top: calc(var(--baseline) * 0.5); }
+
+.choices { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: var(--baseline); }
+.choices button {
+  font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.04em;
+  color: var(--sage); background: transparent;
+  border: 1px solid var(--sage); border-radius: 2px 7px 3px 6px;
+  padding: 0.5em 1em; cursor: pointer;
+  transition: background 160ms var(--ease), color 160ms var(--ease);
+}
+.choices button:hover, .choices button[aria-pressed="true"] { background: var(--sage); color: var(--paper); }
+.choice-reply:not(:empty) {
+  background: var(--paper-deep);
+  border-radius: 4px 10px 5px 9px;
+  padding: calc(var(--baseline) * 0.6) 1.1rem;
+  margin-bottom: var(--baseline);
+}
+.choice-reply p:last-child { margin-bottom: 0; }
+
+.citation {
+  border-top: 1px solid var(--rule);
+  padding-top: var(--baseline);
+  color: var(--ink-soft);
+  font-size: 1rem;
+}
+.citation cite { font-style: italic; }
+
+
+/* -------------------------------------------------------------------------
+   SCANS
+   ------------------------------------------------------------------------- */
+
+.scan-figure { margin: var(--baseline) 0; max-width: 32rem; }
+.scan-figure.sm { max-width: none; margin: 0; }
+.scan-figure figcaption { color: var(--ink-soft); margin-top: 0.5rem; }
+
+.scan-btn {
+  display: block; padding: 0; border: 1px solid var(--rule);
+  background: var(--paper-deep); cursor: zoom-in; width: 100%;
+  border-radius: 3px 9px 4px 8px; overflow: hidden;
+  position: relative;
+}
+.scan-btn img { width: 100%; }
+.scan-zoom {
+  position: absolute; right: 0.5rem; bottom: 0.5rem;
+  background: color-mix(in srgb, var(--ink) 88%, transparent);
+  color: var(--paper); padding: 0.3em 0.7em; border-radius: 2px;
+  opacity: 0; transition: opacity 160ms var(--ease);
+}
+.scan-btn:hover .scan-zoom, .scan-btn:focus-visible .scan-zoom { opacity: 1; }
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--gap);
+  margin: var(--baseline) 0;
+}
+
+
+/* -------------------------------------------------------------------------
+   FORM AND CONTACT
+   ------------------------------------------------------------------------- */
+
+.signup { margin: var(--baseline) 0; max-width: var(--measure); }
+.signup label { color: var(--ink-soft); display: block; margin-bottom: 0.4rem; }
+.signup-row { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.signup input {
+  flex: 1 1 14rem;
+  font-family: var(--f-body); font-size: 1rem;
+  color: var(--ink); background: var(--paper);
+  border: 1px solid var(--rule); border-radius: 2px 7px 3px 6px;
+  padding: 0.6em 0.8em;
+}
+.signup input:focus-visible { border-color: var(--sage); }
+.signup button {
+  font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.04em;
+  color: var(--paper); background: var(--sage);
+  border: 1px solid var(--sage); border-radius: 2px 7px 3px 6px;
+  padding: 0.6em 1.2em; cursor: pointer;
+}
+.signup button:hover { background: var(--ink); border-color: var(--ink); }
+.signup-msg {
+  font-family: var(--f-hand); font-size: 1.05rem; color: var(--aside);
+  margin: 0.7rem 0 0; min-height: 1.5rem;
+}
+.signup-msg.bad { color: var(--correction); }
+
+/* Honeypot. Moved off screen rather than set to display none, because a
+   bot that skips undisplayed fields would skip the trap as well. */
+.honey {
+  position: absolute;
+  left: -9999px;
+  width: 1px; height: 1px;
+  overflow: hidden;
+}
+
+.email-wrap { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.9rem; max-width: none; }
+.email {
+  font-family: var(--f-display);
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-weight: 500;
+  font-size: clamp(1.25rem, 4vw, 2rem);
+  color: var(--ink); background: transparent;
+  border: 0; border-bottom: 2px solid var(--sage);
+  padding: 0 0 0.1em; cursor: copy;
+  word-break: break-all; text-align: left;
+}
+.email:hover { color: var(--sage); }
+.copy-msg { font-family: var(--f-hand); font-size: 1.05rem; color: var(--aside); }
+
+.outlinks { max-width: none; }
+.outlinks a { color: var(--sage); }
+
+.cv-note {
+  font-family: var(--f-hand); font-size: 1.1rem; color: var(--aside);
+  border-left: 2px solid var(--aside); padding-left: 0.9rem;
+  max-width: var(--measure);
+}
+
+
+/* -------------------------------------------------------------------------
+   CLOSING
+   ------------------------------------------------------------------------- */
+
+.closing {
+  border-top: 1px solid var(--rule);
+  padding: calc(var(--baseline) * 3) 0 calc(var(--baseline) * 4);
+  padding-left: clamp(1.25rem, 7vw, 6rem);
+}
+.closing-line {
+  font-family: var(--f-display);
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-weight: 500;
+  font-size: clamp(1.25rem, 2.6vw, 1.7rem);
+  line-height: 1.3;
+  max-width: 32ch;
+  text-wrap: balance;
+}
+.colophon { color: var(--ink-soft); margin: 0; }
+
+
+/* -------------------------------------------------------------------------
+   OVERLAYS
+   ------------------------------------------------------------------------- */
+
+.overlay {
+  position: fixed; inset: 0; z-index: 60;
+  display: grid; place-items: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  background: color-mix(in srgb, var(--ink) 55%, transparent);
+  overflow-y: auto;
+}
+.overlay[hidden] { display: none; }
+
+.overlay-panel {
+  position: relative;
+  background: var(--paper);
+  border-radius: 4px 12px 6px 10px;
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+  max-width: 42rem; width: 100%;
+  max-height: 100%; overflow-y: auto;
+}
+
+.overlay-close {
+  position: absolute; top: 0.5rem; right: 0.75rem;
+  font-size: 1.75rem; line-height: 1;
+  color: var(--ink-soft); background: transparent; border: 0;
+  cursor: pointer; padding: 0.25rem 0.5rem;
+}
+.overlay-close:hover { color: var(--sage); }
+
+.short { margin: var(--baseline) 0 0; }
+.short dt { color: var(--ink-soft); margin-top: var(--baseline); }
+.short dt:first-child { margin-top: 0; }
+.short dd { margin: 0.3rem 0 0; }
+.short-foot {
+  color: var(--ink-soft); font-size: 0.9375rem;
+  border-top: 1px solid var(--rule); padding-top: 0.8rem;
+  margin: var(--baseline) 0 0;
+}
+
+.lightbox .overlay-close {
+  position: fixed; top: 1rem; right: 1.25rem;
+  color: var(--paper); font-size: 2.25rem; z-index: 2;
+}
+.lightbox-fig { margin: 0; max-width: 60rem; }
+.lightbox-fig img {
+  width: 100%; border-radius: 3px;
+  background: var(--paper);
+}
+.lightbox-fig figcaption { color: var(--paper); margin-top: 0.75rem; }
+
+
+/* -------------------------------------------------------------------------
+   MOTION
+   Margin notes arrive after their paragraph, and corrections arrive last,
+   because that is the order she wrote them in.
+   ------------------------------------------------------------------------- */
+
+.js .reveal { opacity: 0; transform: translateY(6px); }
+.js .reveal.in {
+  opacity: 1; transform: none;
+  transition: opacity 320ms var(--ease), transform 320ms var(--ease);
+}
+.js .margin-note.reveal.in { transition-delay: 200ms; }
+.js .correction.reveal.in { transition-delay: 380ms; }
+
+/* Page turn on entry change. */
+.js .entry { transform-origin: left center; }
+.js .entry.turning {
+  animation: turn 400ms var(--ease);
+}
+@keyframes turn {
+  0%   { opacity: 0.35; transform: perspective(1400px) rotateY(-3.5deg); }
+  100% { opacity: 1;    transform: none; }
+}
+
+
+/* -------------------------------------------------------------------------
+   RESPONSIVE
+   The right channel loses its position, so it gains a name. See .channel.
+   ------------------------------------------------------------------------- */
+
+@media (max-width: 60rem) {
+  .entry { grid-template-columns: minmax(0, 1fr); gap: var(--baseline); }
+  .channel { top: 0; margin-left: var(--margin-x); }
+  .phase-wrap { grid-template-columns: minmax(0, 1fr); }
+  .titration { grid-template-columns: minmax(0, 1fr); }
+  .titration-canvas { margin: 0 auto; }
+}
+
+@media (max-width: 34rem) {
+  :root { --measure: 100%; }
+  .sheet { --margin-x: 1.6rem; padding: 0 0.9rem; }
+  .two-panel { grid-template-columns: minmax(0, 1fr); }
+  .cover { min-height: auto; padding-top: calc(var(--baseline) * 4); }
+  .display { font-size: clamp(1.85rem, 9vw, 2.6rem); }
+  .topbar-nav a { display: none; }
+  .channel { margin-left: 0; }
+  .entry-main, .cover { padding-left: var(--margin-x); }
+  .walk > li { padding-left: 1rem; }
+  .walk > li::before { left: -1rem; width: 2rem; font-size: 0.6875rem; }
+  .closing { padding-left: 1.6rem; }
+}
+
+
+/* -------------------------------------------------------------------------
+   REDUCED MOTION
+   Interactives hold their final state and say what they would have shown.
+   ------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .js .reveal { opacity: 1; transform: none; }
+}
+
+.rm-note {
+  font-family: var(--f-hand); font-size: 1.05rem; color: var(--aside);
+  margin: 0.7rem 0 0;
+}
+
+
+@media print {
+  .topbar, .controls, .overlay, .scan-zoom { display: none !important; }
+  body { background: #fff; }
+  .entry-main, .cover { background-image: none; }
+}

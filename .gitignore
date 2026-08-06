@@ -1,0 +1,19 @@
+# Camera originals for the notebook scans. 11 MB of HEIC that no page loads.
+# The site serves the processed webp and jpg in assets/scans instead.
+assets/notes/
+*.heic
+
+# Working notes and source documents. These live in the parent folder and are
+# outside the repo already, but this is a second lock: a public repo keeps
+# whatever it is given, in history, permanently.
+CLAUDE.md
+*_BRIEF.md
+PROMISE_VOICE_SAMPLES.md
+WRITING_EXAMPLES.md
+
+# OS and editor litter
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/

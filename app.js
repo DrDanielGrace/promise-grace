@@ -1,0 +1,1425 @@
+/* =========================================================================
+   Promise Oluwatosin Grace, portfolio
+
+   Everything here is an enhancement. The page is fully readable with this
+   file removed, so each module checks for its own elements and exits quietly
+   if they are missing.
+
+   Interactives run only while on screen, and under reduced motion they draw
+   their final state once and explain what the animation would have shown.
+   ========================================================================= */
+
+(function () {
+  "use strict";
+
+  /* ---------------------------------------------------------------------
+     EDIT ME
+     Set CV_READY to false if the file at CV_PATH is ever pulled for
+     revision. False turns the three Download CV links back into a short
+     note offering to send it by email instead of leaving a dead link.
+     --------------------------------------------------------------------- */
+  var CV_READY = true;
+  var CV_PATH = "assets/promise-grace-research-cv.pdf";
+  /* --------------------------------------------------------------------- */
+
+  var root = document.documentElement;
+  root.classList.add("js");
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  function $(sel, ctx) { return (ctx || document).querySelector(sel); }
+  function $$(sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); }
+
+  function on(el, ev, fn, opts) { if (el) el.addEventListener(ev, fn, opts); }
+
+  /* If an interactive throws, say so plainly in her handwriting rather than
+     leaving an empty box. */
+  function fallback(container, text) {
+    if (!container) return;
+    var p = document.createElement("p");
+    p.className = "rm-note";
+    p.textContent = text;
+    container.appendChild(p);
+  }
+
+  function guard(name, fn) {
+    try { fn(); }
+    catch (err) {
+      if (window.console) console.error(name, err);
+    }
+  }
+
+
+  /* =====================================================================
+     CV LINKS
+     ===================================================================== */
+
+  /* The markup links straight at the PDF, so the download works with this
+     file removed. This only runs for the exception: if the CV is ever
+     pulled for revision, the links become a short note offering to send it
+     by email rather than a dead download. */
+  guard("cv", function () {
+    if (CV_READY) return;
+
+    $$("[data-cv]").forEach(function (a) {
+      a.removeAttribute("download");
+      a.setAttribute("href", "#cv-note");
+    });
+
+    var note = document.createElement("p");
+    note.className = "cv-note";
+    note.id = "cv-note";
+    note.setAttribute("tabindex", "-1");
+    note.textContent = "My CV is being rewritten at the moment. Email me and I will send it "
+      + "straight to you, usually the same day.";
+
+    var outlinks = $(".outlinks");
+    if (outlinks && outlinks.parentNode) {
+      outlinks.parentNode.insertBefore(note, outlinks.nextSibling);
+    }
+  });
+
+
+  /* =====================================================================
+     TOP BAR
+     ===================================================================== */
+
+  guard("topbar", function () {
+    var bar = $("#topbar");
+    var cover = $("#cover");
+    if (!bar || !cover || !("IntersectionObserver" in window)) return;
+
+    new IntersectionObserver(function (entries) {
+      bar.hidden = entries[0].isIntersecting;
+    }, { rootMargin: "-70% 0px 0px 0px" }).observe(cover);
+  });
+
+
+  /* =====================================================================
+     REVEALS AND THE PAGE TURN
+     Margin notes arrive after their paragraph. Corrections arrive last.
+     ===================================================================== */
+
+  guard("reveal", function () {
+    if (reduced.matches || !("IntersectionObserver" in window)) return;
+
+    var targets = $$(".margin-note, .correction, .entry h2, .card, .project");
+    targets.forEach(function (el) { el.classList.add("reveal"); });
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add("in");
+          io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.1 });
+
+    targets.forEach(function (el) { io.observe(el); });
+
+    var turner = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add("turning");
+          turner.unobserve(e.target);
+          setTimeout(function () { e.target.classList.remove("turning"); }, 460);
+        }
+      });
+    }, { threshold: 0.06 });
+
+    $$(".entry").forEach(function (el) { turner.observe(el); });
+  });
+
+
+  /* =====================================================================
+     OVERLAYS, shared behaviour
+     ===================================================================== */
+
+  var lastFocus = null;
+
+  function openOverlay(el) {
+    if (!el) return;
+    lastFocus = document.activeElement;
+    el.hidden = false;
+    document.body.style.overflow = "hidden";
+    var target = $(".overlay-close", el);
+    if (target) target.focus();
+  }
+
+  function closeOverlay(el) {
+    if (!el || el.hidden) return;
+    el.hidden = true;
+    document.body.style.overflow = "";
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  guard("overlays", function () {
+    $$(".overlay").forEach(function (ov) {
+      on(ov, "click", function (e) {
+        if (e.target === ov || e.target.hasAttribute("data-close")) closeOverlay(ov);
+      });
+    });
+
+    on(document, "keydown", function (e) {
+      if (e.key !== "Escape") return;
+      $$(".overlay").forEach(function (ov) { if (!ov.hidden) closeOverlay(ov); });
+    });
+
+    // Keep tab focus inside an open panel.
+    on(document, "keydown", function (e) {
+      if (e.key !== "Tab") return;
+      var open = $$(".overlay").filter(function (o) { return !o.hidden; })[0];
+      if (!open) return;
+      var f = $$("a[href], button, input, [tabindex]:not([tabindex='-1'])", open)
+        .filter(function (el) { return el.offsetParent !== null; });
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+
+    $$("[data-hurry]").forEach(function (b) {
+      on(b, "click", function () { openOverlay($("#hurry")); });
+    });
+  });
+
+
+  /* =====================================================================
+     LIGHTBOX
+     ===================================================================== */
+
+  guard("lightbox", function () {
+    var box = $("#lightbox");
+    var img = $("#lightbox-img");
+    var cap = $("#lightbox-cap");
+    if (!box || !img) return;
+
+    $$(".scan-btn").forEach(function (btn) {
+      on(btn, "click", function () {
+        var name = btn.getAttribute("data-scan");
+        var thumb = $("img", btn);
+        var figcap = btn.parentNode.querySelector("figcaption");
+        img.src = "assets/scans/" + name + ".jpg";
+        img.alt = thumb ? thumb.alt : "";
+        if (cap) cap.textContent = figcap ? figcap.textContent : "";
+        openOverlay(box);
+      });
+    });
+
+    on(img, "error", function () {
+      img.removeAttribute("src");
+      if (cap) cap.textContent = img.alt || "This page could not be loaded.";
+    });
+  });
+
+
+  /* =====================================================================
+     COPY EMAIL
+     ===================================================================== */
+
+  guard("copy", function () {
+    var btn = $("[data-copy]");
+    var out = $("[data-out='copy']");
+    if (!btn) return;
+
+    on(btn, "click", function () {
+      var value = btn.getAttribute("data-copy");
+      var done = function () { if (out) out.textContent = "Copied. I will look out for your message."; };
+      var failed = function () { if (out) out.textContent = "That did not copy. The address is " + value; };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(done, failed);
+      } else {
+        failed();
+      }
+    });
+  });
+
+
+  /* =====================================================================
+     SIGNUP
+
+     Posts to FormSubmit over fetch. A native form POST would redirect the
+     visitor away from the page, which is why this is XHR rather than a
+     plain action attribute.
+
+     One thing to know about the first run: FormSubmit sends Promise a
+     one-time activation email the very first time this endpoint receives
+     anything, and nothing is forwarded until she clicks the link in it.
+     She submits her own address once before launch so that no real visitor
+     is the one who triggers it.
+
+     If the request fails for any reason, the mailto path takes over, so
+     the address still reaches her.
+     ===================================================================== */
+
+  var SIGNUP_ENDPOINT = "https://formsubmit.co/ajax/promisetosingrace@gmail.com";
+
+  guard("signup", function () {
+    var form = $("[data-signup]");
+    if (!form) return;
+    var input = $("#email", form);
+    var honey = $("input[name='_honey']", form);
+    var button = $("button[type='submit']", form);
+    var out = $("[data-out='msg']", form);
+    var sending = false;
+
+    function say(text, bad) {
+      if (!out) return;
+      out.textContent = text;
+      out.classList.toggle("bad", !!bad);
+    }
+
+    function mailtoFallback(value) {
+      var subject = encodeURIComponent("Notes please");
+      var body = encodeURIComponent(
+        "Hi Promise,\n\nPlease add me to your notes.\n\n" + value + "\n"
+      );
+      say("That did not go through, so your mail app should be opening instead with a short message already written. Send it and I will add you. If nothing happened, write to me at promisetosingrace@gmail.com.");
+      window.location.href = "mailto:promisetosingrace@gmail.com?subject=" + subject + "&body=" + body;
+    }
+
+    on(form, "submit", function (e) {
+      e.preventDefault();
+      if (sending) return;
+
+      var value = (input.value || "").trim();
+
+      if (!value) {
+        say("I need an address to send them to.", true);
+        input.focus();
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
+        say("That does not look like an email address. Check it and try again.", true);
+        input.focus();
+        return;
+      }
+
+      if (!window.fetch) { mailtoFallback(value); return; }
+
+      sending = true;
+      if (button) button.disabled = true;
+      say("One moment.");
+
+      fetch(SIGNUP_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          email: value,
+          _subject: "Notes signup from the site",
+          _captcha: "false",
+          _template: "table",
+          _honey: honey ? honey.value : ""
+        })
+      })
+        .then(function (r) {
+          return r.json().then(function (data) { return { ok: r.ok, data: data }; });
+        })
+        .then(function (res) {
+          if (!res.ok || String(res.data.success) !== "true") {
+            throw new Error("submission was not accepted");
+          }
+          form.reset();
+          say("Got it, thank you. I will add you to the list, and the next set goes out when I have finished the papers I am on.");
+        })
+        .catch(function () {
+          mailtoFallback(value);
+        })
+        .then(function () {
+          sending = false;
+          if (button) button.disabled = false;
+        });
+    });
+  });
+
+
+  /* =====================================================================
+     STUDY WALKTHROUGH
+     ===================================================================== */
+
+  guard("study", function () {
+    var wrap = $("[data-lab='study']");
+    if (!wrap) return;
+    var out = $("[data-out='reply']", wrap);
+    var buttons = $$("[data-choice]", wrap);
+
+    var replies = {
+      interviews:
+        ["Interviews would have told me why, in their own words, and I would have learned things I did not know to ask about.",
+         "The cost is reach. Thirty interviews is a good week of work, and thirty students cannot tell you what a whole faculty does.",
+         "I chose a survey. It was the only method that reached enough students to say something about the population, and I could run it alongside a full teaching load. What I gave up is that I collected what people report about themselves, not what they do."],
+      survey:
+        ["That is what I chose, and for the reason you probably picked it. It reaches enough people to say something about the population, and one person can run it.",
+         "The cost is that a survey collects what people believe about themselves, filtered through what they think a researcher wants to hear. I recorded those answers as behaviour. They are not behaviour.",
+         "If I ran it again I would keep the survey and pair it with something I could actually observe."],
+      observation:
+        ["An observational study would have shown me what students did rather than what they said they did, which is the honest version of the question.",
+         "It needs access to their devices or their network, and I had neither. There is also a consent problem I did not have the standing to solve as an undergraduate.",
+         "I chose a survey instead. It reached 1,000 students, and I accepted self reporting as the price. That trade is the main thing I would revisit."]
+    };
+
+    buttons.forEach(function (btn) {
+      btn.setAttribute("aria-pressed", "false");
+      on(btn, "click", function () {
+        buttons.forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+        btn.setAttribute("aria-pressed", "true");
+        var lines = replies[btn.getAttribute("data-choice")] || [];
+        out.innerHTML = "";
+        lines.forEach(function (line) {
+          var p = document.createElement("p");
+          p.textContent = line;
+          out.appendChild(p);
+        });
+      });
+    });
+  });
+
+
+  /* =====================================================================
+     CANVAS HELPERS
+     ===================================================================== */
+
+  var INK = "#332E5C", CORR = "#8C2F45", SAGE = "#33543B",
+      PAPER = "#FAF6EF", DEEP = "#F1EBE0", RULE = "#C5C7DC",
+      ASIDE = "#8A5A2B", BUTTER = "#E9C978";
+
+  function fit(canvas) {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = canvas.width, h = canvas.height;
+    if (canvas._fitted === dpr) return canvas.getContext("2d");
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.aspectRatio = w + " / " + h;
+    var ctx = canvas.getContext("2d");
+    ctx.scale(dpr, dpr);
+    canvas._logical = { w: w, h: h };
+    canvas._fitted = dpr;
+    return ctx;
+  }
+
+  /* Runs a draw loop only while the container is on screen. */
+  function ticker(container, step, onStop) {
+    var raf = null, running = false, t = 0;
+
+    function frame() {
+      if (!running) return;
+      t += 1;
+      step(t);
+      raf = requestAnimationFrame(frame);
+    }
+    function start() {
+      if (running) return;
+      running = true;
+      raf = requestAnimationFrame(frame);
+    }
+    function stop() {
+      running = false;
+      if (raf) cancelAnimationFrame(raf);
+      raf = null;
+      if (onStop) onStop();
+    }
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) start(); else stop();
+      }, { threshold: 0.15 }).observe(container);
+    } else {
+      start();
+    }
+    return {
+      reset: function () { t = 0; },
+      get t() { return t; },
+      set t(v) { t = v; },
+      stop: stop,
+      start: start
+    };
+  }
+
+
+  /* =====================================================================
+     ENTRY 01, CRYSTAL GROWTH UNDER TWO GRAVITIES
+
+     The mechanism is the documented one. Under 1 g, density differences
+     drive convection, so the solution keeps moving, nuclei form in many
+     places, crystals sediment and collide, and defects get trapped. Near
+     0 g convection is largely absent, transport is diffusion limited, and
+     growth is slower, more even and better ordered.
+     ===================================================================== */
+
+  guard("crystal", function () {
+    var wrap = $("[data-lab='crystal']");
+    if (!wrap) return;
+    var canvases = $$("canvas.stage", wrap);
+    if (canvases.length < 2) { fallback(wrap, "The comparison did not load."); return; }
+
+    var LOOP = 720;              // twelve seconds at sixty frames
+    var slow = false;
+    var earth = [], micro = [], flow = [];
+
+    function seed() {
+      earth = [];
+      for (var i = 0; i < 11; i++) {
+        earth.push({
+          x: 40 + Math.random() * 340,
+          y: 40 + Math.random() * 90,
+          r: 0,
+          max: 7 + Math.random() * 9,
+          born: Math.random() * 200,
+          vy: 0,
+          incl: []
+        });
+      }
+      micro = [{ x: 210, y: 150, r: 0, max: 52, born: 20 }];
+      flow = [];
+      for (var j = 0; j < 26; j++) {
+        flow.push({
+          x: Math.random() * 420,
+          y: Math.random() * 300,
+          a: Math.random() * Math.PI * 2
+        });
+      }
+    }
+    seed();
+
+    function facet(ctx, x, y, r, sides, rot, fill, stroke) {
+      ctx.beginPath();
+      for (var i = 0; i < sides; i++) {
+        var a = rot + i * (Math.PI * 2 / sides);
+        var px = x + Math.cos(a) * r, py = y + Math.sin(a) * r;
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 1.2; ctx.stroke(); }
+    }
+
+    function drawEarth(ctx, t) {
+      var W = 420, H = 300;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = DEEP; ctx.fillRect(0, 0, W, H);
+
+      // Convection. Warm fluid up one side, cool fluid down the other.
+      ctx.strokeStyle = "rgba(140,47,69,0.20)";
+      ctx.lineWidth = 1;
+      flow.forEach(function (f, i) {
+        var phase = t * 0.012 + i;
+        var cx = f.x + Math.sin(phase) * 16;
+        var cy = (f.y + t * 0.55 * (i % 2 ? 1 : -1)) % H;
+        if (cy < 0) cy += H;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(f.a) * 7, cy + Math.sin(f.a) * 7);
+        ctx.stroke();
+      });
+
+      earth.forEach(function (c, i) {
+        if (t < c.born) return;
+        var age = t - c.born;
+        c.r = Math.min(c.max, age * 0.035);
+        // Sedimentation, then settling on the floor.
+        c.vy = Math.min(0.55, c.vy + 0.0016);
+        c.y = Math.min(H - 22 - c.r, c.y + c.vy);
+        var wob = Math.sin(t * 0.02 + i) * 1.6;
+        if (c.r > 3 && c.incl.length < 3 && Math.random() < 0.02) {
+          c.incl.push({ dx: (Math.random() - 0.5) * c.r, dy: (Math.random() - 0.5) * c.r });
+        }
+        facet(ctx, c.x + wob, c.y, c.r, 6, i, "rgba(51,46,92,0.30)", INK);
+        ctx.fillStyle = CORR;
+        c.incl.forEach(function (d) {
+          ctx.beginPath();
+          ctx.arc(c.x + wob + d.dx, c.y + d.dy, 1.5, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      });
+
+      ctx.fillStyle = "rgba(51,46,92,0.10)";
+      ctx.fillRect(0, H - 18, W, 18);
+    }
+
+    function drawMicro(ctx, t) {
+      var W = 420, H = 300;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = DEEP; ctx.fillRect(0, 0, W, H);
+
+      var c = micro[0];
+      if (t > c.born) {
+        c.r = Math.min(c.max, (t - c.born) * 0.075);
+
+        // Diffusion field, drawn as a depleted halo rather than currents.
+        var g = ctx.createRadialGradient(c.x, c.y, c.r, c.x, c.y, c.r + 46);
+        g.addColorStop(0, "rgba(51,84,59,0.16)");
+        g.addColorStop(1, "rgba(51,84,59,0)");
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(c.x, c.y, c.r + 46, 0, Math.PI * 2); ctx.fill();
+
+        // Growth layers, because it builds outward evenly.
+        for (var k = 1; k <= 4; k++) {
+          facet(ctx, c.x, c.y, c.r * (k / 4), 6, 0.35, null, "rgba(51,84,59,0.30)");
+        }
+        facet(ctx, c.x, c.y, c.r, 6, 0.35, "rgba(51,84,59,0.22)", SAGE);
+      }
+    }
+
+    var ctxE = fit(canvases[0]), ctxM = fit(canvases[1]);
+
+    if (reduced.matches) {
+      drawEarth(ctxE, LOOP); drawMicro(ctxM, LOOP);
+      fallback(wrap.parentNode,
+        "Held at the end of the run. Animated, the left panel shows the solution stirring while many small crystals form, sink and trap flaws. The right panel shows one crystal growing outward evenly with nothing to disturb it.");
+      var ctrlsRM = $("[data-controls='crystal']");
+      if (ctrlsRM) ctrlsRM.hidden = true;
+      return;
+    }
+
+    var tk = ticker(wrap, function (t) {
+      var tt = slow ? t * 0.4 : t;
+      if (tt > LOOP) { tk.t = 0; seed(); return; }
+      drawEarth(ctxE, tt);
+      drawMicro(ctxM, tt);
+    });
+
+    var ctrls = $("[data-controls='crystal']");
+    if (ctrls) {
+      on($("[data-act='replay']", ctrls), "click", function () { tk.t = 0; seed(); });
+      var slowBtn = $("[data-act='slow']", ctrls);
+      on(slowBtn, "click", function () {
+        slow = !slow;
+        slowBtn.setAttribute("aria-pressed", String(slow));
+      });
+    }
+  });
+
+
+  /* =====================================================================
+     ENTRY 05, THE STALACTITE
+
+     Left, gravity makes the drop fall and the deposit builds downward.
+     Right, with almost no gravity the drop never detaches. Surface tension
+     holds it as a bead and mineral comes out around its whole surface, so
+     a shell builds outward instead of a spike growing down.
+     ===================================================================== */
+
+  guard("stalactite", function () {
+    var wrap = $("[data-lab='stalactite']");
+    if (!wrap) return;
+    var canvases = $$("canvas.stage", wrap);
+    if (canvases.length < 2) { fallback(wrap, "The comparison did not load."); return; }
+
+    var LOOP = 900;
+    var CEIL = 26;
+
+    function drawG(ctx, t) {
+      var W = 360, H = 320;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = DEEP; ctx.fillRect(0, 0, W, H);
+
+      // Ceiling.
+      ctx.fillStyle = "rgba(51,46,92,0.16)";
+      ctx.fillRect(0, 0, W, CEIL);
+
+      var cycle = 150;
+      var n = Math.floor(t / cycle);        // completed drips
+      var p = (t % cycle) / cycle;          // progress through this drip
+      var spike = Math.min(70, n * 3.4);
+
+      // The spike that has built so far.
+      ctx.beginPath();
+      ctx.moveTo(W / 2 - 16, CEIL);
+      ctx.quadraticCurveTo(W / 2 - 5, CEIL + spike * 0.75, W / 2, CEIL + spike);
+      ctx.quadraticCurveTo(W / 2 + 5, CEIL + spike * 0.75, W / 2 + 16, CEIL);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(140,47,69,0.20)";
+      ctx.fill();
+      ctx.strokeStyle = CORR; ctx.lineWidth = 1.2; ctx.stroke();
+
+      // Layer lines, because it is built bit by bit.
+      ctx.strokeStyle = "rgba(140,47,69,0.30)";
+      ctx.lineWidth = 0.8;
+      for (var i = 1; i < Math.min(n, 18); i++) {
+        var y = CEIL + (spike * i / Math.min(n, 18));
+        var half = 16 * (1 - i / Math.min(n, 18) * 0.9);
+        ctx.beginPath(); ctx.moveTo(W / 2 - half, y); ctx.lineTo(W / 2 + half, y); ctx.stroke();
+      }
+
+      // The drop: swells, necks, falls.
+      var tipY = CEIL + spike;
+      if (p < 0.62) {
+        var grow = p / 0.62;
+        var r = 3 + grow * 6;
+        ctx.beginPath();
+        ctx.ellipse(W / 2, tipY + r * 0.7, r * 0.85, r * (1 + grow * 0.35), 0, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(51,84,59,0.55)"; ctx.fill();
+      } else {
+        var fall = (p - 0.62) / 0.38;
+        var fy = tipY + 8 + fall * fall * (H - tipY - 30);
+        ctx.beginPath();
+        ctx.ellipse(W / 2, fy, 5, 7.5, 0, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(51,84,59,0.55)"; ctx.fill();
+      }
+
+      // Floor and the stalagmite answering it.
+      ctx.fillStyle = "rgba(51,46,92,0.16)";
+      ctx.fillRect(0, H - 20, W, 20);
+      var up = Math.min(40, n * 2.0);
+      ctx.beginPath();
+      ctx.moveTo(W / 2 - 14, H - 20);
+      ctx.quadraticCurveTo(W / 2, H - 20 - up * 1.2, W / 2 + 14, H - 20);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(140,47,69,0.16)"; ctx.fill();
+      ctx.strokeStyle = "rgba(140,47,69,0.55)"; ctx.lineWidth = 1; ctx.stroke();
+    }
+
+    function drawZ(ctx, t) {
+      var W = 360, H = 320;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = DEEP; ctx.fillRect(0, 0, W, H);
+
+      ctx.fillStyle = "rgba(51,46,92,0.16)";
+      ctx.fillRect(0, 0, W, CEIL);
+
+      var grow = Math.min(1, t / LOOP);
+      var cx = W / 2, cy = CEIL + 34;
+      var shell = 16 + grow * 44;
+
+      // The mineral shell, built outward all around the bead.
+      for (var k = 6; k >= 1; k--) {
+        var rr = shell * (k / 6);
+        ctx.beginPath();
+        ctx.arc(cx, cy, rr, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(51,84,59," + (0.18 + 0.10 * (6 - k) / 6) + ")";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+      ctx.beginPath();
+      ctx.arc(cx, cy, shell, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(51,84,59,0.14)"; ctx.fill();
+      ctx.strokeStyle = SAGE; ctx.lineWidth = 1.4; ctx.stroke();
+
+      // The bead itself, held by surface tension, breathing very slightly.
+      var wob = Math.sin(t * 0.03) * 0.8;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 13 + wob, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(51,84,59,0.50)"; ctx.fill();
+
+      // Nothing falls, so the floor stays bare.
+      ctx.fillStyle = "rgba(51,46,92,0.16)";
+      ctx.fillRect(0, H - 20, W, 20);
+    }
+
+    var c1 = fit(canvases[0]), c2 = fit(canvases[1]);
+
+    if (reduced.matches) {
+      drawG(c1, LOOP); drawZ(c2, LOOP);
+      fallback(wrap.parentNode,
+        "Held at the end of the run. Animated, the left panel drips over and over and the spike grows downward a layer at a time. On the right the drop never falls, and the shell thickens evenly all the way around it.");
+      var rmCtrl = $("[data-controls='stalactite']");
+      if (rmCtrl) rmCtrl.hidden = true;
+      return;
+    }
+
+    var tk = ticker(wrap, function (t) {
+      if (t > LOOP) { tk.t = 0; return; }
+      drawG(c1, t); drawZ(c2, t);
+    });
+
+    var ctrls = $("[data-controls='stalactite']");
+    if (ctrls) on($("[data-act='replay']", ctrls), "click", function () { tk.t = 0; });
+  });
+
+
+  /* =====================================================================
+     ENTRY 03, TITRATION
+     ===================================================================== */
+
+  guard("titration", function () {
+    var wrap = $("[data-lab='titration']");
+    if (!wrap) return;
+    var canvas = $("canvas.titration-canvas", wrap);
+    if (!canvas) { fallback(wrap, "The titration did not load."); return; }
+
+    var ctx = fit(canvas);
+
+    /* Real numbers: 25.00 cm3 of 0.100 M HCl in the flask, 0.100 M NaOH in
+       the burette, so equivalence falls at 25.00 cm3 added.
+
+       The run starts at 24.50 because a real titration is done twice. You
+       do a rough one to find roughly where it lands, then a careful one
+       where you slow right down near the end. This is the careful one. */
+    var ACID_V = 25.0, ACID_C = 0.100, BASE_C = 0.100;
+    var EQUIV = ACID_V * ACID_C / BASE_C;   // 25.00 cm3
+    var START = 24.50;
+    var DROP = 0.05;                        // one drop from a burette
+    var added = START;
+    var over = false;
+
+    var volOut = $("[data-out='vol']", wrap);
+    var phOut = $("[data-out='ph']", wrap);
+    var msgOut = $("[data-out='msg']", wrap);
+
+    /* Strong acid against strong base. Straight from the mole balance, so
+       the jump near equivalence is the real one rather than a drawn curve. */
+    function ph(v) {
+      var total = ACID_V + v;
+      var molAcid = ACID_V * ACID_C;
+      var molBase = v * BASE_C;
+      var diff = molAcid - molBase;
+      if (Math.abs(diff) < 1e-9) return 7;
+      if (diff > 0) {
+        return -Math.log(diff / total) / Math.LN10;
+      }
+      var pOH = -Math.log((-diff) / total) / Math.LN10;
+      return 14 - pOH;
+    }
+
+    /* Phenolphthalein is colourless below about 8.2, pink through to about
+       10, and deep pink above that. Nothing happens before 8.2, which is
+       why almost the whole run looks like nothing is happening. */
+    function colour(v) {
+      var p = ph(v);
+      if (p < 8.2) return "rgba(250,246,239,0.85)";
+      var s = Math.min(1, (p - 8.2) / 1.8);
+      return "rgba(198," + Math.round(122 - 62 * s) + "," + Math.round(158 - 42 * s) + "," + (0.28 + 0.64 * s) + ")";
+    }
+
+    function draw() {
+      var W = 300, H = 380;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = DEEP; ctx.fillRect(0, 0, W, H);
+
+      // Burette.
+      ctx.strokeStyle = INK; ctx.lineWidth = 1.4;
+      ctx.strokeRect(W / 2 - 11, 16, 22, 170);
+      // A 50 cm3 burette, draining as it goes.
+      var frac = Math.max(0, 1 - added / 50);
+      ctx.fillStyle = "rgba(51,84,59,0.30)";
+      ctx.fillRect(W / 2 - 9, 18 + 166 * (1 - frac), 18, 166 * frac);
+      // Tap and tip.
+      ctx.beginPath();
+      ctx.moveTo(W / 2 - 6, 186); ctx.lineTo(W / 2 + 6, 186);
+      ctx.lineTo(W / 2 + 1.5, 204); ctx.lineTo(W / 2 - 1.5, 204);
+      ctx.closePath(); ctx.fillStyle = INK; ctx.fill();
+
+      // Flask.
+      ctx.beginPath();
+      ctx.moveTo(W / 2 - 9, 236);
+      ctx.lineTo(W / 2 - 9, 262);
+      ctx.lineTo(W / 2 - 62, 344);
+      ctx.lineTo(W / 2 + 62, 344);
+      ctx.lineTo(W / 2 + 9, 262);
+      ctx.lineTo(W / 2 + 9, 236);
+      ctx.closePath();
+      ctx.strokeStyle = INK; ctx.lineWidth = 1.6; ctx.stroke();
+
+      // Contents.
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(W / 2 - 9, 236);
+      ctx.lineTo(W / 2 - 9, 262);
+      ctx.lineTo(W / 2 - 62, 344);
+      ctx.lineTo(W / 2 + 62, 344);
+      ctx.lineTo(W / 2 + 9, 262);
+      ctx.lineTo(W / 2 + 9, 236);
+      ctx.closePath();
+      ctx.clip();
+      ctx.fillStyle = colour(added);
+      ctx.fillRect(W / 2 - 70, 300, 140, 50);
+      ctx.restore();
+
+      ctx.fillStyle = "rgba(51,46,92,0.55)";
+      ctx.font = "11px ui-monospace, monospace";
+      ctx.textAlign = "center";
+      ctx.fillText("NaOH", W / 2, 12);
+    }
+
+    function refresh() {
+      if (volOut) volOut.textContent = added.toFixed(2) + " cm³";
+      if (phOut) phOut.textContent = ph(added).toFixed(1);
+      draw();
+    }
+
+    function say(text, bad) {
+      if (!msgOut) return;
+      msgOut.textContent = text;
+      msgOut.classList.toggle("over", !!bad);
+    }
+
+    function addDrop() {
+      if (over) return;
+      added = Math.round((added + DROP) * 100) / 100;
+      refresh();
+
+      var p = ph(added);
+
+      if (p >= 10.0) {
+        // Deep and permanent. Past the useful endpoint.
+        over = true;
+        say("Gone. That is well past it now, and no amount of swirling brings it back. Rinse out and start again. The reading you would have written down is worthless, so the only honest thing is to do it twice more and take an average of the good ones.", true);
+      } else if (p >= 8.2) {
+        // The first pink that survives swirling. This is the endpoint.
+        say("Stop. That faint pink is staying, and that is your endpoint. Write the reading down before you do anything else.");
+      } else if (added >= EQUIV - 0.10) {
+        say("Watch the flask, not the burette. The pink is flashing where each drop lands and then swirling out. You are one or two drops away.");
+      } else {
+        say("Still nothing to see. It will look like nothing is happening right up until it happens.");
+      }
+    }
+
+    if (reduced.matches) {
+      added = 25.05; refresh();
+      say("Held one drop past equivalence, at the first pink that stays. Adding drops one at a time gets you here, and one more would take it deep pink for good.");
+      $$("[data-act]", wrap).forEach(function (b) { b.hidden = true; });
+      return;
+    }
+
+    refresh();
+    say("You have done the rough run already. This is the careful one, so go a drop at a time.");
+    on($("[data-act='drop']", wrap), "click", addDrop);
+    on($("[data-act='reset']", wrap), "click", function () {
+      added = START; over = false; refresh();
+      say("Rinsed and refilled. A drop at a time again.");
+    });
+  });
+
+
+  /* =====================================================================
+     ENTRY 02, PHASE DIAGRAM
+
+     Two systems. A eutectic with terminal solid solutions, and an
+     isomorphous one with complete solubility. Boundaries are real curves,
+     regions are decided by those curves, and the lever rule is computed
+     from the tie line ends rather than approximated.
+     ===================================================================== */
+
+  guard("phase", function () {
+    var wrap = $("[data-lab='phase']");
+    if (!wrap) return;
+    var canvas = $("canvas.phase-canvas", wrap);
+    var beaker = $("canvas.beaker-canvas", wrap);
+    if (!canvas) { fallback(wrap, "The phase diagram did not load."); return; }
+
+    var ctx = fit(canvas);
+    var bctx = beaker ? fit(beaker) : null;
+
+    var W = 520, H = 420;
+    var PAD = { l: 52, r: 18, t: 20, b: 46 };
+    var PW = W - PAD.l - PAD.r, PH = H - PAD.t - PAD.b;
+
+    var TMIN = 100, TMAX = 1100;
+
+    /* ---- the two systems ---- */
+
+    var eutectic = {
+      kind: "eutectic",
+      tmA: 1000, tmB: 600,
+      xE: 0.58, tE: 380,
+      xAlphaMax: 0.18, xBetaMin: 0.92,
+      xAlphaRT: 0.03, xBetaRT: 0.985,
+      names: { alpha: "α", beta: "β" },
+
+      liquidus: function (x) {
+        // Two branches meeting at the eutectic, each bowed downward.
+        if (x <= this.xE) {
+          var u = x / this.xE;
+          return this.tmA + (this.tE - this.tmA) * Math.pow(u, 0.86);
+        }
+        var v = (x - this.xE) / (1 - this.xE);
+        return this.tE + (this.tmB - this.tE) * Math.pow(v, 0.86);
+      },
+      solidusA: function (x) {         // valid 0 .. xAlphaMax
+        var u = x / this.xAlphaMax;
+        return this.tmA + (this.tE - this.tmA) * Math.pow(u, 0.72);
+      },
+      solidusB: function (x) {         // valid xBetaMin .. 1
+        var u = (1 - x) / (1 - this.xBetaMin);
+        return this.tmB + (this.tE - this.tmB) * Math.pow(u, 0.72);
+      },
+      solvusA: function (t) {          // composition of alpha at temperature t
+        var u = Math.max(0, Math.min(1, (t - TMIN) / (this.tE - TMIN)));
+        return this.xAlphaRT + (this.xAlphaMax - this.xAlphaRT) * Math.pow(u, 0.75);
+      },
+      solvusB: function (t) {
+        var u = Math.max(0, Math.min(1, (t - TMIN) / (this.tE - TMIN)));
+        return this.xBetaRT + (this.xBetaMin - this.xBetaRT) * Math.pow(u, 0.75);
+      }
+    };
+
+    var isomorphous = {
+      kind: "isomorphous",
+      tmA: 1000, tmB: 600,
+      names: { solid: "solid solution" },
+      /* Both curves are the straight line between the two melting points,
+         pulled down by x(1 - x) so they meet exactly at the pure ends and
+         bow apart in the middle. The sag constants are kept below the
+         melting point difference so both curves stay monotonic, which is
+         what lets the tie line inversion below be a safe bisection. */
+      liquidus: function (x) {
+        return this.tmA + (this.tmB - this.tmA) * x - 100 * x * (1 - x);
+      },
+      solidus: function (x) {
+        return this.tmA + (this.tmB - this.tmA) * x - 380 * x * (1 - x);
+      }
+    };
+
+    var sys = eutectic;
+    var pt = { x: 0.50, t: 900 };
+    var lastRegion = "";
+
+    /* ---- geometry ---- */
+
+    function px(x) { return PAD.l + x * PW; }
+    function py(t) { return PAD.t + (1 - (t - TMIN) / (TMAX - TMIN)) * PH; }
+    function ux(p) { return Math.max(0, Math.min(1, (p - PAD.l) / PW)); }
+    function ut(p) {
+      var f = 1 - (p - PAD.t) / PH;
+      return Math.max(TMIN, Math.min(TMAX, TMIN + f * (TMAX - TMIN)));
+    }
+
+    /* Which region are we in, and what are the tie line ends. */
+    function classify(x, t) {
+      if (sys.kind === "isomorphous") {
+        var L = sys.liquidus(x), S = sys.solidus(x);
+        if (t >= L) return { name: "Liquid", phases: ["Liquid"], single: true };
+        if (t <= S) return { name: "Solid solution", phases: ["Solid solution"], single: true };
+        // Tie line: liquid composition on the liquidus, solid on the solidus.
+        var xl = invert(function (q) { return sys.liquidus(q); }, t);
+        var xs = invert(function (q) { return sys.solidus(q); }, t);
+        return {
+          name: "Liquid + solid solution",
+          phases: ["Liquid", "Solid"],
+          single: false,
+          xl: xl, xs: xs, left: Math.min(xl, xs), right: Math.max(xl, xs),
+          leftName: xl < xs ? "Liquid" : "Solid",
+          rightName: xl < xs ? "Solid" : "Liquid"
+        };
+      }
+
+      // Eutectic system.
+      var Lq = sys.liquidus(x);
+      if (t >= Lq) return { name: "Liquid", phases: ["Liquid"], single: true };
+
+      if (t >= sys.tE) {
+        // Above the eutectic isotherm: either a solid solution or liquid plus one.
+        if (x <= sys.xAlphaMax && t <= sys.solidusA(Math.min(x, sys.xAlphaMax))) {
+          return { name: "α solid solution", phases: ["α"], single: true };
+        }
+        if (x >= sys.xBetaMin && t <= sys.solidusB(Math.max(x, sys.xBetaMin))) {
+          return { name: "β solid solution", phases: ["β"], single: true };
+        }
+        if (x < sys.xE) {
+          var xa = invert(function (q) { return sys.solidusA(q); }, t, 0, sys.xAlphaMax);
+          var xlq = invert(function (q) { return sys.liquidus(q); }, t, 0, sys.xE);
+          return {
+            name: "Liquid + α", phases: ["Liquid", "α"], single: false,
+            left: xa, right: xlq, leftName: "α", rightName: "Liquid"
+          };
+        }
+        var xb = invert(function (q) { return sys.solidusB(q); }, t, sys.xBetaMin, 1);
+        var xlq2 = invert(function (q) { return sys.liquidus(q); }, t, sys.xE, 1);
+        return {
+          name: "Liquid + β", phases: ["Liquid", "β"], single: false,
+          left: xlq2, right: xb, leftName: "Liquid", rightName: "β"
+        };
+      }
+
+      // Below the eutectic isotherm.
+      var sa = sys.solvusA(t), sb = sys.solvusB(t);
+      if (x <= sa) return { name: "α solid solution", phases: ["α"], single: true };
+      if (x >= sb) return { name: "β solid solution", phases: ["β"], single: true };
+      return {
+        name: "α + β", phases: ["α", "β"], single: false,
+        left: sa, right: sb, leftName: "α", rightName: "β"
+      };
+    }
+
+    /* Find x where curve(x) === t, by bisection. Every curve is monotonic on
+       the branch it is called with, which is what makes this safe.
+
+       If t lies outside the range the branch actually covers there is no
+       root, so we return the nearer end rather than letting the bisection
+       converge on nonsense. */
+    function invert(curve, t, lo, hi) {
+      lo = lo === undefined ? 0 : lo;
+      hi = hi === undefined ? 1 : hi;
+      var fa = curve(lo) - t, fb = curve(hi) - t;
+      if (fa === 0) return lo;
+      if (fb === 0) return hi;
+      if ((fa < 0) === (fb < 0)) return Math.abs(fa) < Math.abs(fb) ? lo : hi;
+
+      var a = lo, b = hi;
+      for (var i = 0; i < 40; i++) {
+        var m = (a + b) / 2, fm = curve(m) - t;
+        if ((fa < 0) === (fm < 0)) { a = m; fa = fm; } else { b = m; }
+      }
+      return (a + b) / 2;
+    }
+
+    /* ---- drawing ---- */
+
+    function curvePath(fn, from, to) {
+      ctx.beginPath();
+      var steps = 90;
+      for (var i = 0; i <= steps; i++) {
+        var x = from + (to - from) * (i / steps);
+        var t = fn(x);
+        var X = px(x), Y = py(t);
+        if (i === 0) ctx.moveTo(X, Y); else ctx.lineTo(X, Y);
+      }
+    }
+
+    function drawAxes() {
+      ctx.fillStyle = DEEP;
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.strokeStyle = RULE; ctx.lineWidth = 1;
+      for (var t = 200; t <= 1000; t += 200) {
+        ctx.beginPath(); ctx.moveTo(PAD.l, py(t)); ctx.lineTo(W - PAD.r, py(t)); ctx.stroke();
+      }
+      ctx.strokeStyle = INK; ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(PAD.l, PAD.t); ctx.lineTo(PAD.l, H - PAD.b); ctx.lineTo(W - PAD.r, H - PAD.b);
+      ctx.stroke();
+
+      ctx.fillStyle = "#615A6E";
+      ctx.font = "11px ui-monospace, monospace";
+      ctx.textAlign = "right";
+      for (var t2 = 200; t2 <= 1000; t2 += 200) {
+        ctx.fillText(t2 + "°", PAD.l - 7, py(t2) + 4);
+      }
+      ctx.textAlign = "center";
+      ctx.fillText("100% A", PAD.l, H - PAD.b + 18);
+      ctx.fillText("100% B", W - PAD.r, H - PAD.b + 18);
+      ctx.fillText("composition", PAD.l + PW / 2, H - PAD.b + 34);
+
+      ctx.save();
+      ctx.translate(13, PAD.t + PH / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText("temperature", 0, 0);
+      ctx.restore();
+    }
+
+    function drawSystem() {
+      if (sys.kind === "isomorphous") {
+        curvePath(function (x) { return sys.liquidus(x); }, 0, 1);
+        ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.stroke();
+        curvePath(function (x) { return sys.solidus(x); }, 0, 1);
+        ctx.strokeStyle = SAGE; ctx.lineWidth = 2; ctx.stroke();
+
+        ctx.fillStyle = "rgba(97,90,110,0.85)";
+        ctx.font = "11px ui-monospace, monospace";
+        ctx.textAlign = "left";
+        ctx.fillText("liquidus", px(0.13), py(sys.liquidus(0.13)) - 8);
+        ctx.fillText("solidus", px(0.13), py(sys.solidus(0.13)) + 16);
+        return;
+      }
+
+      // Liquidus, both branches.
+      curvePath(function (x) { return sys.liquidus(x); }, 0, 1);
+      ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.stroke();
+
+      // Solidus branches.
+      curvePath(function (x) { return sys.solidusA(x); }, 0, sys.xAlphaMax);
+      ctx.strokeStyle = SAGE; ctx.lineWidth = 2; ctx.stroke();
+      curvePath(function (x) { return sys.solidusB(x); }, sys.xBetaMin, 1);
+      ctx.strokeStyle = SAGE; ctx.lineWidth = 2; ctx.stroke();
+
+      // Solvus lines.
+      ctx.beginPath();
+      for (var i = 0; i <= 60; i++) {
+        var t = TMIN + (sys.tE - TMIN) * (i / 60);
+        var X = px(sys.solvusA(t)), Y = py(t);
+        if (i === 0) ctx.moveTo(X, Y); else ctx.lineTo(X, Y);
+      }
+      ctx.strokeStyle = SAGE; ctx.lineWidth = 1.4; ctx.stroke();
+
+      ctx.beginPath();
+      for (var j = 0; j <= 60; j++) {
+        var t2 = TMIN + (sys.tE - TMIN) * (j / 60);
+        var X2 = px(sys.solvusB(t2)), Y2 = py(t2);
+        if (j === 0) ctx.moveTo(X2, Y2); else ctx.lineTo(X2, Y2);
+      }
+      ctx.strokeStyle = SAGE; ctx.lineWidth = 1.4; ctx.stroke();
+
+      // Eutectic isotherm.
+      ctx.beginPath();
+      ctx.moveTo(px(sys.xAlphaMax), py(sys.tE));
+      ctx.lineTo(px(sys.xBetaMin), py(sys.tE));
+      ctx.strokeStyle = CORR; ctx.lineWidth = 2; ctx.stroke();
+
+      // The eutectic point itself.
+      ctx.beginPath();
+      ctx.arc(px(sys.xE), py(sys.tE), 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = CORR; ctx.fill();
+
+      ctx.fillStyle = "rgba(97,90,110,0.85)";
+      ctx.font = "11px ui-monospace, monospace";
+      ctx.textAlign = "left";
+      ctx.fillText("liquidus", px(0.10), py(sys.liquidus(0.10)) - 8);
+      ctx.fillText("α", px(0.05), py(sys.tE + 180));
+      ctx.fillText("β", px(0.95), py(sys.tE + 180));
+      ctx.textAlign = "center";
+      ctx.fillText("eutectic", px(sys.xE), py(sys.tE) + 18);
+    }
+
+    function drawTieAndPoint(info) {
+      if (!info.single) {
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(px(info.left), py(pt.t));
+        ctx.lineTo(px(info.right), py(pt.t));
+        ctx.strokeStyle = ASIDE; ctx.lineWidth = 1.4; ctx.stroke();
+        ctx.setLineDash([]);
+
+        [info.left, info.right].forEach(function (x) {
+          ctx.beginPath();
+          ctx.arc(px(x), py(pt.t), 3, 0, Math.PI * 2);
+          ctx.fillStyle = ASIDE; ctx.fill();
+        });
+      }
+
+      ctx.beginPath();
+      ctx.arc(px(pt.x), py(pt.t), 7, 0, Math.PI * 2);
+      ctx.fillStyle = BUTTER; ctx.fill();
+      ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.stroke();
+    }
+
+    function drawBeaker(info) {
+      if (!bctx) return;
+      var w = 240, h = 240;
+      bctx.clearRect(0, 0, w, h);
+
+      var x0 = 54, y0 = 24, bw = 132, bh = 190;
+      bctx.strokeStyle = INK; bctx.lineWidth = 1.6;
+      bctx.strokeRect(x0, y0, bw, bh);
+
+      var liquidFrac = 0, solidFrac = 0, twoSolid = false;
+      if (info.single) {
+        if (info.name === "Liquid") liquidFrac = 1;
+        else solidFrac = 1;
+      } else {
+        var span = info.right - info.left;
+        var fLeft = span > 0 ? (info.right - pt.x) / span : 0.5;
+        var fRight = 1 - fLeft;
+        if (info.leftName === "Liquid") { liquidFrac = fLeft; solidFrac = fRight; }
+        else if (info.rightName === "Liquid") { liquidFrac = fRight; solidFrac = fLeft; }
+        else { twoSolid = true; solidFrac = 1; }
+      }
+
+      bctx.save();
+      bctx.beginPath(); bctx.rect(x0, y0, bw, bh); bctx.clip();
+
+      if (twoSolid) {
+        // Two solids sitting together, drawn as two grain populations.
+        var spanB = info.right - info.left;
+        var fA = spanB > 0 ? (info.right - pt.x) / spanB : 0.5;
+        for (var g = 0; g < 90; g++) {
+          var gx = x0 + 8 + ((g * 37) % (bw - 16));
+          var gy = y0 + 12 + ((g * 53) % (bh - 24));
+          var isA = (g / 90) < fA;
+          bctx.beginPath();
+          bctx.arc(gx, gy, 7, 0, Math.PI * 2);
+          bctx.fillStyle = isA ? "rgba(51,84,59,0.42)" : "rgba(140,47,69,0.34)";
+          bctx.fill();
+        }
+      } else {
+        // Liquid pools at the bottom, solid grains sit in it.
+        var liqH = bh * liquidFrac;
+        bctx.fillStyle = "rgba(51,46,92,0.16)";
+        bctx.fillRect(x0, y0 + bh - liqH, bw, liqH);
+
+        var count = Math.round(solidFrac * 34);
+        for (var s = 0; s < count; s++) {
+          var sx = x0 + 14 + ((s * 41) % (bw - 28));
+          var sy = y0 + bh - 14 - ((s * 29) % (bh - 28));
+          bctx.beginPath();
+          for (var v = 0; v < 6; v++) {
+            var a = v * Math.PI / 3 + s;
+            var vx = sx + Math.cos(a) * 9, vy = sy + Math.sin(a) * 9;
+            if (v === 0) bctx.moveTo(vx, vy); else bctx.lineTo(vx, vy);
+          }
+          bctx.closePath();
+          bctx.fillStyle = "rgba(51,84,59,0.40)";
+          bctx.fill();
+          bctx.strokeStyle = SAGE; bctx.lineWidth = 1; bctx.stroke();
+        }
+      }
+      bctx.restore();
+
+      bctx.fillStyle = "#615A6E";
+      bctx.font = "11px ui-monospace, monospace";
+      bctx.textAlign = "center";
+      bctx.fillText("what you would be holding", w / 2, y0 + bh + 24);
+    }
+
+    function drawLever(info) {
+      var box = $("[data-lever]", wrap);
+      if (!box) return;
+      var bars = $(".lever-bars", box);
+      var none = $(".lever-none", box);
+      bars.innerHTML = "";
+
+      if (info.single) {
+        none.hidden = false;
+        return;
+      }
+      none.hidden = true;
+
+      var span = info.right - info.left;
+      var fLeft = span > 0 ? (info.right - pt.x) / span : 0.5;
+      var pairs = [
+        [info.leftName, fLeft],
+        [info.rightName, 1 - fLeft]
+      ];
+
+      pairs.forEach(function (p) {
+        var row = document.createElement("div");
+        row.className = "lever-bar";
+        var name = document.createElement("span");
+        name.textContent = p[0];
+        var track = document.createElement("span");
+        track.className = "lever-track";
+        var fill = document.createElement("span");
+        fill.className = "lever-fill";
+        fill.style.display = "block";
+        fill.style.width = Math.max(0, Math.min(100, p[1] * 100)).toFixed(0) + "%";
+        track.appendChild(fill);
+        var pct = document.createElement("span");
+        pct.textContent = (p[1] * 100).toFixed(0) + "%";
+        row.appendChild(name); row.appendChild(track); row.appendChild(pct);
+        bars.appendChild(row);
+      });
+    }
+
+    var crossings = {
+      "Liquid": "All liquid up here. Too hot for anything to hold together.",
+      "Liquid + α": "You crossed the liquidus. The first solid has appeared, and it is richer in A than the liquid it came out of.",
+      "Liquid + β": "You crossed the liquidus on the B side. Solid is appearing, and it is richer in B than the melt.",
+      "Liquid + solid solution": "You crossed the liquidus. Liquid and solid are sitting together now, and neither has the composition you started with.",
+      "α solid solution": "Past the solidus. The last of the liquid has gone and you are left with one solid phase.",
+      "β solid solution": "Past the solidus. All solid now, one phase, B rich.",
+      "Solid solution": "Past the solidus. All solid, and the two metals are mixed right through each other.",
+      "α + β": "Below the solvus. The solid could not hold all of it in solution any more, so it has separated into two."
+    };
+
+    function render() {
+      var info = classify(pt.x, pt.t);
+      drawAxes();
+      drawSystem();
+      drawTieAndPoint(info);
+      drawBeaker(info);
+      drawLever(info);
+
+      var regionOut = $("[data-out='region']", wrap);
+      var coordsOut = $("[data-out='coords']", wrap);
+      if (regionOut) regionOut.textContent = info.name;
+      if (coordsOut) {
+        coordsOut.textContent = Math.round(pt.x * 100) + "% B · " + Math.round(pt.t) + " °C";
+      }
+
+      if (info.name !== lastRegion) {
+        var msg = $("[data-crossing]", wrap);
+        if (msg) msg.textContent = crossings[info.name] || "";
+        lastRegion = info.name;
+      }
+    }
+
+    /* ---- input ---- */
+
+    function fromEvent(e) {
+      var r = canvas.getBoundingClientRect();
+      var sx = W / r.width, sy = H / r.height;
+      var cx = (e.clientX - r.left) * sx;
+      var cy = (e.clientY - r.top) * sy;
+      pt.x = ux(cx);
+      pt.t = ut(cy);
+      render();
+    }
+
+    var dragging = false;
+    on(canvas, "pointerdown", function (e) {
+      dragging = true;
+      // Capture can throw if the pointer is already gone. Losing capture is
+      // survivable, so it must not take the drag down with it.
+      try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+      fromEvent(e);
+    });
+    on(canvas, "pointermove", function (e) { if (dragging) fromEvent(e); });
+    on(canvas, "pointerup", function (e) {
+      dragging = false;
+      try {
+        if (canvas.hasPointerCapture && canvas.hasPointerCapture(e.pointerId)) {
+          canvas.releasePointerCapture(e.pointerId);
+        }
+      } catch (err) {}
+    });
+    on(canvas, "pointercancel", function () { dragging = false; });
+
+    on(canvas, "keydown", function (e) {
+      var stepX = e.shiftKey ? 0.01 : 0.04;
+      var stepT = e.shiftKey ? 10 : 40;
+      var used = true;
+      if (e.key === "ArrowLeft") pt.x = Math.max(0, pt.x - stepX);
+      else if (e.key === "ArrowRight") pt.x = Math.min(1, pt.x + stepX);
+      else if (e.key === "ArrowUp") pt.t = Math.min(TMAX, pt.t + stepT);
+      else if (e.key === "ArrowDown") pt.t = Math.max(TMIN, pt.t - stepT);
+      else used = false;
+      if (used) { e.preventDefault(); render(); }
+    });
+
+    /* ---- presets ---- */
+
+    function goTo(x, t) {
+      if (reduced.matches) { pt.x = x; pt.t = t; render(); return; }
+      var x0 = pt.x, t0 = pt.t, start = null;
+      function anim(ts) {
+        if (start === null) start = ts;
+        var k = Math.min(1, (ts - start) / 520);
+        var e = 1 - Math.pow(1 - k, 3);
+        pt.x = x0 + (x - x0) * e;
+        pt.t = t0 + (t - t0) * e;
+        render();
+        if (k < 1) requestAnimationFrame(anim);
+      }
+      requestAnimationFrame(anim);
+    }
+
+    $$("[data-preset]", wrap.parentNode).forEach(function (btn) {
+      on(btn, "click", function () {
+        $$("[data-preset]", wrap.parentNode).forEach(function (b) { b.classList.remove("on"); });
+        btn.classList.add("on");
+        var which = btn.getAttribute("data-preset");
+        var msg = $("[data-crossing]", wrap);
+
+        if (which === "complete") {
+          sys = isomorphous;
+          lastRegion = "";
+          // Land inside the lens, so the tie line and the lever rule are
+          // actually on screen rather than the point sitting up in the melt.
+          // At 45 percent B the lens runs from about 726 to 795 degrees.
+          goTo(0.45, 760);
+          if (msg) msg.textContent = "Complete solubility. A and B mix in any proportion, in the solid as well as the liquid, so there is one lens and no eutectic anywhere on it.";
+        } else if (which === "eutectic") {
+          sys = eutectic;
+          lastRegion = "";
+          goTo(eutectic.xE, eutectic.tE + 6);
+          if (msg) msg.textContent = "The eutectic. This mixture melts lower than either metal on its own, and it freezes all at once with no mushy stage, because here the liquidus and solidus meet at a point.";
+        } else {
+          sys = eutectic;
+          lastRegion = "";
+          goTo(0.55, 260);
+          if (msg) msg.textContent = "Partial solubility. Each solid will dissolve a little of the other and no more, so below the solvus the leftover separates out and you hold two solids at once.";
+        }
+      });
+    });
+
+    render();
+
+    if (reduced.matches) {
+      fallback(wrap.parentNode,
+        "Shown at 50 percent B and 900 degrees. Dragging the marker moves through the diagram and the panel updates to show which phases you would be holding and in what proportion.");
+    }
+  });
+
+})();
