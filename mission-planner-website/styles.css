@@ -432,6 +432,10 @@ p{margin:0 0 var(--baseline);max-width:66ch}
   width:100%;background:none;border:0;padding:0;cursor:pointer;
   display:flex;align-items:baseline;gap:1rem;text-align:left;
   font-family:inherit;color:inherit;
+  /* A revised estimate makes .phase-w twice its usual width, and a long title
+     plus that no longer fits on one line at 320. Let the duration drop to its
+     own line rather than push the page sideways. */
+  flex-wrap:wrap;
 }
 .phase-n{
   font-family:var(--f-mono);font-size:.72rem;color:var(--ink-soft);
