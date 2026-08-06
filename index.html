@@ -78,8 +78,54 @@
     <p>That difference is not a curiosity. It changes what we can learn about how materials assemble
     themselves, and it changes what we can build.</p>
 
-    <p>You can turn gravity down yourself below. Watch the shaded ring around the crystal, because
-    that ring is the answer.</p>
+    <p>Before any of that, a crystal has to survive being born. Most of them do not.</p>
+
+    <figure class="fig" id="fig-nucleation">
+      <div class="lab" data-lab="nucleation">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">THE BARRIER</p>
+            <canvas data-view="energy" width="300" height="240"
+              aria-label="Free energy against cluster radius. Surface cost rises as radius squared, bulk payoff falls as radius cubed, and their sum peaks at the critical radius. Raising supersaturation moves that peak left and lowers it."></canvas>
+          </div>
+          <div class="lab-view">
+            <p class="mono view-tag">CLUSTERS, LIVE</p>
+            <canvas data-view="field" width="300" height="240"
+              aria-label="Clusters appearing at random. Most shrink and vanish. Occasionally one crosses the critical radius and runs away, and those are marked as survivors."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <label class="mono" for="s-slider">SUPERSATURATION <b data-out="s">3</b></label>
+          <span class="slider-row">
+            <input id="s-slider" type="range" min="1.2" max="10" step="0.05" value="3" data-s>
+          </span>
+          <p class="mono quiet">Push it up and watch how many more get through.</p>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line depth-not-picture"><span>CRITICAL RADIUS</span> <b data-out="rstar">0</b> nm</p>
+          <p class="mono readout-line depth-only-maths"><span>BARRIER</span> <b data-out="barrier">0</b> kT</p>
+          <p class="mono readout-line depth-only-maths"><span>RATE J</span> <b data-out="rate">0</b> per m³s</p>
+          <p class="mono readout-line"><span>SURVIVED</span> <b data-out="survived">0</b></p>
+          <p class="mono readout-line depth-not-picture"><span>DISSOLVED</span> <b data-out="died">0</b></p>
+        </div>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">A cluster of molecules has two things happening to it at once. Making a
+      surface costs energy and that cost grows with the square of the radius. Being solid rather
+      than dissolved pays energy back and that payoff grows with the cube. Cubes beat squares
+      eventually, so there is a radius, the critical radius, where the cost stops winning. Below it
+      a cluster is more likely to dissolve than to grow. Above it, it runs away. Clusters appear and
+      vanish constantly, and nucleation is just the rare one that gets across.</p>
+      <figcaption class="mono">FIG. 1a · Classical nucleation. The barrier is computed, the individual cluster paths are illustrative.</figcaption>
+    </figure>
+
+    <p>Every survivor there becomes a crystal competing for the same solute, which is why the count
+    matters below. Now the growth itself. You can turn gravity down yourself, and the thing to watch
+    is the shaded ring around the crystal, because that ring is the answer.</p>
 
     <figure class="fig" id="fig-crystal">
       <div class="lab" data-lab="crystal">
@@ -134,7 +180,7 @@
       the crystal, growth slows, and because it is now limited by how fast solute can diffuse in, it
       becomes steady and even. The Péclet number is the ratio of the two kinds of transport, and the
       change happens as it passes one.</p>
-      <figcaption class="mono">FIG. 1 · Growth of one crystal against gravity. Size is computed, the defect figure is illustrative.</figcaption>
+      <figcaption class="mono">FIG. 1b · Growth of one crystal against gravity. Size is computed, the defect figure is illustrative.</figcaption>
     </figure>
   </div>
 </article>
@@ -1244,6 +1290,7 @@
 <!-- defer keeps these in order: the engine, then the page, then the labs it drives -->
 <script src="sim.js" defer></script>
 <script src="app.js" defer></script>
+<script src="lab-nucleation.js" defer></script>
 <script src="lab-crystal.js" defer></script>
 </body>
 </html>

@@ -319,14 +319,26 @@ window.Sim = (function () {
 
     if (!("IntersectionObserver" in window)) { start(s); return s; }
 
+    /* Two labs can sit in one entry, so "whichever fired last" is the wrong
+       rule and it left the second one frozen. Track how much of each is on
+       screen and drive the one the reader is actually looking at. */
+    s.ratio = 0;
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) start(s);
-        else if (active === s) stop(s);
-      });
-    }, { rootMargin: "80px 0px", threshold: 0.01 });
+      entries.forEach(function (e) { s.ratio = e.isIntersecting ? e.intersectionRatio : 0; });
+      pickMostVisible();
+    }, { rootMargin: "80px 0px", threshold: [0, 0.05, 0.25, 0.5, 0.75, 1] });
     io.observe(el);
     return s;
+  }
+
+  function pickMostVisible() {
+    var best = null;
+    sims.forEach(function (s) {
+      if (s.tier >= STATIC_TIER) return;
+      if (!best || (s.ratio || 0) > (best.ratio || 0)) best = s;
+    });
+    if (!best || !(best.ratio > 0)) { if (active) stop(active); return; }
+    if (best !== active) start(best);
   }
 
   /* A page hidden in a background tab does no work at all. */
