@@ -294,8 +294,14 @@ window.Snd = (function () {
     document.body.appendChild(b);
 
     /* One invitation, in her voice, low down, easy to ignore, and it does
-       not come back once it has been waved away. */
-    var inv = document.createElement("div");
+       not come back once it has been waved away.
+
+       It sits IN the page rather than floating over it. The first version
+       was a fixed panel above the toggle and it did exactly what the brief
+       forbids: it landed on top of a paragraph somebody was reading. A note
+       in the margin flow cannot do that, and it is closer to how she writes
+       anyway. */
+    var inv = document.createElement("aside");
     inv.className = "sound-invite";
     inv.setAttribute("role", "note");
     /* Two sentences. On a 320px screen anything longer is a panel sitting on
@@ -307,24 +313,24 @@ window.Snd = (function () {
       '<p class="sound-invite-do">' +
       '<button type="button" class="btn-quiet" data-invite-yes>Turn it on</button>' +
       '<button type="button" class="btn-quiet" data-invite-no>No thanks</button></p>';
-    document.body.appendChild(inv);
+    /* Placed a few entries in, so it is genuinely low down and a reader who
+       never gets that far never meets it. */
+    var entries = document.querySelectorAll("main .entry");
+    var anchor = entries[Math.min(2, entries.length - 1)];
+    if (anchor && anchor.parentNode) {
+      anchor.parentNode.insertBefore(inv, anchor.nextSibling);
+    } else {
+      document.body.appendChild(inv);
+    }
+
     inv.querySelector("[data-invite-yes]").addEventListener("click", function () {
       setOn(true); dismiss();
     });
     inv.querySelector("[data-invite-no]").addEventListener("click", dismiss);
 
-    /* It appears once, after the reader is well into the page, and never on
-       load. If they never get that far they never see it. */
-    var shown = false, gone = false;
-    function maybe() {
-      if (shown || gone) return;
-      var y = window.pageYOffset || document.documentElement.scrollTop;
-      var h = document.documentElement.scrollHeight - window.innerHeight;
-      if (h > 0 && y / h > 0.18) { shown = true; inv.classList.add("is-up"); }
-    }
-    dismiss = function () { gone = true; inv.classList.remove("is-up"); inv.hidden = true; };
-    window.addEventListener("scroll", maybe, { passive: true });
-    maybe();
+    dismiss = function () {
+      if (inv.parentNode) inv.parentNode.removeChild(inv);
+    };
   }
 
   /* Replaced by build() once the invitation exists. */
