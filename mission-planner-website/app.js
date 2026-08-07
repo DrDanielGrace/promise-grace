@@ -1323,8 +1323,16 @@ function setCell(kind){
   $('#cell-type').textContent=info[0];
   $('#cell-count').textContent=info[1];
   $('#cell-pack').textContent=info[2];
+
+  /* Nothing on screen said which of the three was showing except the
+     readout, so the buttons now carry it, in the markup as well as in the
+     styling. */
+  $$('[data-cell]').forEach(function(b){
+    b.setAttribute('aria-pressed', String(b.getAttribute('data-cell')===kind));
+  });
 }
 $$('[data-cell]').forEach(function(b){
+  b.setAttribute('aria-pressed','false');
   b.addEventListener('click',function(){ setCell(b.getAttribute('data-cell')); });
 });
 
@@ -1363,6 +1371,76 @@ $('#start-phase0').addEventListener('click',function(){
   $('#plan').scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});
 });
 
+/* ---------------- shareable state ----------------
+   Everything anybody changed here goes in the address bar, so a lecturer
+   who sets one of these up the way they want it can send the link rather
+   than send instructions. Nothing is written to storage, which is the same
+   rule the rest of this page follows.
+
+   Only values that have been moved off their default are written, so a
+   visitor who touches nothing gets a clean URL. */
+var URL_KEYS = [
+  { k:'ph',  id:'ph-conc',     def:'70'  },
+  { k:'arr', id:'arr-t',       def:'300' },
+  { k:'bg',  id:'bg-wl',       def:'550' },
+  { k:'bud', id:'bud-gap',     def:'112' },
+  { k:'brt', id:'bragg-theta', def:'22'  },
+  { k:'brd', id:'bragg-d',     def:'20'  }
+];
+var urlHold=null;
+function writeUrl(){
+  if(!window.history||!history.replaceState) return;
+  if(urlHold) return;                       /* dragging fires a lot */
+  urlHold=setTimeout(function(){
+    urlHold=null;
+    var p=new URLSearchParams();
+    URL_KEYS.forEach(function(o){
+      var el0=$('#'+o.id);
+      if(el0 && el0.value!==o.def) p.set(o.k, el0.value);
+    });
+    if(sqTandem) p.set('sq', $('#sq-gap').value+','+$('#sq-gap2').value);
+    else if($('#sq-gap') && $('#sq-gap').value!=='134') p.set('sq', $('#sq-gap').value);
+    var cell=$('[data-cell][aria-pressed="true"]');
+    if(cell && cell.getAttribute('data-cell')!=='sc') p.set('cell', cell.getAttribute('data-cell'));
+    var q=p.toString();
+    history.replaceState(null,'', q ? '?'+q+location.hash : location.pathname+location.hash);
+  },250);
+}
+function readUrl(){
+  var p=new URLSearchParams(location.search);
+  URL_KEYS.forEach(function(o){
+    if(!p.has(o.k)) return;
+    var el0=$('#'+o.id); if(!el0) return;
+    el0.value=p.get(o.k);
+    el0.dispatchEvent(new Event('input',{bubbles:true}));
+  });
+  if(p.has('sq') && $('#sq-gap')){
+    var parts=String(p.get('sq')).split(',');
+    $('#sq-gap').value=parts[0];
+    if(parts.length>1 && $('#sq-add')){
+      $('#sq-gap2').value=parts[1];
+      $('#sq-add').click();                 /* switches the pair on */
+      $('#sq-gap').value=parts[0];          /* the toggle sets its own defaults */
+      $('#sq-gap2').value=parts[1];
+    }
+    drawSQ();
+  }
+  if(p.has('cell')){
+    var b=$('[data-cell="'+p.get('cell')+'"]');
+    if(b) b.click();
+  }
+  /* A shared link is a link to a configuration somebody wants seen, so the
+     visualisation it points at is opened rather than left behind a
+     prediction they never made. */
+  if(p.toString()){
+    $$('.viz-body[hidden]').forEach(function(b){ b.hidden=false; });
+    $$('.annotation[hidden]').forEach(function(a){ a.hidden=false; });
+  }
+}
+$$('input[type=range]').forEach(function(i){ i.addEventListener('input', writeUrl); });
+$$('[data-cell]').forEach(function(b){ b.addEventListener('click', writeUrl); });
+if($('#sq-add')) $('#sq-add').addEventListener('click', writeUrl);
+
 /* ---------------- go ---------------- */
 renderStatus();
 renderPhases();
@@ -1371,5 +1449,6 @@ renderWriter();
 refresh();
 initCrystal();
 initCell();
+readUrl();          /* last, so every control it touches already exists */
 
 })();

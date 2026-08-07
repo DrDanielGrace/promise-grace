@@ -774,3 +774,9 @@ details[open]>summary::before{content:'\2212'}
   }
   .topbar-nav::-webkit-scrollbar{display:none}
 }
+
+/* Which unit cell is showing, said by the button and not only by the
+   readout. Shape as well as colour: the pressed one gains a filled edge. */
+[data-cell][aria-pressed="true"]{
+  border-color:var(--sage);background:var(--sage);color:#fff;
+}
