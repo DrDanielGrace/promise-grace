@@ -748,3 +748,12 @@ summary::marker{content:''}
 summary::-webkit-details-marker{display:none}
 summary::before{content:'+';font-family:var(--f-mono);opacity:.65}
 details[open]>summary::before{content:'\2212'}
+
+/* ---------- telemetry, two owners kept apart ---------- */
+.tel-group{
+  font-family:var(--f-mono);font-size:.62rem;letter-spacing:.13em;
+  color:var(--ink-soft);margin:1rem 0 .2rem;
+  border-bottom:1px solid var(--rule);padding-bottom:.25rem;
+}
+.tel-group:first-child{margin-top:0}
+.status-age{color:var(--correction);display:inline}

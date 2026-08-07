@@ -420,21 +420,55 @@ function defectList(){
   return out;
 }
 
-/* ---------------- telemetry ---------------- */
+/* ---------------- the status line ----------------
+   The day count is worked out from the nucleation date rather than typed,
+   so it cannot go stale. Only the phase and the sentence are hand written,
+   and the page says how old the sentence is rather than letting an old one
+   pass as current. */
+function daysRunning(){
+  return Math.max(0,Math.floor((Date.now()-NUCLEATED.getTime())/86400000))+1;
+}
+function renderStatus(){
+  var el0=$('.status-now'); if(!el0) return;
+  var phase=el0.getAttribute('data-phase')||'?';
+  var said=el0.getAttribute('data-said');
+  var line=$('#status-line');
+  if(line){
+    var txt=line.textContent;
+    var rest=txt.replace(/^Phase\s+\d+,\s*day\s+\d+\.\s*/,'');
+    line.textContent='Phase '+phase+', day '+daysRunning()+'. '+rest;
+  }
+  var age=$('#status-age');
+  if(age && said){
+    var d=Math.floor((Date.now()-new Date(said+'T00:00:00').getTime())/86400000);
+    age.textContent = d>14
+      ? ' I wrote that sentence '+d+' days ago and have not updated it since, so treat it as out of date.'
+      : '';
+  }
+}
+
+/* ---------------- telemetry ----------------
+   Two owners, kept apart. The top of the panel is my run. Everything under
+   it is the reader's crystal, which starts empty because they have just
+   arrived. Mixing the two is what made this panel read as a contradiction:
+   zeros beside a status line saying phase two. */
 function refresh(){
   var t=totals();
-  var days=Math.max(0,Math.floor((Date.now()-NUCLEATED.getTime())/86400000));
+  var days=daysRunning();
   $('#t-atoms').textContent=t.atoms;
   $('#t-defects').textContent=t.defects;
   $('#t-phase').textContent=t.phase;
   $('#t-days').textContent=days;
+  var mine=$('.status-now');
+  if($('#t-myphase') && mine) $('#t-myphase').textContent=mine.getAttribute('data-phase')||'?';
 
   var hrs=0; for(var k in S.hours) hrs+=S.hours[k]||0;
   $('#t-growth').textContent = !t.any ? 'not started' : (hrs>20?'steady':(hrs>5?'slow':'just nucleated'));
 
   $('#crystal-alt').textContent =
-    'The crystal currently has '+t.atoms+' atoms and '+t.defects+
-    ' defects, at phase '+t.phase+', '+days+' days since it started growing.'+
+    'Your crystal currently has '+t.atoms+' atoms and '+t.defects+
+    ' defects, at phase '+t.phase+'. It starts empty and grows as you tick topics off. '+
+    'Separately, my own run is on day '+days+'.'+
     (t.defects? ' The defects are: '+defectList().join(' ') : '');
 
   buildCrystal();
@@ -1270,6 +1304,7 @@ $('#start-phase0').addEventListener('click',function(){
 });
 
 /* ---------------- go ---------------- */
+renderStatus();
 renderPhases();
 renderPapers();
 renderWriter();

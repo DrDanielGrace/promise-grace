@@ -31,6 +31,7 @@
     <a href="#stalactite">Stalactite</a>
     <a href="#explaining">Explaining</a>
     <a href="#contact">Contact</a>
+    <a href="contents.html">Contents</a>
     <button type="button" class="hurry-open" data-hurry>In a hurry?</button>
   </nav>
 </header>
@@ -51,6 +52,7 @@
 
   <p class="cover-links">
     <a class="ulink" href="#question">Open the notebook ↓</a>
+    <a class="ulink" href="contents.html">Contents</a>
     <a class="ulink" href="assets/promise-grace-research-cv.pdf" download="Promise Grace Research CV.pdf" data-cv>Download CV</a>
   </p>
 
@@ -693,8 +695,47 @@
       <figcaption class="mono">FIG. 2 · Speculative. This is what I think would happen, not what I know.</figcaption>
     </figure>
 
+    <!-- THE OPEN QUESTION
+         This block is built to survive being wrong. The prediction is written
+         down and dated on the left. The right hand side is empty and stays
+         empty until the paper turns up, and then whatever it says goes in
+         there, including if it says I was wrong. To fill it in, replace the
+         contents of .answer-pending with the finding and put the date and the
+         citation in .answer-source. Do not edit the prediction. That is the
+         whole point of it being there. -->
+    <div class="ledger" id="stalactite-ledger">
+      <div class="ledger-col ledger-said">
+        <p class="mono ledger-head">WHAT I PREDICTED, 2 AUGUST 2026</p>
+        <p>Without gravity the drop never falls, so nothing builds downward. I think the mineral
+        comes out of solution all round the bead instead, and you get a rounded shell rather than a
+        spike. I also think it comes out cleaner, because nothing is sinking and nothing is settling
+        unevenly.</p>
+        <p class="hand aside-note">Written before I looked for the answer, on purpose.</p>
+      </div>
+      <div class="ledger-col ledger-found">
+        <p class="mono ledger-head">WHAT THE ANSWER TURNED OUT TO BE</p>
+        <p class="answer-pending">Still empty. I have not found the paper yet, and I am not going to
+        write anything here until I do.</p>
+        <p class="mono answer-source quiet">Nothing to cite yet.</p>
+      </div>
+    </div>
+
+    <p>I am leaving that second column visibly empty rather than quietly dropping the question,
+    because the honest ending to this is the one where somebody shows me I had it backwards. If
+    that happens it goes in the box next to my prediction, in my own site, with my prediction still
+    sitting there beside it. That seems like the least I can do for being confident in public.</p>
+
     <p class="invite">If you know what actually happens here, or you know the paper I have not
     found, I would really like you to tell me.</p>
+
+    <p class="answer-do">
+      <a class="btn-answer" id="stalactite-mail"
+         href="mailto:promisetosingrace@gmail.com?subject=The%20stalactite%20question&amp;body=Hello%20Promise%2C%0A%0AAbout%20your%20open%20question%20on%20what%20forms%20when%20a%20stalactite%20cannot%20drip%3A%0A%0A%0A%0A%28If%20you%20have%20a%20paper%2C%20a%20DOI%20or%20a%20title%20is%20plenty.%29%0A%0A">
+        Tell me what actually happens
+      </a>
+      <span class="mono quiet">Opens an email with the subject already written. Two clicks and you
+      have said it.</span>
+    </p>
   </div>
 </article>
 
@@ -1559,6 +1600,11 @@
 <footer class="closing">
   <p class="closing-line">If any of this is close to what you work on, tell me. I would rather have
   the conversation than get it right on my own.</p>
+  <p class="closing-links">
+    <a class="ulink" href="contents.html">Contents</a>
+    <a class="ulink" href="simulations.html">Every simulation</a>
+    <a class="ulink" href="mission-planner-website/index.html">What I am learning</a>
+  </p>
   <p class="mono colophon">Promise Oluwatosin Grace · Lagos · 2026</p>
 </footer>
 
@@ -1622,6 +1668,7 @@
 <script src="sim.js" defer></script>
 <script src="sound.js" defer></script>
 <script src="pages.js" defer></script>
+<script src="structure.js" defer></script>
 <script src="app.js" defer></script>
 <script src="lab-nucleation.js" defer></script>
 <script src="lab-crystal.js" defer></script>

@@ -46,11 +46,21 @@
     <p>This page is the whole thing. The plan I am following, where I am in it, what I got wrong, and the things I built to understand it. Nothing here is locked. If you want to follow the same plan, everything you need is on this page.</p>
   </div>
 
-  <!-- STATUS -->
+  <!-- STATUS
+       TO UPDATE THIS: edit the two data attributes on .status-now below, and
+       nothing else. data-phase is which phase I am on. data-said is the date
+       I last wrote the sentence, in YYYY-MM-DD. The day count is worked out
+       from the nucleation date in app.js, so it can never go stale, and if
+       the sentence is more than two weeks old the page says so by itself
+       rather than quietly pretending it is current. -->
   <div class="status" aria-live="polite">
     <p class="status-old">Phase 0, day 3. Still deciding whether I actually need calculus.</p>
     <p class="status-old">Phase 1, day 9. Doping finally made sense this morning.</p>
-    <p class="status-now"><span class="status-label">RIGHT NOW</span> Phase 2, day 4. Reading about why perovskites fall apart in sunlight.</p>
+    <p class="status-now" data-phase="2" data-said="2026-08-04">
+      <span class="status-label">RIGHT NOW</span>
+      <span id="status-line">Phase 2, day 4. Reading about why perovskites fall apart in sunlight.</span>
+      <span class="status-age" id="status-age"></span>
+    </p>
   </div>
 </section>
 
@@ -65,15 +75,19 @@
       <div id="crystal-canvas" role="img" aria-describedby="crystal-alt"></div>
       <p class="defect-tip" id="defect-tip" hidden></p>
       <p class="run-id">RUN 001 · NUCLEATED 2026-08-01</p>
-      <noscript><p class="fallback">My progress is drawn here as a crystal that grows as I finish topics, and carries a visible defect everywhere I struggled. It needs JavaScript. The telemetry beside this describes its current state.</p></noscript>
+      <noscript><p class="fallback">A crystal is drawn here that grows as you tick topics off, and carries a visible defect everywhere you marked something as hard. It needs JavaScript, and it starts empty because you have not ticked anything yet. The panel beside it describes its current state.</p></noscript>
     </div>
 
     <div class="telemetry" id="telemetry">
+      <p class="tel-group">MY RUN</p>
+      <div class="tel-row"><span>DAY OF THE RUN</span><b id="t-days">1</b></div>
+      <div class="tel-row"><span>PHASE I AM ON</span><b id="t-myphase">2</b></div>
+
+      <p class="tel-group">YOUR CRYSTAL</p>
       <div class="tel-row"><span>ATOMS</span><b id="t-atoms">0</b></div>
       <div class="tel-row"><span>DEFECTS</span><b id="t-defects">0</b></div>
       <div class="tel-row"><span>PHASE</span><b id="t-phase">0</b></div>
-      <div class="tel-row"><span>DAYS SINCE NUCLEATION</span><b id="t-days">0</b></div>
-      <div class="tel-row"><span>GROWTH</span><b id="t-growth">steady</b></div>
+      <div class="tel-row"><span>GROWTH</span><b id="t-growth">not started</b></div>
       <div class="tel-controls">
         <button type="button" id="spin-toggle" class="btn-quiet">Pause rotation</button>
       </div>
@@ -82,7 +96,8 @@
   </div>
 
   <div class="crystal-note">
-    <p>Every topic I finish adds atoms. Every topic that fought me leaves a defect in the lattice, and the defects do not go away. You can hover one to see what caused it.</p>
+    <p>That crystal is yours, not mine, and it is empty because you have just arrived. Every topic <em>you</em> tick off in the plan adds atoms to it. Every topic you mark as one that fought you leaves a defect in the lattice, and the defects do not go away. You can hover one to see what caused it.</p>
+    <p>I had this the wrong way round for a while. The page said the crystal was mine while the code was quietly drawing yours, so it sat there at zero atoms next to a note saying I was on phase two. Two people's numbers in one readout is worse than a stale one, so they are separated now. The top two lines are mine. Everything under them is yours.</p>
     <p class="crystal-punch">Crystals grown on Earth come out flawed because they grow in bad conditions. Convection stirring the solution, gravity pulling everything down, nothing ever still. Grow the same crystal in microgravity and it comes out clean. Mine has defects in it because I learned this on a school laptop, in the evenings, after teaching all day. Imperfect conditions.</p>
   </div>
 </section>

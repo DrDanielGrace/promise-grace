@@ -1364,3 +1364,180 @@ details.assumptions > summary {
   .lab.is-instrument .mono,
   .lab.is-instrument .view-tag { color: #000; }
 }
+
+
+/* =====================================================================
+   THE OPEN QUESTION LEDGER
+
+   A prediction on the left, and a column on the right that is empty and
+   is meant to look empty. Publishing your own disconfirmed prediction is
+   one of the most credible things a young researcher can do, and it only
+   works if the slot was built before the answer arrived.
+   ===================================================================== */
+.ledger {
+  display: grid; gap: 1rem;
+  margin: 0 0 var(--baseline);
+  max-width: var(--measure);
+}
+@media (min-width: 46rem) { .ledger { grid-template-columns: 1fr 1fr; } }
+
+.ledger-col { padding: 0.9rem 1rem; border-radius: 3px 8px 4px 7px; }
+.ledger-said { background: var(--paper-deep); border-left: 2px solid var(--ink); }
+/* Dashed, because a dashed edge reads as unfinished on its own, without
+   needing a colour to say so. */
+.ledger-found { border: 1px dashed var(--rule); }
+.ledger-head { color: var(--ink-soft); margin: 0 0 0.5rem; }
+.ledger-col p { max-width: none; }
+.ledger-col p:last-child { margin-bottom: 0; }
+.answer-pending { color: var(--ink-soft); font-style: italic; }
+
+.answer-do {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
+  max-width: var(--measure);
+}
+.btn-answer {
+  display: inline-flex; align-items: center;
+  min-height: 2.75rem; padding: 0.5rem 1rem;
+  font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.04em;
+  background: var(--sage); color: var(--paper);
+  border-radius: 4px; text-decoration: none;
+}
+.btn-answer:hover { text-decoration: underline; }
+.answer-do .mono { flex: 1 1 16rem; }
+
+
+/* ---------- reading time and per entry links ---------- */
+.reading-time {
+  margin: 0 0 var(--baseline);
+  max-width: var(--measure);
+}
+
+.entry-no { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
+.entry-link { display: inline-flex; align-items: center; gap: 0.5rem; }
+.entry-link-btn {
+  font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.05em;
+  background: none; border: 1px solid var(--rule); border-radius: 3px;
+  color: var(--sage); cursor: pointer; text-decoration: none;
+  min-height: 2.75rem; padding: 0 0.7rem;
+  display: inline-flex; align-items: center;
+}
+.entry-link-btn:hover { border-color: var(--sage); }
+.entry-link-msg { color: var(--aside); font-size: 1rem; }
+
+@media print {
+  .entry-link { display: none; }
+  .reading-time { display: none; }
+}
+
+
+/* =====================================================================
+   THE CONTENTS AND SIMULATIONS PAGES
+   Same paper, same pens, no page turning. They are lists, not chapters.
+   ===================================================================== */
+.page-plain .sheet { padding-bottom: calc(var(--baseline) * 3); }
+
+.toc { list-style: none; margin: 0; padding: 0; }
+.toc-row {
+  display: grid; gap: 0.15rem 1rem;
+  grid-template-columns: 2.5rem 1fr;
+  padding: calc(var(--baseline) * 0.7) 0;
+  border-bottom: 1px solid var(--rule);
+  max-width: var(--measure);
+}
+.toc-no { grid-row: 1 / span 3; color: var(--ink-soft); margin: 0; }
+.toc-title { margin: 0; font-family: var(--f-display); font-size: 1.15rem; }
+.toc-title a { text-decoration: none; border-bottom: 1.5px solid var(--sage); }
+.toc-note { margin: 0; color: var(--aside); font-size: 1.05rem; }
+.toc-what { margin: 0.2rem 0 0; font-size: 0.98rem; max-width: none; }
+
+.simlist { list-style: none; margin: 0; padding: 0; counter-reset: sim; }
+.simlist > li {
+  padding: calc(var(--baseline) * 0.8) 0;
+  border-bottom: 1px solid var(--rule);
+  max-width: var(--measure);
+}
+.sim-name { margin: 0 0 0.25rem; font-family: var(--f-display); font-size: 1.12rem; }
+.sim-name a { text-decoration: none; border-bottom: 1.5px solid var(--sage); }
+.sim-line { margin: 0 0 0.4rem; max-width: none; }
+.sim-tag { color: var(--ink-soft); font-size: 0.6875rem; letter-spacing: 0.08em; margin: 0; }
+
+.plain-list { list-style: none; margin: 0; padding: 0; max-width: var(--measure); }
+.plain-list > li { padding: calc(var(--baseline) * 0.6) 0; border-bottom: 1px solid var(--rule); }
+.plain-list .quiet { display: block; font-size: 0.95rem; margin-top: 0.2rem; }
+
+
+/* =====================================================================
+   PRINT
+
+   Professors print. What comes out has to be readable on paper without
+   the reader having any of the things a screen gives them: no animation,
+   no hover, no clicking a link to find out where it goes.
+   ===================================================================== */
+@media print {
+  /* Paper is already paper. Drop the ruling, it costs toner and gains
+     nothing once the page is physically ruled by nothing. */
+  .entry-main, .cover {
+    background-image: none;
+    padding-left: 0;
+  }
+  .entry-main::before, .cover::before { display: none; }
+
+  body {
+    background: #fff; color: #000;
+    font-size: 10.5pt; line-height: 1.45;
+  }
+  .sheet { max-width: none; padding: 0; }
+
+  /* Everything you cannot press on paper */
+  .topbar, .skip, .hurry, .hurry-open, .sound-toggle, .sound-invite,
+  .pages-toggle, .page-edges, .listen-btn, .listen-what, .entry-link,
+  .reading-time, .depth, .lab-controls, .controls, .stepper,
+  .signup, .signup-row, .scan-zoom, .predict-opts {
+    display: none !important;
+  }
+
+  /* An interactive becomes its static fallback and its caption, which is
+     exactly what the reduced motion reader and the noscript reader get,
+     so there is one fallback and it cannot rot unnoticed. */
+  .lab canvas, .two-panel canvas, .fig canvas { display: none; }
+  .nojs-note {
+    display: block !important;
+    border-left: 2px solid #999; padding-left: 0.8rem;
+    font-size: 10pt;
+  }
+  figcaption { font-size: 9pt; color: #333; }
+
+  /* Dark panels invert rather than printing as a slab of toner. */
+  .lab.is-instrument, .spectral-panel, .tele-dark {
+    background: #fff !important; color: #000 !important; border-color: #999 !important;
+  }
+  .lab.is-instrument *, .tele-dark * { color: #000 !important; }
+
+  /* Scans are the most credible thing here, so they print large enough to
+     actually read, and the transcription prints alongside. */
+  .scan-figure img { max-width: 100%; width: 100%; }
+  .transcript { display: block !important; }
+  .transcript > summary { display: none; }
+  .transcript-body { display: block !important; }
+  details { display: block; }
+  details > summary { display: none; }
+  details > *:not(summary) { display: block !important; }
+
+  /* A link on paper is a dead end unless it says where it goes. */
+  a[href^="http"]::after,
+  a[href^="mailto"]::after {
+    content: " (" attr(href) ")";
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 8.5pt;
+    word-break: break-all;
+  }
+  /* Internal anchors have nowhere to go on paper, so they say nothing. */
+  a[href^="#"]::after { content: ""; }
+
+  .entry { page-break-inside: auto; break-inside: auto; }
+  h2 { page-break-after: avoid; break-after: avoid; }
+  figure { page-break-inside: avoid; break-inside: avoid; }
+
+  .ledger { display: block; }
+  .ledger-col { border: 1px solid #999; margin-bottom: 0.5rem; }
+}
