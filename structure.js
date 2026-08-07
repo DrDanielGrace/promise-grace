@@ -29,9 +29,14 @@
     var n = 0;
     Array.prototype.slice.call(main.querySelectorAll(".entry-main, .cover"))
       .forEach(function (el) {
+        /* Counting words by cloning was quietly defeating lazy loading.
+           cloneNode copies the src attribute, and a detached image with a
+           src still fetches, so counting the words on the page was pulling
+           down a 96 KB scan that nobody had scrolled anywhere near. Strip
+           the images out of the clone first. They contain no words. */
         var clone = el.cloneNode(true);
         Array.prototype.slice.call(
-          clone.querySelectorAll("canvas, .lab, script, style, .nojs-note, noscript")
+          clone.querySelectorAll("img, picture, source, canvas, .lab, script, style, .nojs-note, noscript")
         ).forEach(function (x) { if (x.parentNode) x.parentNode.removeChild(x); });
         var t = clone.textContent || "";
         n += t.split(/\s+/).filter(Boolean).length;
