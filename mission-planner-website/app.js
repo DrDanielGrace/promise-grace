@@ -1500,6 +1500,18 @@ refresh();
 initCrystal();
 initCell();
 buildDepth();
+
+/* Draw every visualisation once at load, even though they all start inside
+   a hidden body. Without this their readouts sit at whatever was typed into
+   the HTML until somebody touches a slider, and a link shared at maths depth
+   opened on "Ea read back off it = 0" because drawArr had never run. Numbers
+   on this page should be computed from the first frame, not from a default
+   somebody typed and might not keep up to date. */
+if($('#arr-c1'))     drawArr();
+if($('#bud-canvas')) drawBudget();
+if($('#sq-canvas'))  drawSQ();
+if($('#bragg-canvas')) drawBragg();
+
 readUrl();          /* last, so every control it touches already exists */
 
 })();
