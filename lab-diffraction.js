@@ -341,10 +341,32 @@
     });
   });
 
+  /* ---- the pattern, played -----------------------------------------------
+     Position becomes pitch, and the computed width becomes how far the tone
+     is smeared. The loudness is the integrated intensity, amp times beta,
+     which is what a peak actually contributes however wide it is. Nothing
+     here is invented for the sound: it is the same three numbers the picture
+     is drawn from. */
+  var listenBtn = host.querySelector('[data-listen="diffraction"]');
+  if (listenBtn) {
+    listenBtn.addEventListener("click", function () {
+      if (!window.Snd) return;
+      if (!Snd.enabled()) Snd.set(true);
+      var ps = peaks().map(function (p) {
+        var b = betaTotal(p.theta);
+        return { twoTheta: p.twoTheta, width: b, integrated: 1 / (1 + p.s * 0.16) };
+      });
+      var top = ps.reduce(function (m, p) { return Math.max(m, p.integrated); }, 0.0001);
+      Snd.pattern(ps, { lo: 20, hi: 145, span: 2.6,
+                        amp: function (p) { return p.integrated / top; } });
+    });
+  }
+
   var sizeInput = host.querySelector("[data-size]");
   if (sizeInput) {
     sizeInput.addEventListener("input", function () {
       D = parseFloat(sizeInput.value); fromGrowth = null; readout(); draw(); Sim.writeUrl();
+      if (window.Snd) Snd.tick();
     });
     Sim.stepper(sizeInput, { label: "crystallite size" });
   }

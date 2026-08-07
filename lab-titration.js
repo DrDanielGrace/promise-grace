@@ -235,10 +235,42 @@
       readout(); draw(); Sim.writeUrl();
     });
   });
+  /* ---- sound, and only where it says something --------------------------
+     The drop is a recording. The endpoint tone is synthesised, because it
+     has to go sour by exactly the amount you overshot by, and no recording
+     can do that. Colour turning is the signal a student actually reads, so
+     the tone fires when the indicator is half turned, not at equivalence. */
+  var wasTurned = false;
+  function listen() {
+    if (!window.Snd || !Snd.enabled()) { wasTurned = colourFraction() >= 0.5; return; }
+    var turned = colourFraction() >= 0.5;
+    if (turned && !wasTurned) {
+      /* The same number the readout calls ERROR: how far the colour turning
+         is from where the reaction actually finished. Sour in either
+         direction, because the expensive mistake in this lab is methyl
+         orange on a weak acid, and that one turns far too EARLY. A tone that
+         only went sour on an overshoot would stay sweet through the worst
+         reading on the page. */
+      var ve = equivalenceVolume();
+      var err = Math.abs(endpointVolume() - ve) / ve;
+      if (err > 0.01) {
+        Snd.tone({ f: 392, dur: 0.9, gain: 0.16, sour: Math.min(0.03 + err * 0.5, 0.22) });
+      } else {
+        Snd.tone({ f: 392, dur: 0.7, gain: 0.17 });
+        Snd.tone({ f: 588, dur: 0.5, gain: 0.07 });
+      }
+    }
+    wasTurned = turned;
+  }
+
   var vIn = host.querySelector("[data-vb]");
   if (vIn) {
     vIn.max = String(equivalenceVolume() * 2);
-    vIn.addEventListener("input", function () { Vb = parseFloat(vIn.value); readout(); draw(); });
+    vIn.addEventListener("input", function () {
+      Vb = parseFloat(vIn.value); readout(); draw();
+      if (window.Snd) Snd.tick();
+      listen();
+    });
     Sim.stepper(vIn, { label: "volume added" });
   }
   var drop = host.querySelector('[data-act="drop"]');
@@ -246,10 +278,13 @@
     Vb = Math.min(Vb + 0.05, equivalenceVolume() * 2);
     if (vIn) vIn.value = String(Vb);
     readout(); draw();
+    if (window.Snd) Snd.sample("drop", { gain: 0.4, gap: 90 });
+    listen();
   });
   var rinse = host.querySelector('[data-act="rinse"]');
   if (rinse) rinse.addEventListener("click", function () {
     Vb = 0; if (vIn) vIn.value = "0"; readout(); draw();
+    wasTurned = false;
   });
 
   var p = new URLSearchParams(location.search);

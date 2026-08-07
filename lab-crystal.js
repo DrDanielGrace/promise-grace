@@ -55,6 +55,7 @@
   var strainProxy = 0;
   var tier = { agents: 1, extras: true, res: null };
   var running = true;
+  var shimmerAcc = 0;       // paces the growth sound off the computed rate
 
   function u()  { return U_1G * g; }
   function Pe() { return u() * R / D; }
@@ -265,6 +266,15 @@
           hist.push({ t: t, rate: rate });
           if (hist.length > 220) hist.shift();
         }
+        /* Atoms arriving on the face. Under gravity the flow keeps feeding it
+           and you hear it often. Turn gravity down, the depleted shell builds,
+           the rate falls away, and it thins out to almost nothing. The sound
+           carries the same story the growth curve does. */
+        if (window.Snd && Snd.enabled()) {
+          var s = Math.min(rate * 1e6 / 3, 1);
+          shimmerAcc += dt * (0.7 + s * 9);
+          if (shimmerAcc >= 1) { shimmerAcc = 0; Snd.shimmer(s); }
+        }
         if (R >= R_MAX) { running = false; handoff(); }
       }
       flowPhase += dt * (0.4 + g * 2.2);
@@ -303,6 +313,7 @@
       g = parseFloat(slider.value);
       reset(); readout(); drawAll();
       Sim.writeUrl();
+      if (window.Snd) Snd.tick();
     });
     Sim.stepper(slider, { label: "gravity" });
   }

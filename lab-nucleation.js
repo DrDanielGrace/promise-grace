@@ -48,6 +48,7 @@
   var survivors = 0, died = 0;
   var tier = { agents: 1, extras: true, res: null };
   var spawnAcc = 0;
+  var listening = false;      // the sonification, off until asked for
 
   function dGv() { return kT * Math.log(Math.max(S, 1.0001)) / VM; }
   function rStar() { return 2 * GAMMA / dGv(); }
@@ -186,8 +187,17 @@
       var noise = gauss() * 0.42;
       c.r += (lean + noise) * rs * dt * 2.4;
 
+      /* A cluster dissolving makes no sound. That is not an omission, it is
+         the information: almost all of them go this way and you are meant to
+         hear how rarely the counter clicks. */
       if (c.r <= rs * 0.04) { clusters.splice(i, 1); died++; continue; }
-      if (c.r > rs * 2.3 && !c.escaped) { c.escaped = true; survivors++; }
+      if (c.r > rs * 2.3 && !c.escaped) {
+        c.escaped = true; survivors++;
+        if (listening && window.Snd && Snd.enabled()) {
+          Snd.crackle(Math.min(c.r / rs / 3, 1));
+          Snd.settle(c.r / rs);
+        }
+      }
       if (c.r > rs * 4.5) { clusters.splice(i, 1); continue; }
     }
   }
@@ -246,8 +256,22 @@
   if (slider) {
     slider.addEventListener("input", function () {
       S = parseFloat(slider.value); reset(); draw(); readout(); Sim.writeUrl();
+      if (window.Snd) Snd.tick();
     });
     Sim.stepper(slider, { label: "supersaturation" });
+  }
+
+  /* The sonification is its own switch, off until asked for, and the button
+     turns page sound on too so nobody presses it and hears nothing. */
+  var listenBtn = host.querySelector('[data-listen="nucleation"]');
+  if (listenBtn) {
+    listenBtn.addEventListener("click", function () {
+      listening = !listening;
+      if (listening && window.Snd && !Snd.enabled()) Snd.set(true);
+      listenBtn.setAttribute("aria-pressed", String(listening));
+      var lab = listenBtn.querySelector("[data-listen-label]");
+      if (lab) lab.textContent = listening ? "Stop listening" : "Listen to it";
+    });
   }
   var p = new URLSearchParams(location.search);
   if (p.has("nucleation")) {
