@@ -1371,6 +1371,54 @@ $('#start-phase0').addEventListener('click',function(){
   $('#plan').scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});
 });
 
+/* ---------------- three depths ----------------
+   Same three the notebook has, same class names, so there is one idea to
+   learn rather than two. Picture is what happens with no numbers.
+   Mechanism names the quantities and is the default. Maths adds the
+   governing ones.
+
+   The choice lives in memory and in the address bar, never in storage, and
+   it applies to every simulation on the page at once, because a reader who
+   wants numbers wants them everywhere. */
+var DEPTHS=['picture','mechanism','maths'];
+var depth='mechanism';
+
+function setDepth(d, quiet){
+  if(DEPTHS.indexOf(d)<0 || d===depth) return;
+  depth=d;
+  document.documentElement.setAttribute('data-depth', depth);
+  $$('[data-depth-set]').forEach(function(b){
+    b.setAttribute('aria-pressed', String(b.getAttribute('data-depth-set')===depth));
+  });
+  /* Two of these draw their own labels into a canvas, so they have to be
+     told rather than restyled. */
+  if(typeof drawBudget==='function') drawBudget();
+  if(typeof drawSQ==='function') drawSQ();
+  if(!quiet) writeUrl();
+}
+
+function buildDepth(){
+  var labels={picture:'Picture', mechanism:'Mechanism', maths:'Maths'};
+  $$('.viz .viz-body').forEach(function(body){
+    if(body.querySelector('.depth')) return;
+    var wrap=el('div','depth');
+    wrap.setAttribute('role','group');
+    wrap.setAttribute('aria-label','How much detail to show');
+    DEPTHS.forEach(function(d){
+      var b=el('button','depth-btn',labels[d]);
+      b.type='button';
+      b.setAttribute('data-depth-set',d);
+      b.setAttribute('aria-pressed', String(d===depth));
+      b.addEventListener('click',function(){ setDepth(d); });
+      wrap.appendChild(b);
+    });
+    var cap=body.querySelector('.viz-cap');
+    if(cap) body.insertBefore(wrap, cap);
+    else body.appendChild(wrap);
+  });
+  document.documentElement.setAttribute('data-depth', depth);
+}
+
 /* ---------------- shareable state ----------------
    Everything anybody changed here goes in the address bar, so a lecturer
    who sets one of these up the way they want it can send the link rather
@@ -1402,12 +1450,14 @@ function writeUrl(){
     else if($('#sq-gap') && $('#sq-gap').value!=='134') p.set('sq', $('#sq-gap').value);
     var cell=$('[data-cell][aria-pressed="true"]');
     if(cell && cell.getAttribute('data-cell')!=='sc') p.set('cell', cell.getAttribute('data-cell'));
+    if(depth!=='mechanism') p.set('d', depth);
     var q=p.toString();
     history.replaceState(null,'', q ? '?'+q+location.hash : location.pathname+location.hash);
   },250);
 }
 function readUrl(){
   var p=new URLSearchParams(location.search);
+  if(p.has('d')) setDepth(p.get('d'), true);
   URL_KEYS.forEach(function(o){
     if(!p.has(o.k)) return;
     var el0=$('#'+o.id); if(!el0) return;
@@ -1449,6 +1499,7 @@ renderWriter();
 refresh();
 initCrystal();
 initCell();
+buildDepth();
 readUrl();          /* last, so every control it touches already exists */
 
 })();

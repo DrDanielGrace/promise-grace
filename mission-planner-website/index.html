@@ -149,10 +149,10 @@
 
         <div class="ph-panels">
           <p id="ph-readout" class="calc">
-            <span class="calc-line">[H<sup>+</sup>] = <b id="ph-conc-val">1.0 &times; 10<sup>-7</sup></b> <em>mol dm<sup>-3</sup></em></span>
-            <span class="calc-line">pH = -log<sub>10</sub>[H<sup>+</sup>]</span>
+            <span class="calc-line depth-not-picture">[H<sup>+</sup>] = <b id="ph-conc-val">1.0 &times; 10<sup>-7</sup></b> <em>mol dm<sup>-3</sup></em></span>
+            <span class="calc-line depth-only-maths">pH = -log<sub>10</sub>[H<sup>+</sup>]</span>
             <span class="calc-rule"></span>
-            <span class="calc-line calc-res">pH = <b id="ph-val">7.00</b></span>
+            <span class="calc-line calc-res depth-not-picture">pH = <b id="ph-val">7.00</b></span>
           </p>
 
           <div class="scale-block">
@@ -224,13 +224,13 @@ logPosition = (14 - pH) / 14 * 100;</code></pre>
         </div>
         <div class="arr-panels">
           <p id="arr-readout" class="calc">
-            <span class="calc-line">T = <b id="arr-t-val">300</b> <em>K</em></span>
-            <span class="calc-line">1/T = <b id="arr-inv-val">3.33e-3</b> <em>K<sup>-1</sup></em></span>
-            <span class="calc-line">E<sub>a</sub> put in = 50.0 <em>kJ mol<sup>-1</sup></em></span>
-            <span class="calc-line">slope of the line = <b id="arr-slope">0</b> <em>K</em></span>
-            <span class="calc-line">E<sub>a</sub> read back off it = <b id="arr-ea">0</b> <em>kJ mol<sup>-1</sup></em></span>
+            <span class="calc-line depth-not-picture">T = <b id="arr-t-val">300</b> <em>K</em></span>
+            <span class="calc-line depth-only-maths">1/T = <b id="arr-inv-val">3.33e-3</b> <em>K<sup>-1</sup></em></span>
+            <span class="calc-line depth-only-maths">E<sub>a</sub> put in = 50.0 <em>kJ mol<sup>-1</sup></em></span>
+            <span class="calc-line depth-only-maths">slope of the line = <b id="arr-slope">0</b> <em>K</em></span>
+            <span class="calc-line depth-only-maths">E<sub>a</sub> read back off it = <b id="arr-ea">0</b> <em>kJ mol<sup>-1</sup></em></span>
             <span class="calc-rule"></span>
-            <span class="calc-line calc-res">k = <b id="arr-k-val">1.0</b> <em>relative</em></span>
+            <span class="calc-line calc-res depth-not-picture">k = <b id="arr-k-val">1.0</b> <em>relative</em></span>
           </p>
           <div class="chart-pair">
             <figure><figcaption>k against T</figcaption><canvas id="arr-c1" width="300" height="200" aria-label="Rate constant against temperature, an upward curve"></canvas></figure>
@@ -298,9 +298,9 @@ Ea    = -slope * R;                // comes back as 50.0 kJ/mol</code></pre>
         <label for="bg-wl" class="wl-label">Wavelength</label>
         <input type="range" id="bg-wl" min="200" max="1400" value="550" step="5" class="wl-slider" aria-describedby="bg-readout">
         <div class="tele-dark" id="bg-readout">
-          <div class="tel-row"><span>WAVELENGTH</span><b id="bg-wl-val">550</b></div>
-          <div class="tel-row"><span>PHOTON ENERGY</span><b id="bg-e-val">2.25</b></div>
-          <div class="tel-row"><span>REGION</span><b id="bg-region">Visible</b></div>
+          <div class="tel-row depth-not-picture"><span>WAVELENGTH</span><b id="bg-wl-val">550</b></div>
+          <div class="tel-row depth-not-picture"><span>PHOTON ENERGY</span><b id="bg-e-val">2.25</b></div>
+          <div class="tel-row depth-not-picture"><span>REGION</span><b id="bg-region">Visible</b></div>
         </div>
         <div class="levels" id="bg-levels">
           <p class="lev-label lev-cb">Conduction band</p>
@@ -361,11 +361,11 @@ usable = (E >= bandGap);</code></pre>
           <span class="stepper" data-step-for="bud-gap"></span>
         </div>
         <div class="tele-dark" id="bud-readout">
-          <div class="tel-row"><span>BAND GAP</span><b id="bud-gap-val">1.12 eV</b></div>
+          <div class="tel-row depth-not-picture"><span>BAND GAP</span><b id="bud-gap-val">1.12 eV</b></div>
           <div class="tel-row"><span>PASSES STRAIGHT THROUGH</span><b id="bud-below">19.2%</b></div>
           <div class="tel-row"><span>LOST AS HEAT</span><b id="bud-therm">31.7%</b></div>
           <div class="tel-row"><span>STILL ON THE TABLE</span><b id="bud-ult">49.0%</b></div>
-          <div class="tel-row"><span>PHOTONS CAUGHT</span><b id="bud-flux">43.8 mA cm<sup>-2</sup> worth</b></div>
+          <div class="tel-row depth-not-picture"><span>PHOTONS CAUGHT</span><b id="bud-flux">43.8 mA cm<sup>-2</sup> worth</b></div>
         </div>
         <p class="panel-note" id="bud-msg"></p>
         <button type="button" class="btn-quiet" id="bud-send">Send this gap to the efficiency limit below</button>
@@ -437,12 +437,12 @@ ultimate   = harvested / Pin              // what is still available
         </div>
 
         <div class="tele-dark" id="sq-readout">
-          <div class="tel-row"><span id="sq-lab-gap">BAND GAP</span><b id="sq-gap-val">1.34 eV</b></div>
-          <div class="tel-row" id="sq-row2" hidden><span>BOTTOM GAP</span><b id="sq-gap2-val">0.94 eV</b></div>
+          <div class="tel-row depth-not-picture"><span id="sq-lab-gap">BAND GAP</span><b id="sq-gap-val">1.34 eV</b></div>
+          <div class="tel-row depth-not-picture" id="sq-row2" hidden><span>BOTTOM GAP</span><b id="sq-gap2-val">0.94 eV</b></div>
           <div class="tel-row"><span>LIMIT</span><b id="sq-eff-val">33.7%</b></div>
-          <div class="tel-row"><span id="sq-lab-j">SHORT CIRCUIT CURRENT</span><b id="sq-j">35.0 mA cm<sup>-2</sup></b></div>
-          <div class="tel-row"><span id="sq-lab-v">OPEN CIRCUIT VOLTAGE</span><b id="sq-v">1.082 V</b></div>
-          <div class="tel-row"><span id="sq-lab-m">NEAREST MATERIAL</span><b id="sq-mat">Perovskite</b></div>
+          <div class="tel-row depth-only-maths"><span id="sq-lab-j">SHORT CIRCUIT CURRENT</span><b id="sq-j">35.0 mA cm<sup>-2</sup></b></div>
+          <div class="tel-row depth-only-maths"><span id="sq-lab-v">OPEN CIRCUIT VOLTAGE</span><b id="sq-v">1.082 V</b></div>
+          <div class="tel-row depth-not-picture"><span id="sq-lab-m">NEAREST MATERIAL</span><b id="sq-mat">Perovskite</b></div>
         </div>
 
         <p class="panel-note" id="sq-msg"></p>
@@ -516,12 +516,12 @@ V(J) = VT * log((Jph_top - J)/J0_top + 1)
           <p class="run-id">RUN 002 · BRAGG</p>
         </div>
         <div class="telemetry">
-          <div class="tel-row"><span>ANGLE</span><b id="bg-theta">22.0</b></div>
-          <div class="tel-row"><span>d SPACING</span><b id="bg-d">2.00</b></div>
-          <div class="tel-row"><span>PATH DIFF</span><b id="bg-path">1.50</b></div>
-          <div class="tel-row"><span>PATH DIFF IN WAVELENGTHS</span><b id="bg-nwave">0.97</b></div>
+          <div class="tel-row depth-not-picture"><span>ANGLE</span><b id="bg-theta">22.0</b></div>
+          <div class="tel-row depth-not-picture"><span>d SPACING</span><b id="bg-d">2.00</b></div>
+          <div class="tel-row depth-not-picture"><span>PATH DIFF</span><b id="bg-path">1.50</b></div>
+          <div class="tel-row depth-only-maths"><span>PATH DIFF IN WAVELENGTHS</span><b id="bg-nwave">0.97</b></div>
           <div class="tel-row"><span>CONDITION</span><b id="bg-cond">off peak</b></div>
-          <div class="tel-row"><span>NEAREST EXACT PEAK</span><b id="bg-exact">22.6°</b></div>
+          <div class="tel-row depth-only-maths"><span>NEAREST EXACT PEAK</span><b id="bg-exact">22.6°</b></div>
           <label for="bragg-theta" class="tel-label">Angle</label>
           <input type="range" id="bragg-theta" min="5" max="60" value="22" step="0.5">
           <label for="bragg-d" class="tel-label">Plane spacing</label>
@@ -573,8 +573,8 @@ exactAngle = Math.asin(n * lambda / (2 * d));</code></pre>
         </div>
         <div class="telemetry">
           <div class="tel-row"><span>TYPE</span><b id="cell-type">Simple cubic</b></div>
-          <div class="tel-row"><span>ATOMS PER CELL</span><b id="cell-count">1</b></div>
-          <div class="tel-row"><span>PACKING</span><b id="cell-pack">52%</b></div>
+          <div class="tel-row depth-not-picture"><span>ATOMS PER CELL</span><b id="cell-count">1</b></div>
+          <div class="tel-row depth-only-maths"><span>PACKING</span><b id="cell-pack">52%</b></div>
           <div class="cell-btns">
             <button type="button" class="btn-quiet" data-cell="sc">Simple cubic</button>
             <button type="button" class="btn-quiet" data-cell="bcc">Body centred</button>

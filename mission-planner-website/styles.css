@@ -780,3 +780,20 @@ details[open]>summary::before{content:'\2212'}
 [data-cell][aria-pressed="true"]{
   border-color:var(--sage);background:var(--sage);color:#fff;
 }
+
+/* ---------- three depths ----------
+   Same class names as the notebook, so there is one idea and not two. */
+html[data-depth="picture"] .depth-not-picture{display:none}
+html:not([data-depth="maths"]) .depth-only-maths{display:none}
+
+.depth{display:flex;gap:.4rem;flex-wrap:wrap;margin:1rem 0 .4rem}
+.depth-btn{
+  min-height:44px;padding:.5rem .9rem;
+  font-family:var(--f-mono);font-size:.72rem;letter-spacing:.05em;
+  background:none;border:1px solid var(--rule);color:var(--ink-soft);
+  cursor:pointer;
+}
+.depth-btn:hover{border-color:var(--sage);color:var(--sage)}
+.depth-btn[aria-pressed="true"]{
+  border-color:var(--sage);background:var(--sage);color:#fff;
+}
