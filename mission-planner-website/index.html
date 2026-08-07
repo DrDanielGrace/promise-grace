@@ -170,6 +170,28 @@
         </div>
       </div>
       <p class="viz-cap">FIG · Linear and logarithmic representation of the same quantity.</p>
+
+      <details class="working">
+        <summary>Show the working</summary>
+        <p class="assume-title">WHAT IS COMPUTED</p>
+        <pre class="code"><code>// pH is nothing more than this, and the slider walks it.
+conc = Math.pow(10, -pH);          // mol per cubic decimetre
+
+// The linear bar is that concentration as a share of 1 mol dm-3.
+// That is the entire demonstration: at pH 3 it is 0.1 percent of
+// the bar and there is nothing left to look at.
+linearWidth = conc / 1 * 100;      // per cent
+
+// The log bar is the same number, positioned by pH instead.
+logPosition = (14 - pH) / 14 * 100;</code></pre>
+        <p class="assume-title">WHAT THIS ASSUMES</p>
+        <ul class="assumptions">
+          <li>Concentration and activity are treated as the same thing. In real solutions they part company as things get concentrated, and pH is defined on activity.</li>
+          <li>The scale is drawn from 0 to 14 because that is the range people are taught. It is not a hard limit: concentrated acids go below 0 and concentrated bases above 14.</li>
+          <li>Temperature is ignored. Neutral is pH 7 only at 25 degrees, because the ion product of water moves with temperature.</li>
+          <li>Nothing here is a measurement of any particular solution. It is the definition of the scale, walked.</li>
+        </ul>
+      </details>
     </div>
 
     <div class="annotation" hidden>
@@ -203,7 +225,10 @@
         <div class="arr-panels">
           <p id="arr-readout" class="calc">
             <span class="calc-line">T = <b id="arr-t-val">300</b> <em>K</em></span>
-            <span class="calc-line">E<sub>a</sub> = 50 <em>kJ mol<sup>-1</sup></em></span>
+            <span class="calc-line">1/T = <b id="arr-inv-val">3.33e-3</b> <em>K<sup>-1</sup></em></span>
+            <span class="calc-line">E<sub>a</sub> put in = 50.0 <em>kJ mol<sup>-1</sup></em></span>
+            <span class="calc-line">slope of the line = <b id="arr-slope">0</b> <em>K</em></span>
+            <span class="calc-line">E<sub>a</sub> read back off it = <b id="arr-ea">0</b> <em>kJ mol<sup>-1</sup></em></span>
             <span class="calc-rule"></span>
             <span class="calc-line calc-res">k = <b id="arr-k-val">1.0</b> <em>relative</em></span>
           </p>
@@ -214,6 +239,31 @@
         </div>
       </div>
       <p class="viz-cap">FIG · Arrhenius behaviour, plotted raw and plotted logarithmically.</p>
+
+      <details class="working">
+        <summary>Show the working</summary>
+        <p class="assume-title">WHAT IS COMPUTED</p>
+        <pre class="code"><code>// The Arrhenius equation, shown as a rate relative to the rate at 300 K
+// so the constant A cancels and only the shape is left.
+k(T) = Math.exp(-Ea / (R * T)) / Math.exp(-Ea / (R * 300));
+
+// Taking logs turns the multiplying into adding:
+//   ln k = -(Ea/R) * (1/T) + constant
+// which is a straight line IF the x axis is 1/T. The right hand
+// graph plots exactly that.
+
+// And the slope is read back off the plotted line, not printed
+// from the Ea that produced it:
+slope = (ln k(280) - ln k(420)) / (1/280 - 1/420);
+Ea    = -slope * R;                // comes back as 50.0 kJ/mol</code></pre>
+        <p class="assume-title">WHAT THIS ASSUMES</p>
+        <ul class="assumptions">
+          <li>Ea is fixed at 50 kJ per mole and R at 8.314 J per mole per kelvin. 50 is a typical figure for a solution reaction, not a measurement of anything.</li>
+          <li>The pre exponential factor A is assumed not to vary with temperature. It does, weakly, and a careful treatment says so.</li>
+          <li>The rate shown is relative to the rate at 300 K, so the y axis on the left is a ratio and not a rate in any unit.</li>
+          <li>An earlier version of the right hand graph plotted ln k against temperature rather than against one over temperature, which bowed 10 per cent away from straight and still looked linear. It is plotted against 1/T now, and the straightness is checked by fitting a line to the pixels the page actually drew: the worst departure is 0.17 per cent of the plot height, which is antialiasing.</li>
+        </ul>
+      </details>
     </div>
 
     <div class="annotation" hidden>
@@ -260,6 +310,25 @@
         <div class="mat-list" id="bg-mats"></div>
       </div>
       <p class="viz-cap">FIG · Photon energy against band gap for common photovoltaic absorbers.</p>
+
+      <details class="working">
+        <summary>Show the working</summary>
+        <p class="assume-title">WHAT IS COMPUTED</p>
+        <pre class="code"><code>// A photon's energy from its wavelength. 1239.84 is h times c
+// expressed in electron volts times nanometres, which is the only
+// form of hc a spectroscopist ever needs.
+E = 1239.84 / wavelength;          // eV, from nm
+
+// A material can use the photon if the photon can pay the gap.
+usable = (E >= bandGap);</code></pre>
+        <p class="assume-title">WHAT THIS ASSUMES</p>
+        <ul class="assumptions">
+          <li>Absorption is treated as a hard edge at the gap. Real absorption has a tail, and an indirect gap material like silicon absorbs weakly for some way above its gap because a phonon has to help.</li>
+          <li>The six band gaps listed are room temperature literature values. Gaps shift with temperature and, in alloys, with composition.</li>
+          <li>Nothing here says how much light is absorbed, only whether a photon has enough energy to be absorbed at all. The next two simulations are where the amount starts to matter.</li>
+          <li>The arrow in the level diagram is scaled to fit the box and is not to any energy scale.</li>
+        </ul>
+      </details>
     </div>
 
     <div class="annotation" hidden>
@@ -450,7 +519,9 @@ V(J) = VT * log((Jph_top - J)/J0_top + 1)
           <div class="tel-row"><span>ANGLE</span><b id="bg-theta">22.0</b></div>
           <div class="tel-row"><span>d SPACING</span><b id="bg-d">2.00</b></div>
           <div class="tel-row"><span>PATH DIFF</span><b id="bg-path">1.50</b></div>
+          <div class="tel-row"><span>PATH DIFF IN WAVELENGTHS</span><b id="bg-nwave">0.97</b></div>
           <div class="tel-row"><span>CONDITION</span><b id="bg-cond">off peak</b></div>
+          <div class="tel-row"><span>NEAREST EXACT PEAK</span><b id="bg-exact">22.6°</b></div>
           <label for="bragg-theta" class="tel-label">Angle</label>
           <input type="range" id="bragg-theta" min="5" max="60" value="22" step="0.5">
           <label for="bragg-d" class="tel-label">Plane spacing</label>
@@ -458,6 +529,29 @@ V(J) = VT * log((Jph_top - J)/J0_top + 1)
         </div>
       </div>
       <p class="viz-cap">FIG · n&lambda; = 2d sin&theta;. Wavelength fixed at 1.54 &#8491;, which is copper K-alpha.</p>
+
+      <details class="working">
+        <summary>Show the working</summary>
+        <p class="assume-title">WHAT IS COMPUTED</p>
+        <pre class="code"><code>// Two rays reflecting off neighbouring planes. The lower one
+// travels this much further:
+pathDifference = 2 * d * Math.sin(theta);
+
+// They arrive in step when that extra distance is a whole number
+// of wavelengths, which is Bragg's law:
+//   n * lambda = 2 * d * sin(theta)
+n = pathDifference / lambda;
+
+// And the angle that would put you exactly on the nth peak:
+exactAngle = Math.asin(n * lambda / (2 * d));</code></pre>
+        <p class="assume-title">WHAT THIS ASSUMES</p>
+        <ul class="assumptions">
+          <li>Copper K-alpha at 1.54 angstroms, and only the alpha-1 line. A real copper tube emits alpha-1 and alpha-2 close together, which splits every peak at high angle.</li>
+          <li>Two planes and two rays. A real crystal has thousands of planes contributing, which is what makes a real peak sharp rather than merely present.</li>
+          <li>The picture is a cross section. Nothing here says anything about which reflections are allowed for a given lattice, and some of the ones you can find here would be systematically absent in a real structure. The powder diffraction simulation in the notebook is where absences are handled.</li>
+          <li>The condition is graded rather than binary. Within 0.01 of a whole number it says in step, within 0.06 it says almost, and the exact angle and how far you are from it are both shown. An earlier version called anything within 0.06 a bright peak, which meant claiming one up to 4.15 degrees off.</li>
+        </ul>
+      </details>
     </div>
 
     <div class="annotation" hidden>
@@ -489,6 +583,30 @@ V(J) = VT * log((Jph_top - J)/J0_top + 1)
         </div>
       </div>
       <p class="viz-cap">FIG · The three cubic Bravais lattices.</p>
+
+      <details class="working">
+        <summary>Show the working</summary>
+        <p class="assume-title">WHAT IS COMPUTED</p>
+        <pre class="code"><code>// Corner atoms, shared eight ways between neighbouring cells.
+// Face atoms, shared two ways. Body centre atoms, not shared.
+atomsPerCell = 8 * (1/8)                    // simple cubic  = 1
+             + 8 * (1/8) + 1                // body centred  = 2
+             + 8 * (1/8) + 6 * (1/2);       // face centred  = 4
+
+// Packing fraction is the volume the spheres actually occupy,
+// with the spheres touching along whichever direction is closest
+// packed in that lattice:
+//   simple cubic   pi / 6            = 52%   (touch along an edge)
+//   body centred   sqrt(3) pi / 8    = 68%   (along the body diagonal)
+//   face centred   sqrt(2) pi / 6    = 74%   (along a face diagonal)</code></pre>
+        <p class="assume-title">WHAT THIS ASSUMES</p>
+        <ul class="assumptions">
+          <li>Hard spheres, all the same size, touching. Real atoms are not hard spheres and an alloy has more than one size of them.</li>
+          <li>The model draws whole atoms at every site rather than the fractions a single cell actually owns, because eight eighths of a sphere at the corners is unreadable. The counts in the readout are the shared ones.</li>
+          <li>The three packing fractions are the exact geometric constants for these lattices, not measurements.</li>
+          <li>These are three of the fourteen Bravais lattices, the cubic ones. Most real materials are not cubic.</li>
+        </ul>
+      </details>
     </div>
   </article>
 </section>

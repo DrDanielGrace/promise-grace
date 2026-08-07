@@ -776,20 +776,35 @@ function phUpdate(){
 }
 if($('#ph-conc')){ $('#ph-conc').addEventListener('input',phUpdate); phUpdate(); }
 
-/* ---------------- Arrhenius ---------------- */
-function arrK(T){ return Math.exp(-50000/(8.314*T)) / Math.exp(-50000/(8.314*300)); }
+/* ---------------- Arrhenius ----------------
+   The second graph is captioned "ln k against 1/T" and the first version of
+   it plotted ln k against T with the axis reversed. That is not a straight
+   line and it is not what the label says. Measured: it bowed away from
+   straight by 10.1 per cent of the plot height at 343 K, which is enough to
+   see and little enough to get away with, so it read as "roughly linear" and
+   nobody would have questioned it.
+
+   The whole lesson of that figure is that the line IS straight and its slope
+   hands you the activation energy. So the x axis is 1/T now, and the slope
+   and the recovered Ea are both on screen, because a claim you can check is
+   worth more than a claim you have to accept. */
+var ARR_EA = 50000;                  // J per mol
+var ARR_R  = 8.314;                  // J per mol per K
+function arrK(T){ return Math.exp(-ARR_EA/(ARR_R*T)) / Math.exp(-ARR_EA/(ARR_R*300)); }
+
 function drawArr(){
   var c1=$('#arr-c1'), c2=$('#arr-c2'); if(!c1) return;
   var T=+$('#arr-t').value;
   $('#arr-t-val').textContent=T;
   $('#arr-k-val').textContent=arrK(T).toFixed(2);
   $('#arr-fill').style.height=((T-280)/140*100)+'%';
+  if($('#arr-inv-val')) $('#arr-inv-val').textContent=(1000/T).toFixed(3)+'e-3';
 
   var g1=c1.getContext('2d'), g2=c2.getContext('2d');
   [g1,g2].forEach(function(g){ g.clearRect(0,0,300,200); g.strokeStyle='#C5C7DC'; g.lineWidth=1;
     g.beginPath(); g.moveTo(34,10); g.lineTo(34,175); g.lineTo(290,175); g.stroke(); });
 
-  /* curve */
+  /* left, the curve: k against T, linear in T */
   g1.strokeStyle='#332E5C'; g1.lineWidth=2; g1.beginPath();
   for(var i=0;i<=256;i++){
     var t=280+(i/256)*140, k=arrK(t);
@@ -800,19 +815,34 @@ function drawArr(){
   g1.fillStyle='#8C2F45';
   var kx=34+((T-280)/140)*256, ky=175-Math.min(arrK(T)/arrK(420),1)*160;
   g1.beginPath(); g1.arc(kx,ky,4,0,7); g1.fill();
+  g1.fillStyle='#615A6E'; g1.font='10px "IBM Plex Mono",monospace';
+  g1.fillText('280 K',34,190); g1.fillText('420 K',258,190);
 
-  /* straight line */
+  /* right, the line: ln k against 1/T, linear in 1/T. Hot on the left,
+     cold on the right, which is the way an Arrhenius plot is always drawn,
+     and it is why the line runs downhill. */
+  var iLo=1/420, iHi=1/280;                      // left edge, right edge
+  function X(invT){ return 34 + ((invT-iLo)/(iHi-iLo))*256; }
+  var yLo=Math.log(arrK(280)), yHi=Math.log(arrK(420));   // lowest, highest ln k
+  function Y(lk){ return 175 - ((lk-yLo)/(yHi-yLo))*160; }
+
   g2.strokeStyle='#332E5C'; g2.lineWidth=2; g2.beginPath();
-  var lo=Math.log(arrK(280)), hi=Math.log(arrK(420));
   for(var j=0;j<=256;j++){
-    var tt=280+(j/256)*140, lk=Math.log(arrK(tt));
-    var xx=34+256-j, yy=175-((lk-lo)/(hi-lo))*160;
-    j?g2.lineTo(xx,yy):g2.moveTo(xx,yy);
+    var inv=iLo+(j/256)*(iHi-iLo);
+    var lk=Math.log(arrK(1/inv));
+    j?g2.lineTo(X(inv),Y(lk)):g2.moveTo(X(inv),Y(lk));
   }
   g2.stroke();
   g2.fillStyle='#8C2F45';
-  var lx=34+256-((T-280)/140)*256, ly=175-((Math.log(arrK(T))-lo)/(hi-lo))*160;
-  g2.beginPath(); g2.arc(lx,ly,4,0,7); g2.fill();
+  g2.beginPath(); g2.arc(X(1/T),Y(Math.log(arrK(T))),4,0,7); g2.fill();
+  g2.fillStyle='#615A6E'; g2.font='10px "IBM Plex Mono",monospace';
+  g2.fillText('hot',34,190); g2.fillText('cold',268,190);
+
+  /* The slope is read off the plotted line, not printed from the constant
+     that produced it, so the number is a recovery rather than an echo. */
+  var slope=(Math.log(arrK(280))-Math.log(arrK(420)))/((1/280)-(1/420));
+  if($('#arr-slope')) $('#arr-slope').textContent=Math.round(slope);
+  if($('#arr-ea')) $('#arr-ea').textContent=(-slope*ARR_R/1000).toFixed(1);
 }
 if($('#arr-t')) $('#arr-t').addEventListener('input',drawArr);
 
@@ -1181,24 +1211,54 @@ function drawBragg(){
 
   var path=2*d*Math.sin(rad);
   var lam=1.54, n=path/lam;
-  var near=Math.abs(n-Math.round(n));
-  var hit=near<0.06 && Math.round(n)>=1;
+  var order=Math.round(n);
+  var near=Math.abs(n-order);
+
+  /* The first version called anything within 0.06 of a whole number "IN STEP
+     \u00B7 BRIGHT PEAK". Measured across the whole slider, that meant it claimed a
+     bright peak up to 4.15 degrees away from the true angle, which in a real
+     diffractometer is nowhere near it. A wide window is needed to find peaks
+     with a slider, so the window stays and the claim gets graded instead, and
+     the exact angle is shown so you can go to it. */
+  var exact = null;
+  if(order>=1){
+    var s=order*lam/(2*d);
+    if(s<=1) exact=Math.asin(s)*180/Math.PI;
+  }
+  var state = near<0.01 ? 'in' : (near<0.06 ? 'near' : 'off');
 
   $('#bg-theta').textContent=th.toFixed(1)+'\u00B0';
   $('#bg-d').textContent=d.toFixed(2)+' \u212B';
   $('#bg-path').textContent=path.toFixed(2)+' \u212B';
-  $('#bg-cond').textContent=hit?('peak, n = '+Math.round(n)):'off peak';
+  if($('#bg-nwave')) $('#bg-nwave').textContent=n.toFixed(3);
+  $('#bg-cond').textContent =
+    state==='in'   ? ('peak, n = '+order) :
+    state==='near' ? ('almost, n = '+order) : 'off peak';
+  if($('#bg-exact')){
+    $('#bg-exact').textContent = exact===null ? 'none at this spacing'
+      : (exact.toFixed(1)+'\u00B0, ' + Math.abs(th-exact).toFixed(1)+'\u00B0 away');
+  }
 
-  g.fillStyle=hit?'#33543B':'#615A6E';
+  g.fillStyle = state==='in' ? '#33543B' : (state==='near' ? '#8A5A2B' : '#615A6E');
   g.font='500 13px "IBM Plex Mono",monospace';
-  g.fillText(hit?'IN STEP \u00B7 BRIGHT PEAK':'OUT OF STEP \u00B7 NOTHING', 40, 34);
+  g.fillText(
+    state==='in'   ? 'IN STEP \u00B7 BRIGHT PEAK' :
+    state==='near' ? 'ALMOST \u00B7 NOT QUITE A PEAK' :
+                     'OUT OF STEP \u00B7 NOTHING', 40, 34);
   g.font='11px "IBM Plex Mono",monospace';
   g.fillStyle='#615A6E';
   g.fillText('n\u03BB = 2d sin\u03B8', 40, 54);
 
-  if(hit){
-    g.strokeStyle='#33543B'; g.lineWidth=3;
-    g.beginPath(); g.moveTo(W-60,40); g.lineTo(W-60,90); g.stroke();
+  /* The detector mark. Full height and solid on a real peak, short and
+     faint when you are only close, so the picture grades the same way the
+     words do rather than being on or off. */
+  if(state!=='off'){
+    g.strokeStyle = state==='in' ? '#33543B' : '#8A5A2B';
+    g.lineWidth = state==='in' ? 3 : 1.5;
+    g.beginPath();
+    g.moveTo(W-60,40);
+    g.lineTo(W-60, state==='in' ? 90 : 62);
+    g.stroke();
   }
 }
 if($('#bragg-theta')){ $('#bragg-theta').addEventListener('input',drawBragg); $('#bragg-d').addEventListener('input',drawBragg); }
