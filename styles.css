@@ -1279,6 +1279,7 @@ html[data-pages="off"] .page-edges { display: none; }
 .skip { padding: 0.9em 1em; }
 
 .cover-links .ulink,
+.closing-links .ulink,
 .cover-foot a.mono,
 .outlinks a {
   display: inline-flex; align-items: center;
@@ -1540,4 +1541,70 @@ details.assumptions > summary {
 
   .ledger { display: block; }
   .ledger-col { border: 1px solid #999; margin-bottom: 0.5rem; }
+}
+
+
+/* =====================================================================
+   THE GUIDE
+   ===================================================================== */
+.ways { display: grid; gap: var(--baseline); max-width: var(--measure); }
+.way {
+  padding: 1rem 1.15rem;
+  background: var(--paper-deep);
+  border-radius: 3px 9px 4px 8px;
+}
+.way-tag { color: var(--ink-soft); margin: 0 0 0.4rem; }
+.way-head {
+  font-family: var(--f-display); font-size: 1.15rem; line-height: 1.3;
+  margin: 0 0 0.6rem; max-width: none;
+}
+.way p { max-width: none; }
+.way p:last-child { margin-bottom: 0; }
+.way-list { margin: 0 0 var(--baseline); padding-left: 1.2rem; }
+.way-list li { margin-bottom: 0.5rem; }
+
+/* A crop of a real scan, so the three pens are shown rather than described.
+   The percentages come from the crop rectangle: 292 by 142 source pixels
+   starting 8 in from the top left of a 520 by 724 image. */
+.pen-crop {
+  position: relative; overflow: hidden;
+  width: 100%; max-width: 34rem;
+  aspect-ratio: 292 / 142;
+  border: 1px solid var(--rule);
+  border-radius: 3px 8px 4px 7px;
+  background: var(--paper-deep);
+}
+.pen-crop img {
+  position: absolute;
+  width: 178.1%; max-width: none; height: auto;
+  left: -2.74%; top: -5.63%;
+}
+.figcap-line { color: var(--ink-soft); margin: 0.4rem 0 var(--baseline); }
+
+.pens { margin: 0 0 var(--baseline); max-width: var(--measure); }
+.pens dt {
+  font-family: var(--f-display); font-size: 1.08rem;
+  margin-top: calc(var(--baseline) * 0.6);
+  padding-left: 0.85rem;
+}
+.pens dd { margin: 0.2rem 0 0 0.85rem; }
+/* Each pen is named in words as well as being shown in its colour, and each
+   carries its own left rule, so the three are told apart by position and by
+   the sentence even if the colour is not available. */
+.pen-ink  { border-left: 3px solid var(--ink); color: var(--ink); }
+.pen-corr { border-left: 3px solid var(--correction); color: var(--correction); }
+.pen-aside { border-left: 3px solid var(--aside); color: var(--aside); }
+
+.what-list { margin: 0; max-width: var(--measure); }
+.what-list dt {
+  font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--ink-soft);
+  margin-top: var(--baseline);
+}
+.what-list dd { margin: 0.25rem 0 0; }
+
+.closing-links { display: flex; flex-wrap: wrap; gap: 1.2rem; margin: var(--baseline) 0 0; }
+
+@media (min-width: 52rem) {
+  .ways { grid-template-columns: 1fr; }
 }

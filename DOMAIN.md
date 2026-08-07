@@ -144,17 +144,30 @@ In a browser, on the new domain:
 - Click **Download CV** and confirm the file saves as
   `Promise Grace Research CV.pdf`
 - Follow the link to the mission planner and the link back
+- Open the four other pages from the cover and the footer, and follow each one
+  back: `contents.html`, `guide.html`, `simulations.html`, and the mission
+  planner
+- On the guide, the four embedded simulations run. If instead you see a
+  paragraph under each one beginning "Without JavaScript", the scripts did not
+  load
+- Turn sound on once, from the control at the bottom right, and confirm the
+  three files under `assets/sound/` are being served
 - The address bar shows a padlock
 
 From a terminal, the same checks without the clicking:
 
 ```bash
 curl -s -o /dev/null -w "%{http_code}\n" https://example.com/
+curl -s -o /dev/null -w "%{http_code}\n" https://example.com/guide.html
+curl -s -o /dev/null -w "%{http_code}\n" https://example.com/contents.html
+curl -s -o /dev/null -w "%{http_code}\n" https://example.com/simulations.html
 curl -s -o /dev/null -w "%{http_code}\n" https://example.com/assets/promise-grace-research-cv.pdf
+curl -s -o /dev/null -w "%{http_code}\n" https://example.com/assets/sound/tap.mp3
 curl -s -o /dev/null -w "%{http_code}\n" https://example.com/sim.js
+curl -s -o /dev/null -w "%{http_code}\n" https://example.com/mission-planner-website/solar.js
 ```
 
-All three should be `200`.
+All of them should be `200`.
 
 ---
 

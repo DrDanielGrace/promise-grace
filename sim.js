@@ -447,7 +447,16 @@ window.Sim = (function () {
   }
 
 
-  /* ---------------------------------------------------------------------- */
+  /* ----------------------------------------------------------------------
+     "Scripting is on" belongs here rather than in app.js, because app.js is
+     the notebook's own script and the guide page does not load it. It did
+     not, and the guide showed every simulation with its no JavaScript prose
+     sitting underneath it saying what it would have shown. Anything that
+     runs a simulation loads this file, so this is where the class lives.
+     Adding it twice is harmless.
+     ---------------------------------------------------------------------- */
+  document.documentElement.classList.add("js");
+
   document.documentElement.setAttribute("data-depth", depth);
 
   return {
