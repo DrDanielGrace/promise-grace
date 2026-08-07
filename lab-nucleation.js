@@ -216,9 +216,17 @@
       else if (frac > 1) { ctx.fillStyle = "rgba(51,84,59,0.35)"; }
       else { ctx.fillStyle = "rgba(140,47,69,0.28)"; }
       ctx.fill();
+      /* A survivor is also drawn with a ring around it, so the two outcomes
+         are told apart by shape and not only by colour. */
+      if (c.escaped) {
+        ctx.strokeStyle = SAGE; ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.arc(c.x * w, c.y * h, rad + 3, 0, Math.PI * 2);
+        ctx.stroke();
+      }
     }
     ctx.fillStyle = SOFT; ctx.font = "11px ui-monospace, monospace";
-    ctx.fillText("red dissolves, green survived", 8, h - 8);
+    ctx.fillText("plain dots dissolve, ringed ones survived", 8, h - 8);
   }
 
   function draw() { if (cvEnergy) drawEnergy(); if (cvField) drawField(); }

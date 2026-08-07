@@ -333,12 +333,12 @@ em { font-style: italic; }
 .channel {
   padding: calc(var(--baseline) * 0.75) 1.25rem calc(var(--baseline) * 0.5);
   background: var(--paper-deep);
-  border-left: 2px solid var(--correction);
+  border-left: 2px solid var(--aside);
   border-radius: 3px 9px 4px 8px;
   position: relative;
   top: calc(var(--baseline) * 3);
 }
-.channel-title { color: var(--correction); margin: 0 0 0.5rem; }
+.channel-title { color: var(--aside); margin: 0 0 0.5rem; }
 .channel ol { margin: 0; padding-left: 1.2rem; }
 .channel li {
   margin-bottom: calc(var(--baseline) * 0.5);
@@ -704,7 +704,7 @@ em { font-style: italic; }
   font-family: var(--f-hand); font-size: 1.05rem; color: var(--aside);
   margin: 0.7rem 0 0; min-height: 1.5rem;
 }
-.signup-msg.bad { color: var(--correction); }
+.signup-msg.bad { color: var(--ink); font-weight: 600; }
 
 /* Honeypot. Moved off screen rather than set to display none, because a
    bot that skips undisplayed fields would skip the trap as well. */
@@ -1013,7 +1013,7 @@ html:not([data-depth="maths"]) .depth-only-maths { display: none; }
   cursor: pointer;
   padding: 0.5rem 0;
 }
-.assumptions-title { color: var(--correction); font-size: 0.6875rem; margin: 0.5rem 0 0.3rem; }
+.assumptions-title { color: var(--ink-soft); font-size: 0.6875rem; margin: 0.5rem 0 0.3rem; }
 .assumptions { margin: 0 0 var(--baseline); padding-left: 1.1rem; color: var(--ink-soft); font-size: 0.9375rem; }
 .assumptions li { margin-bottom: 0.3rem; }
 .code {
@@ -1167,7 +1167,7 @@ html[data-pages="on"] .entry.is-settling { animation: page-settle 500ms ease-out
 .page-num {
   font-family: var(--f-hand);
   font-size: 1.15rem;
-  color: var(--aside);
+  color: var(--ink-soft);
   text-align: right;
   margin: 1.6rem 0 0;
   opacity: 0.72;
@@ -1196,10 +1196,10 @@ html[data-pages="off"] .page-edges { display: none; }
   background: var(--rule);
   transition: width 140ms ease, background-color 140ms ease;
 }
-.page-edge.is-read .page-edge-line { width: 0.75rem; background: var(--aside); }
+.page-edge.is-read .page-edge-line { width: 0.75rem; background: var(--ink-soft); }
 /* the current page is longer AND darker AND carries the ribbon, so it is
    never colour on its own doing the work */
-.page-edge.is-here .page-edge-line { width: 1.05rem; height: 2px; background: var(--ink); }
+.page-edge.is-here .page-edge-line { width: 1.05rem; height: 2px; background: var(--sage); }
 .page-edge:hover .page-edge-line { width: 1.05rem; background: var(--sage); }
 
 .page-edge-name {
@@ -1219,7 +1219,7 @@ html[data-pages="off"] .page-edges { display: none; }
 /* the ribbon, marking where the reader got to */
 .page-ribbon {
   position: absolute; left: 0; width: 3px;
-  background: var(--correction);
+  background: var(--sage);
   transition: top 200ms ease;
   border-radius: 0 2px 2px 0;
 }
@@ -1299,4 +1299,68 @@ details.assumptions > summary {
 .signup-row .btn,
 .hurry-open {
   min-height: 2.75rem;
+}
+
+
+/* =====================================================================
+   THE INSTRUMENT HOUSING
+
+   The paper palette stays calm everywhere and that is not negotiable.
+   The one place luminous colour belongs is inside a dark panel, and on
+   this site there is exactly one simulation whose subject IS colour. A
+   soap film's reflected colour sitting on cream paper is a colour being
+   argued with by its own background.
+
+   So the thin film lab goes dark, the way the spectroscopy bench on the
+   mission planner does, and for the same stated reason: you cannot show
+   a wavelength on white paper.
+   ===================================================================== */
+.lab.is-instrument {
+  --panel: #1B1A24;
+  --panel-soft: #B9B4C4;
+  background: var(--panel);
+  border: 1px solid #2E2C3A;
+  border-radius: 4px;
+  padding: 1.1rem;
+  color: var(--panel-soft);
+}
+.lab.is-instrument .view-tag,
+.lab.is-instrument .mono,
+.lab.is-instrument .readout-line span { color: var(--panel-soft); }
+.lab.is-instrument .readout-line b { color: #F1EFF5; }
+.lab.is-instrument .readout-line { border-bottom-color: #33303F; }
+.lab.is-instrument .lab-controls button {
+  background: none; border-color: #4A4757; color: #E4E1EC;
+}
+.lab.is-instrument .lab-controls button:hover,
+.lab.is-instrument .lab-controls button[aria-pressed="true"] {
+  border-color: var(--butter); color: var(--butter);
+}
+.lab.is-instrument .stepper button {
+  background: none; border-color: #4A4757; color: #E4E1EC;
+}
+.lab.is-instrument .verdict {
+  color: #E4E1EC; border-left-color: var(--butter);
+}
+.lab.is-instrument .verdict.is-diffusive { color: var(--butter); border-left-color: var(--butter); }
+.lab.is-instrument :focus-visible { outline-color: var(--butter); }
+
+/* The canvas is transparent, so without this the paper shows through and
+   a near black trace disappears into a cream rectangle. */
+.lab.is-instrument .lab-view canvas {
+  background: #100F16;
+  border-color: #33303F;
+}
+.lab.is-instrument label,
+.lab.is-instrument label b { color: #E4E1EC; }
+
+/* Printed, a dark panel is a solid block of toner. It inverts. */
+@media print {
+  .lab.is-instrument {
+    background: #fff; color: #000; border-color: #999;
+  }
+  .lab.is-instrument .readout-line b,
+  .lab.is-instrument .readout-line span,
+  .lab.is-instrument .mono,
+  .lab.is-instrument .view-tag { color: #000; }
 }

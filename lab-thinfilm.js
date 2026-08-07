@@ -98,7 +98,10 @@
   };
   function fmt(x, n) { return (Math.round(x * Math.pow(10, n)) / Math.pow(10, n)).toFixed(n); }
 
-  var INK = "#332E5C", SAGE = "#33543B", CORR = "#8C2F45", RULE = "#C5C7DC", SOFT = "#615A6E";
+  /* This one lives in a dark housing, because its subject is colour and a
+     colour argued with by a cream background is not the colour. The trace
+     and the labels go luminous against near black to match. */
+  var INK = "#F1EFF5", RULE = "#4A4757", SOFT = "#B9B4C4";
 
   function readout() {
     if (out.d) out.d.textContent = String(Math.round(d));
@@ -129,12 +132,12 @@
     ctx.beginPath(); ctx.moveTo(padL, 8); ctx.lineTo(padL, h - padB); ctx.lineTo(w - 6, h - padB); ctx.stroke();
 
     if (tier.extras) {
+      /* Full strength against black, where a spectrum can actually look
+         like one. On paper this had to be held back to 30 percent. */
       for (var l = 380; l < 700; l += 4) {
-        ctx.fillStyle = "hsl(" + (270 - ((l - 380) / 320) * 270) + ",70%,72%)";
-        ctx.globalAlpha = 0.30;
-        ctx.fillRect(X(l), h - padB - 6, Math.max(1, (w - padL - 8) / 80), 6);
+        ctx.fillStyle = "hsl(" + (270 - ((l - 380) / 320) * 270) + ",85%,58%)";
+        ctx.fillRect(X(l), h - padB - 7, Math.max(1, (w - padL - 8) / 80), 7);
       }
-      ctx.globalAlpha = 1;
     }
 
     var step = Math.max(2, Math.round(4 / (tier.agents || 1)));
