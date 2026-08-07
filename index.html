@@ -71,17 +71,18 @@
     <h2 id="question-h">The question</h2>
     <p class="hand margin-note">the thing I keep coming back to</p>
 
-    <p>On Earth, gravity pulls a growing crystal down through its own solution. Warm fluid rises,
-    cool fluid sinks, and the crystal grows inside an environment that will not sit still. You end
-    up with smaller crystals carrying more defects.</p>
+    <p>Grow the same crystal twice, once in a laboratory here and once on a space station, and
+    the one grown in orbit comes out bigger and cleaner. That part is not controversial. People
+    have been reproducing it since the seventies.</p>
 
-    <p>Take gravity away and convection largely stops. Growth becomes diffusion limited. Crystals
-    come out larger, cleaner, more ordered.</p>
+    <p>What I could not get past is that it sounds backwards. Gravity is a force. It stirs the
+    solution and it keeps delivering fresh material to the crystal face. Take a force away and you
+    would expect less to happen, not better. So what is gravity actually doing that a crystal is
+    better off without?</p>
 
-    <p>That difference is not a curiosity. It changes what we can learn about how materials assemble
-    themselves, and it changes what we can build.</p>
-
-    <p>Before any of that, a crystal has to survive being born. Most of them do not.</p>
+    <p>Reading about it did not get me anywhere. Building it did, three times, in the order the
+    physics happens. And it starts earlier than I expected, because before anything can grow it has
+    to survive being born, and almost nothing does.</p>
 
     <figure class="fig" id="fig-nucleation">
       <div class="lab" data-lab="nucleation">
@@ -134,9 +135,12 @@
       <figcaption class="mono">FIG. 1a · Classical nucleation. The barrier is computed, the individual cluster paths are illustrative.</figcaption>
     </figure>
 
-    <p>Every survivor there becomes a crystal competing for the same solute, which is why the count
-    matters below. Now the growth itself. You can turn gravity down yourself, and the thing to watch
-    is the shaded ring around the crystal, because that ring is the answer.</p>
+    <p>Every survivor there becomes a crystal competing for the same solute, so that count carries
+    forward into the next one. Now the growth itself, and the part I could not predict from a
+    sentence. Gravity is what keeps sweeping fresh solution past the crystal face. Take it away and
+    the crystal should be worse off, because nothing is feeding it any more.</p>
+
+    <p>Turn the slider down and watch whether it is.</p>
 
     <figure class="fig" id="fig-crystal">
       <div class="lab" data-lab="crystal">
@@ -194,18 +198,13 @@
       <figcaption class="mono">FIG. 1b · Growth of one crystal against gravity. Size is computed, the defect figure is illustrative.</figcaption>
     </figure>
 
-    <p>All of that is still a claim until someone measures it. So take the crystal you just grew and
-    put it in front of an X ray beam. Grow one at 1 g and the peaks come out broad. Grow one at
-    almost nothing and they come out sharp. That difference is the argument, and it is a number
-    rather than an impression.</p>
+    <p>So gravity does not help a crystal, it hurries it. That is a satisfying sentence and it is
+    still only a sentence. Uniform is a word, and a supervisor is entitled to ask what number I
+    would put on it.</p>
 
-    <p class="correction">One thing I had to be careful about here. Both crystals finish the same
-    size, because one crystal drawing on a fixed amount of solute ends up the same size whatever
-    gravity is doing. What gravity changes is the rate, how evenly it grows, and how much disorder
-    gets trapped inside. The peaks broaden because a crystal full of dislocations stops scattering
-    coherently across its whole width, so what the pattern measures is the domain rather than the
-    grain. Size differences between real samples come from how many nuclei survived, which is the
-    panel further up.</p>
+    <p>There is one, and it is the reason X ray diffraction exists. Send the crystal you just grew
+    into the beam below and see whether the difference survives being measured.</p>
+
 
     <figure class="fig" id="fig-diffraction">
       <div class="lab" data-lab="diffraction">
@@ -268,6 +267,23 @@
       straight off a single peak.</p>
       <figcaption class="mono">FIG. 1c · Powder diffraction. Positions and widths are computed, peak heights are indicative.</figcaption>
     </figure>
+    <p class="correction">One thing I had to be careful about here. Both crystals finish the same
+    size, because one crystal drawing on a fixed amount of solute ends up the same size whatever
+    gravity is doing. What gravity changes is the rate, how evenly it grows, and how much disorder
+    gets trapped inside. The peaks broaden because a crystal full of dislocations stops scattering
+    coherently across its whole width, so what the pattern measures is the domain rather than the
+    grain. Size differences between real samples come from how many nuclei survived, which is the
+    panel further up.</p>
+
+
+    <p>Three simulations, and the question has an answer: gravity keeps stirring, stirring makes
+    growth fast and uneven, and uneven is a number rather than an impression.</p>
+
+    <p>What I still cannot tell you is what happens at the very slow end of the same idea, where a
+    crystal takes a cave a thousand years to build. That one is entry 05, and I have not solved it.</p>
+
+    <p>First though, the thing that lets you know what a mixture is going to become before it
+    becomes it.</p>
   </div>
 </article>
 
@@ -1308,59 +1324,13 @@
     The node, the linker, and the hole in the middle that does the actual work. I can talk about
     this properly.</p>
 
-    <p>One of these is easy to show, so here it is rather than described. A soap bubble has no
-    pigment in it at all. The colours are the same wave arriving twice, once off the front of the
-    film and once off the back, agreeing at some wavelengths and cancelling at others.</p>
+    <p>The thing that took me longest to accept about a framework is that the useful part is the
+    part that is not there. You spend the whole synthesis building a scaffold, and what you are
+    actually making is the hole. Swap the linker for a longer one below and watch the number at the
+    bottom, because a gram of this stuff having the surface area of a football pitch is the fact
+    that made me care about it in the first place.</p>
 
-    <figure class="fig" id="fig-thinfilm">
-      <div class="lab is-instrument" data-lab="thinfilm">
-        <div class="lab-views">
-          <div class="lab-view">
-            <p class="mono view-tag">WHAT COMES BACK</p>
-            <canvas data-view="spectrum" width="300" height="240"
-              aria-label="Reflectance against wavelength across the visible spectrum. Peaks and troughs move as the film thickness changes, so the colour reflected sweeps through the spectrum."></canvas>
-          </div>
-          <div class="lab-view">
-            <p class="mono view-tag">THE COLOUR</p>
-            <canvas data-view="film" width="300" height="240"
-              aria-label="A patch showing the colour the film reflects at this thickness."></canvas>
-          </div>
-        </div>
-
-        <div class="lab-controls">
-          <span class="slider-row">
-            <label class="mono" for="tf-d">THICKNESS <b data-out="d">320</b> nm</label>
-            <input id="tf-d" type="range" min="40" max="900" step="5" value="320" data-d>
-          </span>
-          <span class="mono">BEHIND IT</span>
-          <button type="button" data-sub="1.00" aria-pressed="true">Air, a bubble</button>
-          <button type="button" data-sub="1.52" aria-pressed="false">Glass, a lens coating</button>
-        </div>
-
-        <div class="readout lab-readout">
-          <p class="mono readout-line depth-not-picture"><span>STRONGEST AT</span> <b data-out="peak">0</b> nm</p>
-          <p class="mono readout-line depth-not-picture"><span>REFLECTED AT 550 nm</span> <b data-out="r550">0</b>%</p>
-          <p class="mono readout-line depth-only-maths"><span>IDEAL FILM INDEX</span> <b data-out="ideal">0</b></p>
-          <p class="mono readout-line depth-only-maths"><span>QUARTER WAVE AT 550</span> <b data-out="qw">0</b> nm</p>
-          <p class="verdict" data-out="tfmsg" role="status" aria-live="polite"></p>
-        </div>
-      </div>
-
-      <div data-chrome class="lab-chrome"></div>
-
-      <p class="nojs-note">Light hitting a thin film reflects twice, once off the top surface and
-      once off the bottom, and the second one travels a little further. Whether those two agree or
-      cancel depends on the wavelength and on how thick the film is, so some colours come back
-      strongly and others barely at all. That is why a soap bubble is coloured and why the colours
-      run as it drains and thins. Turn it around and you get anti reflection coatings: pick the
-      thickness and the material so that the two reflections cancel instead, and almost nothing
-      comes back. Perfect cancellation on glass would need a film with a refractive index of about
-      1.23, and no durable material has one, so real lens coatings use magnesium fluoride at 1.38
-      and settle for nearly nothing.</p>
-      <figcaption class="mono">FIG. 5 · Two beam interference in a thin film. Reflectance is exact, the colour patch is approximate.</figcaption>
-    </figure>
-
-    <figure class="fig" id="fig-mof">
+<figure class="fig" id="fig-mof">
       <div class="lab" data-lab="mof">
         <div class="lab-views">
           <div class="lab-view">
@@ -1420,6 +1390,10 @@
     carry charge well and heat badly, and in most materials those two travel together, so the whole
     field is an argument with that. I have not studied it.</p>
 
+    <p>Heat one end of the bar below and a voltage appears, which is a strange enough thing to
+    happen on its own. Then try to make it bigger. There are two things you can change and they
+    will not both go the way you want.</p>
+
     <figure class="fig" id="fig-thermo">
       <div class="lab" data-lab="thermo">
         <div class="lab-views">
@@ -1471,6 +1445,59 @@
 
     <p><u class="term">Thin films.</u> Same answer. Interested, not trained. It sits next to the
     crystal growth work closely enough that I expect to meet it either way.</p>
+
+    <p>This is the one I can show you cheaply, and it is the one that first made me suspicious that
+    colour is not a property of a thing. A soap bubble has no pigment in it anywhere. Drag the
+    thickness and work out where the colour is coming from, because it is not coming from the
+    soap.</p>
+
+<figure class="fig" id="fig-thinfilm">
+      <div class="lab is-instrument" data-lab="thinfilm">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">WHAT COMES BACK</p>
+            <canvas data-view="spectrum" width="300" height="240"
+              aria-label="Reflectance against wavelength across the visible spectrum. Peaks and troughs move as the film thickness changes, so the colour reflected sweeps through the spectrum."></canvas>
+          </div>
+          <div class="lab-view">
+            <p class="mono view-tag">THE COLOUR</p>
+            <canvas data-view="film" width="300" height="240"
+              aria-label="A patch showing the colour the film reflects at this thickness."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="slider-row">
+            <label class="mono" for="tf-d">THICKNESS <b data-out="d">320</b> nm</label>
+            <input id="tf-d" type="range" min="40" max="900" step="5" value="320" data-d>
+          </span>
+          <span class="mono">BEHIND IT</span>
+          <button type="button" data-sub="1.00" aria-pressed="true">Air, a bubble</button>
+          <button type="button" data-sub="1.52" aria-pressed="false">Glass, a lens coating</button>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line depth-not-picture"><span>STRONGEST AT</span> <b data-out="peak">0</b> nm</p>
+          <p class="mono readout-line depth-not-picture"><span>REFLECTED AT 550 nm</span> <b data-out="r550">0</b>%</p>
+          <p class="mono readout-line depth-only-maths"><span>IDEAL FILM INDEX</span> <b data-out="ideal">0</b></p>
+          <p class="mono readout-line depth-only-maths"><span>QUARTER WAVE AT 550</span> <b data-out="qw">0</b> nm</p>
+          <p class="verdict" data-out="tfmsg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">Light hitting a thin film reflects twice, once off the top surface and
+      once off the bottom, and the second one travels a little further. Whether those two agree or
+      cancel depends on the wavelength and on how thick the film is, so some colours come back
+      strongly and others barely at all. That is why a soap bubble is coloured and why the colours
+      run as it drains and thins. Turn it around and you get anti reflection coatings: pick the
+      thickness and the material so that the two reflections cancel instead, and almost nothing
+      comes back. Perfect cancellation on glass would need a film with a refractive index of about
+      1.23, and no durable material has one, so real lens coatings use magnesium fluoride at 1.38
+      and settle for nearly nothing.</p>
+      <figcaption class="mono">FIG. 5 · Two beam interference in a thin film. Reflectance is exact, the colour patch is approximate.</figcaption>
+    </figure>
 
     <p>I would rather tell you which is which now than have you find out halfway through an
     interview. If you work on any of the second three, I am not going to pretend I arrive knowing
