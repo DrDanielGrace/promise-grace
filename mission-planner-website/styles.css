@@ -797,3 +797,12 @@ html:not([data-depth="maths"]) .depth-only-maths{display:none}
 .depth-btn[aria-pressed="true"]{
   border-color:var(--sage);background:var(--sage);color:#fff;
 }
+
+/* the crystal is draggable and now focusable, so it says so */
+.crystal-how{
+  font-family:var(--f-mono);font-size:.72rem;letter-spacing:.05em;
+  color:var(--ink-soft);margin:0 0 .6rem;
+}
+#crystal-canvas:focus-visible,#cell-canvas:focus-visible{
+  outline:2px solid var(--sage);outline-offset:3px;
+}

@@ -263,28 +263,123 @@ function totals(){
 /* ---------------- crystal ---------------- */
 var CR = {};
 /* -------------------------------------------------------------------------
-   VISIBILITY GATE
+   THE SCHEDULER
 
    Both three.js views used to render every frame forever, whether they were
    on screen or not. RM stopped the rotation but not the render, so two WebGL
    contexts drew continuously on a phone that could not afford one.
 
-   drive() renders only while the host element is on screen and the tab is
-   visible, and it stops the loop rather than skipping work inside it.
+   The first fix gave each view its own observer and its own loop, which was
+   better but not the promise. The promise is that only the simulation in
+   view runs, and per view gating does not deliver that: it delivers "every
+   view that happens to be on screen runs". Measured by putting the two
+   animated views next to each other and counting callbacks by closure
+   identity, both loops ran, 288 requests each over two seconds.
+
+   On the page as it stands they sit 11,632 pixels apart, so it never
+   actually bit. It would have started biting silently the first time a
+   section got shorter or a third view was added.
+
+   So there is one loop now, the way the notebook's engine does it. Every
+   view reports how much of itself is on screen and the scheduler drives the
+   winner. Everything else is not merely skipped, it has no loop to leave
+   behind.
    ------------------------------------------------------------------------- */
+var DRIVERS=[], DRIVING=null, RAFID=null;
+
+function driveFrame(){
+  RAFID=null;
+  if(!DRIVING || document.hidden) return;
+  try { DRIVING.render(); }
+  catch(e){ if(window.console) console.error('render', e); DRIVING.dead=true; DRIVING=null; return; }
+  RAFID=requestAnimationFrame(driveFrame);
+}
+
+/* How much of this element is on screen, in pixels of height. Measured here
+   rather than taken from the observer, because an observer only speaks when
+   a threshold is crossed. The first version of this scheduler trusted the
+   observer's ratio, and a smooth scroll that crossed every threshold on the
+   way past left one driver holding a stale zero with nothing left to fire.
+   The loop stopped after five frames and never came back. Measured: six
+   animation frame requests in two seconds where there should have been
+   about three hundred. */
+function driveVisible(d){
+  if(d.dead) return 0;
+  var r=d.host.getBoundingClientRect();
+  var top=Math.max(r.top,0), bot=Math.min(r.bottom, window.innerHeight||0);
+  return Math.max(0, bot-top);
+}
+
+function drivePick(){
+  var best=null, bestV=0;
+  DRIVERS.forEach(function(d){
+    var v=driveVisible(d);
+    if(v>bestV){ bestV=v; best=d; }
+  });
+  if(best===DRIVING){
+    /* Already on the right one. Make sure it is actually turning, because
+       a driver can be correct and stopped at the same time. */
+    if(DRIVING && RAFID===null && !document.hidden) RAFID=requestAnimationFrame(driveFrame);
+    return;
+  }
+  DRIVING=best;
+  if(DRIVING){ if(RAFID===null && !document.hidden) RAFID=requestAnimationFrame(driveFrame); }
+  else if(RAFID!==null){ cancelAnimationFrame(RAFID); RAFID=null; }
+}
+
+var drivePending=false;
+function driveSoon(){
+  if(drivePending) return;
+  drivePending=true;
+  requestAnimationFrame(function(){ drivePending=false; drivePick(); });
+}
+
 function drive(host, render){
-  var id=null, on=false;
-  function frame(){ id=null; if(!on) return; render(); id=requestAnimationFrame(frame); }
-  function go(){ if(on||document.hidden) return; on=true; if(id===null) id=requestAnimationFrame(frame); }
-  function halt(){ on=false; if(id!==null){ cancelAnimationFrame(id); id=null; } }
+  var d={host:host, render:render, dead:false};
+  DRIVERS.push(d);
   if('IntersectionObserver' in window){
-    new IntersectionObserver(function(es){
-      es.forEach(function(e){ e.isIntersecting ? go() : halt(); });
-    },{rootMargin:'80px 0px',threshold:0.01}).observe(host);
-  } else { go(); }
-  document.addEventListener('visibilitychange', function(){ document.hidden ? halt() : go(); });
+    new IntersectionObserver(driveSoon,{rootMargin:'80px 0px',threshold:[0,0.5,1]}).observe(host);
+  }
   render();   // one still frame so it is never blank before it is reached
-  return {stop:halt};
+  driveSoon();
+  return {stop:function(){ d.dead=true; drivePick(); }};
+}
+
+/* Scroll is the signal that actually correlates with what is on screen, and
+   it is throttled to one check per frame. The observer stays as a cheap
+   wake up for the cases scroll does not cover, like a section being
+   revealed in place. */
+window.addEventListener('scroll', driveSoon, {passive:true});
+window.addEventListener('resize', driveSoon);
+document.addEventListener('visibilitychange', function(){
+  if(document.hidden){ if(RAFID!==null){ cancelAnimationFrame(RAFID); RAFID=null; } }
+  else driveSoon();
+});
+
+/* -------------------------------------------------------------------------
+   SIZING A WEBGL VIEW
+
+   The unit cell was rendering into a 58 pixel wide backing store stretched
+   across 556 pixels of layout, because it measured its host before the grid
+   around it had settled and never measured again. A nine times horizontal
+   stretch, and it looked like a slightly soft render rather than a bug.
+
+   Measure when the element has a size, and keep measuring.
+   ------------------------------------------------------------------------- */
+function fitView(host, ren, cam, fallbackW, fallbackH){
+  function apply(){
+    var w=host.clientWidth||fallbackW, h=host.clientHeight||fallbackH;
+    if(w<2||h<2) return;
+    ren.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+    ren.setSize(w,h,false);
+    ren.domElement.style.width='100%';
+    ren.domElement.style.height='100%';
+    if(cam){ cam.aspect=w/h; cam.updateProjectionMatrix(); }
+  }
+  apply();
+  if('ResizeObserver' in window){ new ResizeObserver(apply).observe(host); }
+  else { window.addEventListener('resize', apply); }
+  return apply;
 }
 
 function initCrystal(){
@@ -297,9 +392,8 @@ function initCrystal(){
   CR.cam.position.set(9,7,11);
   CR.cam.lookAt(0,0,0);
   CR.ren=new THREE.WebGLRenderer({antialias:true,alpha:true});
-  CR.ren.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  CR.ren.setSize(w,h);
   host.appendChild(CR.ren.domElement);
+  fitView(host, CR.ren, CR.cam, 600, 390);
 
   CR.scene.add(new THREE.AmbientLight(0xffffff,0.72));
   var d1=new THREE.DirectionalLight(0xffffff,0.62); d1.position.set(6,10,7); CR.scene.add(d1);
@@ -324,6 +418,23 @@ function initCrystal(){
   function up(){drag=false;}
   host.addEventListener('mousedown',down); window.addEventListener('mousemove',move); window.addEventListener('mouseup',up);
   host.addEventListener('touchstart',down,{passive:true}); host.addEventListener('touchmove',move,{passive:false}); host.addEventListener('touchend',up);
+
+  /* This one could be dragged with a mouse and with a thumb and not with a
+     keyboard, which the unit cell below it has always supported. Same keys,
+     same step, so the two behave identically. */
+  host.tabIndex=0;
+  host.addEventListener('keydown',function(e){
+    var s=0.15;
+    if(e.key==='ArrowLeft'){CR.group.rotation.y-=s;}
+    else if(e.key==='ArrowRight'){CR.group.rotation.y+=s;}
+    else if(e.key==='ArrowUp'){CR.group.rotation.x-=s;}
+    else if(e.key==='ArrowDown'){CR.group.rotation.x+=s;}
+    else return;
+    e.preventDefault();
+    /* Nudging it while it is off screen would otherwise do nothing visible
+       until you scrolled back, so draw the change now. */
+    CR.ren.render(CR.scene,CR.cam);
+  });
 
   var tog=$('#spin-toggle');
   tog.addEventListener('click',function(){
@@ -1273,8 +1384,8 @@ function initCell(){
   UC.cam=new THREE.PerspectiveCamera(40,w/h,0.1,100);
   UC.cam.position.set(3.4,2.7,3.9); UC.cam.lookAt(0,0,0);
   UC.ren=new THREE.WebGLRenderer({antialias:true,alpha:true});
-  UC.ren.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  UC.ren.setSize(w,h); host.appendChild(UC.ren.domElement);
+  host.appendChild(UC.ren.domElement);
+  fitView(host, UC.ren, UC.cam, 440, 260);
   UC.scene.add(new THREE.AmbientLight(0xffffff,0.8));
   var L=new THREE.DirectionalLight(0xffffff,0.6); L.position.set(4,6,5); UC.scene.add(L);
   UC.g=new THREE.Group(); UC.scene.add(UC.g);
