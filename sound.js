@@ -1,51 +1,60 @@
 /* =========================================================================
-   sound.js · sound tied to the physics, never to the interface
+   sound.js · one instrument, and every sound carrying a number
 
-   The rule this whole file obeys is that a sound has to mean something. A
-   drop lands, you hear a drop. A nucleus survives, you hear it settle. A
-   nucleus dissolves and you hear nothing at all, and that silence is
-   carrying information: most of them die.
+   THE RULE THIS FILE NOW OBEYS
 
-   WHAT IS A RECORDING AND WHAT IS SYNTHESISED, because it matters
+   A sound tells you something the screen has not, or it does not exist.
 
-   Three real recordings, from Mixkit, whose free licence needs no account
-   and no attribution. They are listed in CREDITS.md anyway.
+   That rule deleted things. The glass tap that played on every button and
+   link is gone: a click sound tells you that you clicked, which you already
+   knew, and it was the loudest thing on the site. What is left either
+   carries a quantity, marks a threshold being crossed, or is the physical
+   event itself arriving.
 
-     tap.mp3    a wine glass clink, for buttons and links
-     page.mp3   a single page turn
-     drop.mp3   a drop of liquid landing
+   ONE INSTRUMENT, NOT A COLLECTION
 
-   Everything else is synthesised here, and not because nothing suitable
-   existed. It is synthesised because it has to carry a number:
+   Everything pitched lands on one grid: a minor pentatonic on A, three
+   octaves from 110 Hz. Nothing picks its own frequency any more, it asks
+   for a position in a range and gets the nearest note. That is why the
+   whole site now sounds like one room rather than seven separate widgets,
+   and it is also why a slider sweeping upward sounds like a scale rather
+   than a siren.
 
-     the endpoint tone, which has to go sour on an overshoot by exactly the
-       amount of the overshoot
-     the slider tick, which has to be almost nothing and vary
-     the settle of a surviving nucleus, whose pitch comes from its size
-     the diffraction sonification, where the width of a peak becomes the
-       spread of the tone
-     the nucleation crackle, whose rate is the computed nucleation rate
+   THE THREE RECORDINGS
 
-   A recording cannot do any of that. A file plays the same every time and
-   these five have to change with the data or they are decoration.
+     drop.wav   a real water drop landing in liquid   Mixkit 3179
+     glass.wav  glass struck against glass            Mixkit 2936
+     page.wav   a page actually turning               Mixkit 1105
 
-   THE RULES
+   All three replaced what was there before. The old drop was a bubble
+   swelling rather than a drop landing, and the old page turn was a 32 kbps
+   transient with no rustle in it. They ship as 22 kHz mono WAV rather than
+   MP3 on purpose: at this length the file size is the same, and a WAV needs
+   no decoder, which is the easiest fifty milliseconds of latency to lose.
 
-   Off on load, always, with no exception and no auto start. Nothing plays
-   because you scrolled. Files are not fetched at all until sound is
-   switched on, so a clean load pulls zero audio bytes. The same sound never
-   stacks on itself, and repeats are pitched slightly differently so it does
-   not sound mechanical. The choice lives in memory for the session, never
-   in storage.
+   WHAT EACH RECORDING IS ASKED TO CARRY
+
+   None of them plays at a fixed pitch. The drop's pitch rises with how
+   steep the titration curve is where you are, so you can hear the
+   equivalence point coming before the curve shows it. The glass is struck
+   at a pitch set by the size of the cluster that survived. The page is the
+   only one that plays flat, because a page turn is a page turn.
+
+   THE RULES THAT DID NOT CHANGE
+
+   Off on load. Nothing on scroll. Nothing fetched until it is switched on.
+   Never two of the same sound stacked. Silent under reduced motion unless
+   deliberately switched on. The choice lives in memory for the session and
+   never in storage.
    ========================================================================= */
 
 window.Snd = (function () {
   "use strict";
 
   var FILES = {
-    tap:  "assets/sound/tap.mp3",
-    page: "assets/sound/page.mp3",
-    drop: "assets/sound/drop.mp3"
+    drop:  "assets/sound/drop.wav",
+    glass: "assets/sound/glass.wav",
+    page:  "assets/sound/page.wav"
   };
 
   var on = false;
@@ -55,21 +64,47 @@ window.Snd = (function () {
   var asked = {};
   var lastAt = {};
   var listeners = [];
+  var base = "";              /* set by pages that sit in a subfolder */
 
   function reduced() {
     return window.matchMedia &&
            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
-  /* The context is not created until someone switches sound on, because
-     creating one on load is what gets a page a browser warning. */
+  /* ----------------------------------------------------------------------
+     THE INSTRUMENT
+
+     A minor pentatonic on A. Every pitched sound on the site quantises to
+     this, so two simulations playing at once are still in the same key and
+     a sweep sounds like an instrument rather than a theremin.
+     ---------------------------------------------------------------------- */
+  var ROOT = 110;                                  /* A2 */
+  var STEPS = [0, 3, 5, 7, 10];                    /* minor pentatonic */
+  var GRID = (function () {
+    var out = [];
+    for (var oct = 0; oct < 4; oct++) {
+      for (var i = 0; i < STEPS.length; i++) {
+        out.push(ROOT * Math.pow(2, (oct * 12 + STEPS[i]) / 12));
+      }
+    }
+    return out;                                    /* 20 notes, 110 to 1568 Hz */
+  })();
+
+  /* position 0..1 through the range, returned as a note on the grid */
+  function note(pos, lo, hi) {
+    var a = lo === undefined ? 0 : lo;
+    var b = hi === undefined ? GRID.length - 1 : hi;
+    var i = Math.round(a + Math.max(0, Math.min(pos, 1)) * (b - a));
+    return GRID[Math.max(0, Math.min(i, GRID.length - 1))];
+  }
+
   function audio() {
     if (ctx) return ctx;
     var AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return null;
     ctx = new AC();
     master = ctx.createGain();
-    master.gain.value = 0.55;
+    master.gain.value = 0.5;
     master.connect(ctx.destination);
     return ctx;
   }
@@ -78,7 +113,7 @@ window.Snd = (function () {
     if (buffers[name] || asked[name] || !FILES[name] || !ctx) return;
     asked[name] = true;
     var req = new XMLHttpRequest();
-    req.open("GET", FILES[name], true);
+    req.open("GET", base + FILES[name], true);
     req.responseType = "arraybuffer";
     req.onload = function () {
       if (req.status >= 400) return;
@@ -90,7 +125,6 @@ window.Snd = (function () {
 
   function warm() { Object.keys(FILES).forEach(fetchOne); }
 
-  /* Never two of the same thing on top of each other. */
   function clear(name, gapMs) {
     var t = Date.now();
     if (lastAt[name] && t - lastAt[name] < (gapMs || 70)) return false;
@@ -98,6 +132,9 @@ window.Snd = (function () {
     return true;
   }
 
+  /* A recording, played at a pitch that means something. `rate` is the
+     playback rate, so 2 is an octave up, and it is always a quantity rather
+     than a decoration. */
   function sample(name, opts) {
     if (!on || !ctx) return;
     var o = opts || {};
@@ -106,9 +143,7 @@ window.Snd = (function () {
     if (!buf) { fetchOne(name); return; }
     var src = ctx.createBufferSource();
     src.buffer = buf;
-    /* A small pitch wobble on every repeat, so twenty taps in a row do not
-       sound like one tap copied twenty times. */
-    src.playbackRate.value = (o.rate || 1) * (0.94 + Math.random() * 0.12);
+    src.playbackRate.value = o.rate || 1;
     var g = ctx.createGain();
     g.gain.value = o.gain === undefined ? 0.5 : o.gain;
     src.connect(g); g.connect(master);
@@ -119,8 +154,6 @@ window.Snd = (function () {
      SYNTHESIS
      ---------------------------------------------------------------------- */
 
-  /* One tone. `sour` detunes a second voice against the first, so an
-     overshoot is heard as a beat rather than told as a message. */
   function tone(opts) {
     if (!on || !ctx) return;
     var o = opts || {};
@@ -137,6 +170,8 @@ window.Snd = (function () {
     a.frequency.value = o.f || 440;
     a.connect(g); a.start(t0); a.stop(t0 + dur + 0.02);
 
+    /* Two voices a fraction apart beat against each other. The beat rate IS
+       the error, so an overshoot is heard rather than announced. */
     if (o.sour) {
       var b = ctx.createOscillator();
       b.type = o.type || "sine";
@@ -149,39 +184,81 @@ window.Snd = (function () {
     return t0 + dur;
   }
 
-  /* Almost nothing. A slider should feel like an instrument, not a toy. */
-  function tick() {
-    if (!on || !ctx || !clear("tick", 45)) return;
-    tone({ f: 1500 + Math.random() * 260, dur: 0.035, gain: 0.045, attack: 0.003 });
-  }
+  /* ----------------------------------------------------------------------
+     A SLIDER IS A SCALE
 
-  /* A nucleus that got across the barrier. Bigger clusters ring lower,
-     which is the same way a real thing does. */
-  function settle(sizeFrac) {
-    if (!on || !ctx || !clear("settle", 55)) return;
-    var f = 900 / Math.max(0.6, Math.min(sizeFrac || 1, 4));
-    tone({ f: f, dur: 0.20, gain: 0.13, type: "triangle", attack: 0.004 });
-    tone({ f: f * 2.01, dur: 0.11, gain: 0.05, attack: 0.004 });
-  }
-
-  /* Atoms landing on a growing face. Quiet, and the faster it grows the
-     more often you hear it. */
-  function shimmer(strength) {
-    if (!on || !ctx || !clear("shimmer", 110)) return;
-    var s = Math.max(0, Math.min(strength === undefined ? 1 : strength, 1));
-    tone({ f: 2100 + Math.random() * 900, dur: 0.07, gain: 0.02 + 0.03 * s, attack: 0.005 });
+     The old tick was a random pitch between 1500 and 1760 Hz. It marked
+     that you had moved something, which you could already see, and it told
+     you nothing about where you were. Now the pitch IS the position in the
+     range, quantised to the grid, so sweeping a slider up plays a rising
+     scale and you can hear whether you are near an end without looking.
+     ---------------------------------------------------------------------- */
+  function slide(pos) {
+    if (!on || !ctx || !clear("slide", 40)) return;
+    tone({ f: note(pos, 4, 17), dur: 0.05, gain: 0.05, attack: 0.003, type: "sine" });
   }
 
   /* ----------------------------------------------------------------------
-     SONIFICATION ONE · a diffraction pattern played as tones
+     A THRESHOLD SOUNDS DIFFERENT ON EACH SIDE
 
-     Position becomes pitch and width becomes spread. A sharp peak is a
-     single clean tone. A broad peak is the same centre note smeared across
-     several detuned voices, spread in proportion to the measured width, so
-     a small crystal sounds blurred in the same way it looks blurred.
+     Peclet passing one, a cluster passing the critical radius, an indicator
+     reaching its range. Crossing upward is a fifth up, crossing downward is
+     the same interval down, so which way you went is audible without being
+     told, and it cannot be confused with anything else on the site because
+     nothing else plays two notes in sequence.
+     ---------------------------------------------------------------------- */
+  function cross(up, weight) {
+    if (!on || !ctx || !clear("cross", 220)) return;
+    var w = Math.max(0, Math.min(weight === undefined ? 1 : weight, 1));
+    var lo = note(0.42, 4, 17), hi = note(0.62, 4, 17);
+    var g = 0.07 + 0.06 * w;
+    tone({ f: up ? lo : hi, dur: 0.11, gain: g, attack: 0.004, type: "triangle" });
+    var t = ctx.currentTime;
+    setTimeout(function () {
+      tone({ f: up ? hi : lo, dur: 0.22, gain: g * 0.9, attack: 0.004, type: "triangle" });
+    }, 90);
+    return t;
+  }
 
-     Someone who cannot see the screen learns the same thing from this that
-     a sighted reader learns from the picture.
+  /* ----------------------------------------------------------------------
+     A NUCLEUS THAT SURVIVED
+
+     Real glass, struck at a pitch set by how big the surviving cluster is.
+     A big one rings low, a small one rings high, which is what a struck
+     object actually does.
+     ---------------------------------------------------------------------- */
+  function settle(sizeFrac) {
+    if (!on || !ctx || !clear("settle", 60)) return;
+    var s = Math.max(0.5, Math.min(sizeFrac || 1, 5));
+    /* bigger cluster, lower pitch: rate below one is a lower playback pitch */
+    sample("glass", { rate: 1.5 / s, gain: 0.28, gap: 0 });
+  }
+
+  /* ----------------------------------------------------------------------
+     ATOMS ARRIVING ON A GROWING FACE
+
+     The old one picked a random pitch and only the rate of repetition meant
+     anything. Now the pitch is the growth rate, so as a crystal in low
+     gravity slows down you hear it fall as well as thin out.
+     ---------------------------------------------------------------------- */
+  function shimmer(strength) {
+    if (!on || !ctx || !clear("shimmer", 90)) return;
+    var s = Math.max(0, Math.min(strength === undefined ? 1 : strength, 1));
+    tone({ f: note(0.45 + s * 0.5, 8, 19), dur: 0.06,
+           gain: 0.018 + 0.03 * s, attack: 0.004 });
+  }
+
+  /* ----------------------------------------------------------------------
+     SONIFICATION ONE · the diffraction pattern
+
+     Position becomes pitch and the computed peak width becomes how far the
+     tone is smeared. A sharp peak is one clean note that rings. A broad one
+     is the same note across several detuned voices with a slow attack and
+     no edge, so a four nanometre crystal sounds like mush before you have
+     read anything.
+
+     The pitches land on the instrument's grid like everything else, so a
+     pattern is a chord rather than an arbitrary set of frequencies.
      ---------------------------------------------------------------------- */
   var scanning = null;
 
@@ -189,7 +266,7 @@ window.Snd = (function () {
     if (!on || !ctx || !peaks || !peaks.length) return;
     stopPattern();
     var o = opts || {};
-    var span = o.span || 2.6;                    /* seconds for the whole scan */
+    var span = o.span || 2.6;
     var t0 = ctx.currentTime + 0.05;
     var lo = o.lo === undefined ? 20 : o.lo;
     var hi = o.hi === undefined ? 120 : o.hi;
@@ -197,21 +274,25 @@ window.Snd = (function () {
     peaks.forEach(function (p) {
       var pos = Math.max(0, Math.min((p.twoTheta - lo) / (hi - lo), 1));
       var when = t0 + pos * span;
-      /* two octaves of pitch across the pattern */
-      var f = 196 * Math.pow(2, pos * 2);
+      var f = note(pos, 5, 18);
       var amp = (o.amp ? o.amp(p) : 1);
-      /* The width in degrees, turned into how far the voices are detuned.
-         A tenth of a degree is instrument limited and rings clean. Two
-         degrees is a nanocrystal and is meant to sound like mush. */
       var w = Math.max(0, p.width || 0);
       var spread = Math.min(w / 2.2, 1);
-      var voices = spread < 0.06 ? 1 : (spread < 0.3 ? 3 : 6);
-      var dur = 0.28 + spread * 0.5;
+      /* sharp rings, broad smears: fewer voices and a longer ring when it is
+         sharp, more voices and a slurred attack when it is broad */
+      /* How long it rings is the primary carrier, because that is what
+         "sharp" means to an ear. A narrow peak sustains for most of a
+         second on one clean voice. A wide one is over in a quarter of that,
+         spread across eight detuned voices with a slurred attack, so it
+         arrives as a smear rather than a note. Measured across the size
+         slider, that is a three and a half to one difference in ring time
+         and eight to one in voice count. */
+      var voices = spread < 0.05 ? 1 : (spread < 0.18 ? 3 : (spread < 0.45 ? 5 : 8));
+      var dur = 0.92 - spread * 0.68;
       for (var i = 0; i < voices; i++) {
-        var det = voices === 1 ? 0 : ((i / (voices - 1)) - 0.5) * spread * 0.16;
-        voice(f * (1 + det), when, dur, (0.16 * amp) / voices,
-              /* a broad peak also comes in slowly, because it has no edge */
-              0.004 + spread * 0.09);
+        var det = voices === 1 ? 0 : ((i / (voices - 1)) - 0.5) * spread * 0.22;
+        voice(f * (1 + det), when, dur, (0.17 * amp) / Math.sqrt(voices),
+              0.003 + spread * 0.16);
       }
     });
     scanning = setTimeout(function () { scanning = null; }, (span + 1) * 1000);
@@ -235,21 +316,23 @@ window.Snd = (function () {
   }
 
   /* ----------------------------------------------------------------------
-     SONIFICATION TWO · nucleation as a Geiger counter
+     SONIFICATION TWO · nucleation as a counter
 
-     One click per nucleus that actually gets across the barrier. Nothing at
-     all for the ones that dissolve, which is most of them, and that silence
-     is the point. Crank the supersaturation and the counter runs away.
+     A click per cluster that gets across the barrier, and its brightness is
+     the computed barrier height. A high barrier gives rare, dull clicks. A
+     low one gives a dense bright crackle. Nothing at all for the ones that
+     dissolve, which is most of them, and that silence is the measurement:
+     the gaps between clicks ARE the barrier.
      ---------------------------------------------------------------------- */
-  function crackle(pitchHint) {
+  function crackle(barrierFrac) {
     if (!on || !ctx) return;
+    var b = Math.max(0, Math.min(barrierFrac === undefined ? 0.5 : barrierFrac, 1));
     var t0 = ctx.currentTime;
     var g = ctx.createGain();
-    g.gain.setValueAtTime(0.11, t0);
-    g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.035);
+    g.gain.setValueAtTime(0.05 + 0.09 * (1 - b), t0);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.03);
     g.connect(master);
-    /* A click is a very short burst of noise, not a note. */
-    var n = Math.floor(ctx.sampleRate * 0.035);
+    var n = Math.floor(ctx.sampleRate * 0.03);
     var buf = ctx.createBuffer(1, n, ctx.sampleRate);
     var d = buf.getChannelData(0);
     for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
@@ -257,8 +340,9 @@ window.Snd = (function () {
     src.buffer = buf;
     var bp = ctx.createBiquadFilter();
     bp.type = "bandpass";
-    bp.frequency.value = 1400 + (pitchHint || 0) * 900;
-    bp.Q.value = 1.4;
+    /* a low barrier is bright and easy, a high one is dull and rare */
+    bp.frequency.value = 700 + (1 - b) * 2200;
+    bp.Q.value = 1.2;
     src.connect(bp); bp.connect(g);
     src.start(t0);
   }
@@ -293,29 +377,20 @@ window.Snd = (function () {
     b.addEventListener("click", function () { setOn(!on); dismiss(); });
     document.body.appendChild(b);
 
-    /* One invitation, in her voice, low down, easy to ignore, and it does
-       not come back once it has been waved away.
-
-       It sits IN the page rather than floating over it. The first version
-       was a fixed panel above the toggle and it did exactly what the brief
-       forbids: it landed on top of a paragraph somebody was reading. A note
-       in the margin flow cannot do that, and it is closer to how she writes
-       anyway. */
     var inv = document.createElement("aside");
     inv.className = "sound-invite";
     inv.setAttribute("role", "note");
-    /* Two sentences. On a 320px screen anything longer is a panel sitting on
-       top of a paragraph somebody is trying to read. */
     inv.innerHTML =
-      '<p>There is sound here if you want it. Nothing plays by itself. A drop ' +
-      'lands and you hear a drop, and the crystals that dissolve are silent, ' +
-      'which is the part I wanted you to notice.</p>' +
+      '<p>There is sound here if you want it. Nothing plays by itself, and ' +
+      'nothing plays just because you pressed something. Every sound on this ' +
+      'site is telling you a number: how steep the curve is under the drop, ' +
+      'how big the crystal that survived was, how wide a diffraction peak is. ' +
+      'The ones that dissolve stay silent, and that silence is the part I ' +
+      'wanted you to notice.</p>' +
       '<p class="sound-invite-do">' +
       '<button type="button" class="btn-quiet" data-invite-yes>Turn it on</button>' +
       '<button type="button" class="btn-quiet" data-invite-no>No thanks</button></p>';
-    /* Placed a few entries in, so it is genuinely low down and a reader who
-       never gets that far never meets it. */
-    var entries = document.querySelectorAll("main .entry");
+    var entries = document.querySelectorAll("main .entry, main section");
     var anchor = entries[Math.min(2, entries.length - 1)];
     if (anchor && anchor.parentNode) {
       anchor.parentNode.insertBefore(inv, anchor.nextSibling);
@@ -333,7 +408,6 @@ window.Snd = (function () {
     };
   }
 
-  /* Replaced by build() once the invitation exists. */
   var dismiss = function () {};
 
   if (document.readyState === "loading") {
@@ -342,16 +416,9 @@ window.Snd = (function () {
     build();
   }
 
-  /* Buttons and links get the glass tap, and only after a real press. This
-     is the one interface sound on the site and it earns its place by being
-     the thing that tells you the press registered. */
-  document.addEventListener("click", function (e) {
-    if (!on) return;
-    var t = e.target.closest ? e.target.closest("button, a, summary") : null;
-    if (!t) return;
-    if (t.hasAttribute("data-sound-toggle")) return;
-    sample("tap", { gain: 0.30, gap: 55 });
-  }, true);
+  /* There is deliberately no sound on buttons and links any more. It told
+     you that you had clicked something, which you knew, and it was the
+     loudest and most frequent thing on the site. */
 
   document.documentElement.setAttribute("data-sound", "off");
 
@@ -359,14 +426,19 @@ window.Snd = (function () {
     enabled: function () { return on; },
     set: setOn,
     onChange: function (fn) { listeners.push(fn); fn(on); },
+    basePath: function (p) { base = p || ""; },
+    note: note,
     sample: sample,
     tone: tone,
-    tick: tick,
+    slide: slide,
+    cross: cross,
     settle: settle,
     shimmer: shimmer,
     crackle: crackle,
     pattern: pattern,
     stopPattern: stopPattern,
-    reduced: reduced
+    reduced: reduced,
+    /* for measurement: how many notes the grid has and where it spans */
+    grid: function () { return GRID.slice(); }
   };
 })();

@@ -64,6 +64,16 @@
 
   function dG(r) { return 4 * Math.PI * r * r * GAMMA - (4 / 3) * Math.PI * r * r * r * dGv(); }
 
+  /* The barrier as a position between the easiest and hardest this slider
+     can make it, so the sound has something bounded to map onto. Computed
+     from dGStar, not from the slider position, so it stays true if the
+     constants change. */
+  function barrierFrac() {
+    var b = dGStar() / kT;
+    var easy = 6, hard = 90;            /* kT, the ends of this slider */
+    return Math.max(0, Math.min((b - easy) / (hard - easy), 1));
+  }
+
   /* ---- DOM ------------------------------------------------------------- */
   var cvEnergy = host.querySelector('[data-view="energy"]');
   var cvField  = host.querySelector('[data-view="field"]');
@@ -191,10 +201,23 @@
          the information: almost all of them go this way and you are meant to
          hear how rarely the counter clicks. */
       if (c.r <= rs * 0.04) { clusters.splice(i, 1); died++; continue; }
+      /* Crossing r* is the moment the physics changes sign: below it a
+         cluster is more likely to shrink, above it to grow. It is the one
+         threshold this whole simulation exists to show, so it sounds. */
+      if (!c.crossed && c.r >= rs) {
+        c.crossed = true;
+        if (listening && window.Snd && Snd.enabled()) Snd.cross(true, 1 - barrierFrac());
+      }
       if (c.r > rs * 2.3 && !c.escaped) {
         c.escaped = true; survivors++;
         if (listening && window.Snd && Snd.enabled()) {
-          Snd.crackle(Math.min(c.r / rs / 3, 1));
+          /* The click's brightness is the computed barrier, normalised over
+             the range this slider actually covers. A high barrier gives rare
+             dull clicks, a low one a dense bright crackle, and the gaps
+             between them are the measurement. Nothing plays for the ones
+             that dissolve, which is most of them. */
+          Snd.crackle(barrierFrac());
+          /* And real glass, struck at a pitch set by the surviving size. */
           Snd.settle(c.r / rs);
         }
       }
@@ -264,7 +287,8 @@
   if (slider) {
     slider.addEventListener("input", function () {
       S = parseFloat(slider.value); reset(); draw(); readout(); Sim.writeUrl();
-      if (window.Snd) Snd.tick();
+      /* Pitch is the supersaturation, so sweeping it is a rising scale. */
+      if (window.Snd) Snd.slide((S - 1.2) / (10 - 1.2));
     });
     Sim.stepper(slider, { label: "supersaturation" });
   }

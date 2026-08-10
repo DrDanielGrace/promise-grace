@@ -108,8 +108,9 @@
           if (window.Snd && Snd.enabled()) {
             /* Right and wrong sound different, and wrong is not a buzzer.
                It is the same note, flattened. */
-            Snd.tone(ok ? { f: 528, dur: 0.28, gain: 0.12 }
-                        : { f: 396, dur: 0.36, gain: 0.11, sour: 0.06 });
+            Snd.tone(ok
+              ? { f: Snd.note(0.62, 4, 17), dur: 0.28, gain: 0.10 }
+              : { f: Snd.note(0.35, 4, 17), dur: 0.36, gain: 0.09, sour: 0.05 });
           }
         });
       });

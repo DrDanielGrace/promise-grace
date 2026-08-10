@@ -77,6 +77,11 @@
   }
 
   function ind() { return INDICATORS[indicator]; }
+  /* Is the flask's pH inside the band over which this indicator changes? */
+  function inIndicatorRange() {
+    var pH = pHat(Vb), i = ind();
+    return pH > i.lo && pH < i.hi;
+  }
   function colourFraction() {
     var pH = pHat(Vb), i = ind();
     if (pH <= i.lo) return 0;
@@ -241,8 +246,33 @@
      can do that. Colour turning is the signal a student actually reads, so
      the tone fires when the indicator is half turned, not at equivalence. */
   var wasTurned = false;
+  var wasInRange = false;
+
+  /* How steep the curve is here, normalised. This is the number that decides
+     whether one more drop matters, and until now it was only visible. The
+     drop sound is pitched by it, so the equivalence point can be heard
+     approaching several drops before the curve turns. */
+  function steepness() {
+    var d = 0.05;
+    var a = pHat(Math.max(0, Vb - d)), b = pHat(Vb + d);
+    var slope = Math.abs(b - a) / (2 * d);      /* pH units per cm3 */
+    return Math.max(0, Math.min(Math.log10(1 + slope) / 1.6, 1));
+  }
+
   function listen() {
-    if (!window.Snd || !Snd.enabled()) { wasTurned = colourFraction() >= 0.5; return; }
+    if (!window.Snd || !Snd.enabled()) {
+      wasTurned = colourFraction() >= 0.5;
+      wasInRange = inIndicatorRange();
+      return;
+    }
+
+    /* Threshold: the pH has entered the indicator's own range, which is the
+       moment a student starts watching the flask rather than the burette.
+       Entering and leaving sound different, so you know which happened. */
+    var nowIn = inIndicatorRange();
+    if (nowIn !== wasInRange) Snd.cross(nowIn, steepness());
+    wasInRange = nowIn;
+
     var turned = colourFraction() >= 0.5;
     if (turned && !wasTurned) {
       /* The same number the readout calls ERROR: how far the colour turning
@@ -253,11 +283,12 @@
          reading on the page. */
       var ve = equivalenceVolume();
       var err = Math.abs(endpointVolume() - ve) / ve;
+      var root = Snd.note(0.35, 4, 17);
       if (err > 0.01) {
-        Snd.tone({ f: 392, dur: 0.9, gain: 0.16, sour: Math.min(0.03 + err * 0.5, 0.22) });
+        Snd.tone({ f: root, dur: 0.9, gain: 0.16, sour: Math.min(0.03 + err * 0.5, 0.22) });
       } else {
-        Snd.tone({ f: 392, dur: 0.7, gain: 0.17 });
-        Snd.tone({ f: 588, dur: 0.5, gain: 0.07 });
+        Snd.tone({ f: root, dur: 0.7, gain: 0.17 });
+        Snd.tone({ f: Snd.note(0.62, 4, 17), dur: 0.5, gain: 0.07 });
       }
     }
     wasTurned = turned;
@@ -268,7 +299,8 @@
     vIn.max = String(equivalenceVolume() * 2);
     vIn.addEventListener("input", function () {
       Vb = parseFloat(vIn.value); readout(); draw();
-      if (window.Snd) Snd.tick();
+      /* The slider's pitch is where you are in the burette, not a tick. */
+      if (window.Snd) Snd.slide(Vb / (equivalenceVolume() * 2));
       listen();
     });
     Sim.stepper(vIn, { label: "volume added" });
@@ -278,13 +310,20 @@
     Vb = Math.min(Vb + 0.05, equivalenceVolume() * 2);
     if (vIn) vIn.value = String(Vb);
     readout(); draw();
-    if (window.Snd) Snd.sample("drop", { gain: 0.4, gap: 90 });
+    /* A real drop, pitched by how steep the curve is where it landed. Far
+       from the equivalence point it lands dull and flat. Close to it, the
+       same drop comes back a fifth higher, and you can hear the cliff
+       coming before you can see it. */
+    if (window.Snd) {
+      Snd.sample("drop", { rate: 0.85 + steepness() * 0.75,
+                           gain: 0.30 + steepness() * 0.2, gap: 60 });
+    }
     listen();
   });
   var rinse = host.querySelector('[data-act="rinse"]');
   if (rinse) rinse.addEventListener("click", function () {
     Vb = 0; if (vIn) vIn.value = "0"; readout(); draw();
-    wasTurned = false;
+    wasTurned = false; wasInRange = inIndicatorRange();
   });
 
   var p = new URLSearchParams(location.search);

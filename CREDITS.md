@@ -6,47 +6,65 @@ Everything on this site that came from somewhere else, and where from.
 
 ## Sound
 
-Three recordings. All three are from Mixkit, under the Mixkit Sound Effects
-Free Licence, which allows commercial and non commercial use and does not
-require attribution or an account. They are listed here anyway, because
-saying where a thing came from costs nothing.
+Three recordings, all from Mixkit, under the Mixkit Sound Effects Free
+Licence, which allows commercial and non commercial use and requires no
+attribution and no account. Recorded here anyway.
 
-| File | Source | Mixkit id | Used for |
+| File | Source | Mixkit id | Carries |
 |---|---|---|---|
-| `assets/sound/tap.mp3` | Mixkit, "Wine glass clink" | 2936 | Buttons and links |
-| `assets/sound/page.mp3` | Mixkit, "Page turn single" | 1104 | Turning a page |
-| `assets/sound/drop.mp3` | Mixkit, "Liquid bubble" | 3000 | A drop landing in the titration |
+| `assets/sound/drop.wav` | Mixkit, "Water drop splashes in cave" | 3179 | A titration drop, pitched by how steep the curve is where it lands |
+| `assets/sound/glass.wav` | Mixkit, "Wine glass clink" | 2936 | A surviving nucleus, struck at a pitch set by its size |
+| `assets/sound/page.wav` | Mixkit, "Big paper page turn" | 1105 | A page turning, and this is the only one that plays flat |
 
 Licence: https://mixkit.co/license/#sfxFree
 
-Each file was trimmed to the sound itself and nothing after it, by dropping
-whole MPEG frames, so no re-encoding happened and nothing was degraded. The
-three together come to 49 KB and none of them is fetched until sound is
-switched on.
+All three replaced earlier choices that had been settled for. The old drop
+was "Liquid bubble", which is a bubble swelling rather than a drop landing.
+The old page turn was "Page turn single", a transient with no rustle in it
+and encoded at 32 kbps. Freesound and Pixabay were checked for better
+material and Mixkit had the closest recordings of the actual events, so
+nothing is owed to anybody and nothing has to appear in the page.
 
-Nothing was taken from Freesound, so there is no attribution owed to anyone
-and nothing that has to appear in the page.
+Each file is trimmed to the event itself by finding where the sound rises
+above four per cent of its peak and where it falls back under two, then
+faded at both ends so the cut cannot add a click of its own. They ship as
+22 kHz mono WAV rather than MP3, deliberately: at this length the file size
+is the same, and a WAV needs no decoder, which is the cheapest way to keep
+the gap between an action and its sound under fifty milliseconds. Measured
+latency across every sound on the site is 0.1 to 1.9 ms.
 
-### What is synthesised, and why it had to be
+Total weight 77 KB, and none of it is fetched until sound is switched on.
 
-Five sounds are generated in the browser in `sound.js`. Not because nothing
-suitable existed in a free library, but because each one has to carry a
-number that changes:
+### What is synthesised, and why it has to be
 
-- **The endpoint tone.** It has to go sour by exactly the amount you
-  overshot the equivalence point by. A second voice is detuned against the
-  first in proportion to the overshoot, so you hear the error rather than
-  being told about it. A file plays the same every time and cannot do this.
-- **The slider tick.** It has to be almost nothing, and vary, so a slider
-  feels like an instrument.
-- **The settle of a surviving nucleus.** Its pitch comes from the size of
-  the cluster that survived.
-- **The diffraction sonification.** Peak position becomes pitch and the
-  computed peak width becomes how far the tone is smeared across detuned
-  voices. It is the same three numbers the graph is drawn from.
-- **The nucleation crackle.** One click per cluster that actually crosses
-  the barrier. The rate is the computed nucleation rate. Clusters that
-  dissolve are silent, and that silence is the information.
+Nothing here is synthesised for want of a recording. Each one carries a
+number that moves, and a file plays the same every time.
+
+- **The slider**, whose pitch is its position in its own range, quantised to
+  the site's scale, so sweeping one plays a rising or falling run. It used to
+  be a random pitch that told you only that you had moved something.
+- **The threshold**, a rising pair of notes going up and the same pair
+  falling coming down. Used for the Peclet number passing one, a cluster
+  passing the critical radius, an indicator's range being entered, and a
+  Bragg reflection coming into step.
+- **The endpoint tone**, which beats against a detuned copy of itself in
+  proportion to the titration error, in either direction, because the
+  expensive mistake in that lab reads ninety one per cent low rather than
+  high.
+- **The nucleation counter**, whose click brightness is the computed barrier
+  height. High barrier, rare dull clicks. Low barrier, dense and bright.
+- **The diffraction sonification**, where ring time is sharpness. A narrow
+  peak sustains on one voice, a wide one is over in a quarter of the time
+  across eight detuned voices.
+- **The growth shimmer**, pitched and paced by the computed growth rate.
+
+### What was deleted
+
+The glass tap that played on every button, link and disclosure. It told you
+that you had clicked something, which you already knew, and it was the
+loudest and most frequent sound on the site. Under the rule that a sound
+must tell you something the screen has not, it did not qualify.
+
 
 ---
 

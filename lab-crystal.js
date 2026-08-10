@@ -56,6 +56,7 @@
   var tier = { agents: 1, extras: true, res: null };
   var running = true;
   var shimmerAcc = 0;       // paces the growth sound off the computed rate
+  var wasAbovePe = true;    // for the Peclet threshold, which is the answer
 
   function u()  { return U_1G * g; }
   function Pe() { return u() * R / D; }
@@ -273,7 +274,17 @@
         if (window.Snd && Snd.enabled()) {
           var s = Math.min(rate * 1e6 / 3, 1);
           shimmerAcc += dt * (0.7 + s * 9);
+          /* Both the rate of arrival AND the pitch are the growth rate now,
+             so a crystal slowing down in low gravity is heard falling as
+             well as thinning out. The old version picked a random pitch. */
           if (shimmerAcc >= 1) { shimmerAcc = 0; Snd.shimmer(s); }
+
+          /* Peclet passing one is the answer to the whole entry: the point
+             where transport stops being dominated by flow and starts being
+             dominated by diffusion. It has always been a number on screen
+             and never an event. */
+          var above = Pe() > 1;
+          if (above !== wasAbovePe) { Snd.cross(above, 1); wasAbovePe = above; }
         }
         if (R >= R_MAX) { running = false; handoff(); }
       }
@@ -313,7 +324,9 @@
       g = parseFloat(slider.value);
       reset(); readout(); drawAll();
       Sim.writeUrl();
-      if (window.Snd) Snd.tick();
+      /* Pitch is gravity, so the sweep from 1 g down to nothing falls. */
+      if (window.Snd) Snd.slide(g);
+      wasAbovePe = Pe() > 1;
     });
     Sim.stepper(slider, { label: "gravity" });
   }

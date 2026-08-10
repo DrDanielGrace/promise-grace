@@ -1317,6 +1317,7 @@ $$('.stepper').forEach(function(sp){
 });
 
 /* ---------------- Bragg ---------------- */
+var braggWas='off';
 function drawBragg(){
   var c=$('#bragg-canvas'); if(!c) return;
   var g=c.getContext('2d'), W=520,H=300;
@@ -1370,6 +1371,15 @@ function drawBragg(){
     $('#bg-exact').textContent = exact===null ? 'none at this spacing'
       : (exact.toFixed(1)+'\u00B0, ' + Math.abs(th-exact).toFixed(1)+'\u00B0 away');
   }
+
+  /* Coming into step and falling out of it are opposite events, and they
+     sound opposite. This is the moment the detector would see a peak. */
+  if(window.Snd && Snd.cross && braggWas !== state){
+    if(state==='in') Snd.cross(true, 1);
+    else if(braggWas==='in') Snd.cross(false, 0.6);
+    braggWas = state;
+  }
+  braggWas = state;
 
   g.fillStyle = state==='in' ? '#33543B' : (state==='near' ? '#8A5A2B' : '#615A6E');
   g.font='500 13px "IBM Plex Mono",monospace';
@@ -1624,6 +1634,24 @@ $$('[data-cell]').forEach(function(b){ b.addEventListener('click', writeUrl); })
 if($('#sq-add')) $('#sq-add').addEventListener('click', writeUrl);
 
 /* ---------------- go ---------------- */
+/* This page sits in a subfolder, so the shared sound engine is told where
+   the files actually are. Same instrument as the notebook, same grid, so
+   moving between the two pages does not change key. */
+if(window.Snd && Snd.basePath) Snd.basePath('../');
+
+/* Every slider here plays its position rather than a tick, the same way the
+   notebook's do. Sweeping the band gap is a rising scale. */
+(function(){
+  [['#ph-conc',0,140],['#arr-t',280,420],['#bg-wl',200,1400],['#bud-gap',40,300],
+   ['#bragg-theta',5,60],['#bragg-d',10,40],['#sq-gap',40,300],['#sq-gap2',40,280]]
+    .forEach(function(row){
+      var el=$(row[0]); if(!el) return;
+      el.addEventListener('input',function(){
+        if(window.Snd && Snd.slide) Snd.slide((+el.value - row[1])/(row[2]-row[1]));
+      });
+    });
+})();
+
 renderStatus();
 renderPhases();
 renderPapers();
