@@ -78,6 +78,11 @@ window.Pages = (function () {
       current = best;
       if (current > furthest) furthest = current;
       mark();
+      /* Scrolling past a page boundary is the thing you hear most, so it is
+         the quietest thing here: a short window of real paper, a bit
+         different every time. It fires on the boundary, never continuously,
+         so scrolling itself makes no sound. */
+      if (on && window.Snd && Snd.enabled() && !reduced.matches) Snd.scroll();
     }
   }
 
@@ -111,7 +116,7 @@ window.Pages = (function () {
     if (current > furthest) furthest = current;
     mark();
     settle(target);
-    if (window.Snd && Snd.enabled()) Snd.sample("page", { gain: 0.34, gap: 220 });
+    if (window.Snd && Snd.enabled()) Snd.page();
   }
 
   /* The soft shadow that lifts along the leading edge as a page comes to

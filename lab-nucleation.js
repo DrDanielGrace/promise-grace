@@ -206,7 +206,7 @@
          threshold this whole simulation exists to show, so it sounds. */
       if (!c.crossed && c.r >= rs) {
         c.crossed = true;
-        if (listening && window.Snd && Snd.enabled()) Snd.cross(true, 1 - barrierFrac());
+        if (listening && window.Snd && Snd.enabled()) Snd.cross(true);
       }
       if (c.r > rs * 2.3 && !c.escaped) {
         c.escaped = true; survivors++;
@@ -288,7 +288,7 @@
     slider.addEventListener("input", function () {
       S = parseFloat(slider.value); reset(); draw(); readout(); Sim.writeUrl();
       /* Pitch is the supersaturation, so sweeping it is a rising scale. */
-      if (window.Snd) Snd.slide((S - 1.2) / (10 - 1.2));
+      if (window.Snd) Snd.slide();
     });
     Sim.stepper(slider, { label: "supersaturation" });
   }

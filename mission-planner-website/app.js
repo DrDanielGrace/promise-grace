@@ -1375,8 +1375,8 @@ function drawBragg(){
   /* Coming into step and falling out of it are opposite events, and they
      sound opposite. This is the moment the detector would see a peak. */
   if(window.Snd && Snd.cross && braggWas !== state){
-    if(state==='in') Snd.cross(true, 1);
-    else if(braggWas==='in') Snd.cross(false, 0.6);
+    if(state==='in') Snd.cross(true);
+    else if(braggWas==='in') Snd.cross(false);
     braggWas = state;
   }
   braggWas = state;
@@ -1647,7 +1647,7 @@ if(window.Snd && Snd.basePath) Snd.basePath('../');
     .forEach(function(row){
       var el=$(row[0]); if(!el) return;
       el.addEventListener('input',function(){
-        if(window.Snd && Snd.slide) Snd.slide((+el.value - row[1])/(row[2]-row[1]));
+        if(window.Snd && Snd.slide) Snd.slide();
       });
     });
 })();

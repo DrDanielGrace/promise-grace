@@ -368,7 +368,7 @@
       D = parseFloat(sizeInput.value); fromGrowth = null; readout(); draw(); Sim.writeUrl();
       /* Pitch is the crystallite size, so dragging toward four nanometres
          falls, which is the same direction the peaks are going. */
-      if (window.Snd) Snd.slide((D - 4) / (200 - 4));
+      if (window.Snd) Snd.slide();
     });
     Sim.stepper(sizeInput, { label: "crystallite size" });
   }

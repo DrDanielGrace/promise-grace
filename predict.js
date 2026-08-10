@@ -108,9 +108,9 @@
           if (window.Snd && Snd.enabled()) {
             /* Right and wrong sound different, and wrong is not a buzzer.
                It is the same note, flattened. */
-            Snd.tone(ok
-              ? { f: Snd.note(0.62, 4, 17), dur: 0.28, gain: 0.10 }
-              : { f: Snd.note(0.35, 4, 17), dur: 0.36, gain: 0.09, sour: 0.05 });
+            /* The same piece of glass either way. Right rings, wrong is
+               damped. No notes, no buzzer. */
+            Snd.glass(ok ? { gain: 0.15 } : { gain: 0.12, dark: 1400 });
           }
         });
       });

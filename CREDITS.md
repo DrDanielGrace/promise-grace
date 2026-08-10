@@ -6,65 +6,60 @@ Everything on this site that came from somewhere else, and where from.
 
 ## Sound
 
-Three recordings, all from Mixkit, under the Mixkit Sound Effects Free
-Licence, which allows commercial and non commercial use and requires no
-attribution and no account. Recorded here anyway.
+Five recordings, all from Freesound, all released under **Creative Commons
+Zero**, which places them in the public domain and requires no attribution.
+Credited here regardless.
 
-| File | Source | Mixkit id | Carries |
+| File | Freesound | Uploader | What it is |
 |---|---|---|---|
-| `assets/sound/drop.wav` | Mixkit, "Water drop splashes in cave" | 3179 | A titration drop, pitched by how steep the curve is where it lands |
-| `assets/sound/glass.wav` | Mixkit, "Wine glass clink" | 2936 | A surviving nucleus, struck at a pitch set by its size |
-| `assets/sound/page.wav` | Mixkit, "Big paper page turn" | 1105 | A page turning, and this is the only one that plays flat |
+| `assets/sound/drop.mp3` | 667386, "droplet" | MasterSuite | A single droplet falling into water |
+| `assets/sound/glass.mp3` | 506913, "Bottle_Clink" | schoman3 | One bottle touched against another |
+| `assets/sound/paper.mp3` | 856497, "Turning page (heavy paper)" | xkeril | A hand turning a page of heavy paper |
+| `assets/sound/stopper.mp3` | 578640, "Small Bottle Pop" | -GeorgeDiamond- | A small cork easing out of a bottle |
+| `assets/sound/swirl.mp3` | 593790, "Liquid Swirl" | JalynCatbtg | Liquid moved around inside a glass |
 
-Licence: https://mixkit.co/license/#sfxFree
+Every one of these replaced a Mixkit sound that had been settled for. They
+were chosen by measurement rather than by name: ninety three candidates were
+downloaded, decoded in the browser, and scored on duration, decay, and the
+ratio of energy below 700 Hz to energy above 5 kHz, which is the difference
+between a recording with a body in it and one that is thin or tinny.
+Anything that scored as glare with no body was rejected, which removed most
+of the glass candidates, including several with more promising names.
 
-All three replaced earlier choices that had been settled for. The old drop
-was "Liquid bubble", which is a bubble swelling rather than a drop landing.
-The old page turn was "Page turn single", a transient with no rustle in it
-and encoded at 32 kbps. Freesound and Pixabay were checked for better
-material and Mixkit had the closest recordings of the actual events, so
-nothing is owed to anybody and nothing has to appear in the page.
+Total weight 107 KB, and none of it is fetched until sound is switched on.
 
-Each file is trimmed to the event itself by finding where the sound rises
-above four per cent of its peak and where it falls back under two, then
-faded at both ends so the cut cannot add a click of its own. They ship as
-22 kHz mono WAV rather than MP3, deliberately: at this length the file size
-is the same, and a WAV needs no decoder, which is the cheapest way to keep
-the gap between an action and its sound under fifty milliseconds. Measured
-latency across every sound on the site is 0.1 to 1.9 ms.
+### What is synthesised
 
-Total weight 77 KB, and none of it is fetched until sound is switched on.
+Only what cannot be a recording, and none of it is a note. Everything below
+is a short burst of noise, filtered and shaped:
 
-### What is synthesised, and why it has to be
+- the slider, which is a fingertip moving across paper
+- the threshold knock, where going up is open and woody and coming back down
+  is closed and dull, carried by darkness rather than by pitch
+- the nucleation counter, a dry tick that gets darker and quieter as the
+  barrier rises
+- the shimmer of atoms arriving on a growing face
 
-Nothing here is synthesised for want of a recording. Each one carries a
-number that moves, and a file plays the same every time.
+The one exception is the diffraction ring, which is pitched, because
+sharpness genuinely is how long a thing rings and the sweep across a pattern
+is the best thing the site does with sound.
 
-- **The slider**, whose pitch is its position in its own range, quantised to
-  the site's scale, so sweeping one plays a rising or falling run. It used to
-  be a random pitch that told you only that you had moved something.
-- **The threshold**, a rising pair of notes going up and the same pair
-  falling coming down. Used for the Peclet number passing one, a cluster
-  passing the critical radius, an indicator's range being entered, and a
-  Bragg reflection coming into step.
-- **The endpoint tone**, which beats against a detuned copy of itself in
-  proportion to the titration error, in either direction, because the
-  expensive mistake in that lab reads ninety one per cent low rather than
-  high.
-- **The nucleation counter**, whose click brightness is the computed barrier
-  height. High barrier, rare dull clicks. Low barrier, dense and bright.
-- **The diffraction sonification**, where ring time is sharpness. A narrow
-  peak sustains on one voice, a wide one is over in a quarter of the time
-  across eight detuned voices.
-- **The growth shimmer**, pitched and paced by the computed growth rate.
+Everything, recordings included, is mixed through a short synthetic impulse
+about a quarter of a second long. It is the size of a room with a bench in
+it. It is what stops five separate recordings sounding like five separate
+recordings.
 
-### What was deleted
+### What was thrown away, twice
 
-The glass tap that played on every button, link and disclosure. It told you
-that you had clicked something, which you already knew, and it was the
-loudest and most frequent sound on the site. Under the rule that a sound
-must tell you something the screen has not, it did not qualify.
+First the click sound on every button and link, because it only told you
+that you had clicked.
 
+Then an entire earlier version of this file, which put every sound on a
+pentatonic scale so that all of them could carry a number. It worked and it
+was horrible: a bell struck over and over. A laboratory is glass, liquid,
+paper and small mechanical things, not music. Texture comes first now and
+information second, and where carrying a number made a sound uglier, the
+number went and the sound stayed.
 
 ---
 

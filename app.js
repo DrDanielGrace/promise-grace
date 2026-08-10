@@ -708,7 +708,10 @@
     });
 
     var ctrls = $("[data-controls='stalactite']");
-    if (ctrls) on($("[data-act='replay']", ctrls), "click", function () { tk.t = 0; });
+    if (ctrls) on($("[data-act='replay']", ctrls), "click", function () {
+      tk.t = 0;
+      if (window.Snd) Snd.stopper();
+    });
 
     /* No depth control on this one, deliberately. Every other simulation
        here has something real to reveal at the maths setting, because every

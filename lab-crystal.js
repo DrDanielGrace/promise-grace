@@ -284,7 +284,7 @@
              dominated by diffusion. It has always been a number on screen
              and never an event. */
           var above = Pe() > 1;
-          if (above !== wasAbovePe) { Snd.cross(above, 1); wasAbovePe = above; }
+          if (above !== wasAbovePe) { Snd.cross(above); wasAbovePe = above; }
         }
         if (R >= R_MAX) { running = false; handoff(); }
       }
@@ -325,14 +325,18 @@
       reset(); readout(); drawAll();
       Sim.writeUrl();
       /* Pitch is gravity, so the sweep from 1 g down to nothing falls. */
-      if (window.Snd) Snd.slide(g);
+      if (window.Snd) Snd.slide();
       wasAbovePe = Pe() > 1;
     });
     Sim.stepper(slider, { label: "gravity" });
   }
 
+  /* Starting a run sounds like starting one: a cork easing out. */
   var replay = host.querySelector('[data-act="replay"]');
-  if (replay) replay.addEventListener("click", function () { reset(); drawAll(); readout(); });
+  if (replay) replay.addEventListener("click", function () {
+    reset(); drawAll(); readout();
+    if (window.Snd) Snd.stopper();
+  });
 
   /* Reading gravity back off a shared link. */
   var params = new URLSearchParams(location.search);

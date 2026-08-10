@@ -283,13 +283,10 @@
          reading on the page. */
       var ve = equivalenceVolume();
       var err = Math.abs(endpointVolume() - ve) / ve;
-      var root = Snd.note(0.35, 4, 17);
-      if (err > 0.01) {
-        Snd.tone({ f: root, dur: 0.9, gain: 0.16, sour: Math.min(0.03 + err * 0.5, 0.22) });
-      } else {
-        Snd.tone({ f: root, dur: 0.7, gain: 0.17 });
-        Snd.tone({ f: Snd.note(0.62, 4, 17), dur: 0.5, gain: 0.07 });
-      }
+      /* Glass touched. A clean reading rings, a bad one is muffled with a
+         dull knock under it. The error is in how dead it sounds, not in
+         any interval. */
+      Snd.endpoint(Math.min(err, 1));
     }
     wasTurned = turned;
   }
@@ -300,7 +297,7 @@
     vIn.addEventListener("input", function () {
       Vb = parseFloat(vIn.value); readout(); draw();
       /* The slider's pitch is where you are in the burette, not a tick. */
-      if (window.Snd) Snd.slide(Vb / (equivalenceVolume() * 2));
+      if (window.Snd) Snd.slide();
       listen();
     });
     Sim.stepper(vIn, { label: "volume added" });
@@ -314,15 +311,16 @@
        from the equivalence point it lands dull and flat. Close to it, the
        same drop comes back a fifth higher, and you can hear the cliff
        coming before you can see it. */
-    if (window.Snd) {
-      Snd.sample("drop", { rate: 0.85 + steepness() * 0.75,
-                           gain: 0.30 + steepness() * 0.2, gap: 60 });
-    }
+    /* A real droplet into water, drawn a little tighter as the cliff gets
+       closer. This is one of only two places pitch is used at all. */
+    if (window.Snd) Snd.drop(steepness());
     listen();
   });
   var rinse = host.querySelector('[data-act="rinse"]');
   if (rinse) rinse.addEventListener("click", function () {
     Vb = 0; if (vIn) vIn.value = "0"; readout(); draw();
+    /* Emptying the flask sounds like emptying a flask. */
+    if (window.Snd) Snd.swirl();
     wasTurned = false; wasInRange = inIndicatorRange();
   });
 
