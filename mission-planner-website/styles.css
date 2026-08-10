@@ -806,3 +806,53 @@ html:not([data-depth="maths"]) .depth-only-maths{display:none}
 #crystal-canvas:focus-visible,#cell-canvas:focus-visible{
   outline:2px solid var(--sage);outline-offset:3px;
 }
+
+/* ==========================================================
+   PRINT
+
+   This page had no print rules at all, so printing it gave dark
+   instrument panels as solid blocks of toner and every control
+   that cannot be pressed on paper. Same treatment as the notebook.
+   ========================================================== */
+@media print{
+  body{background:#fff;color:#000;font-size:10.5pt;line-height:1.45}
+  body::before{display:none}                 /* the ruling */
+  section{padding:0 0 1.5rem;max-width:none}
+  section::before{display:none}
+
+  /* nothing you can press on paper */
+  .topbar,.skip,.plan-legend,.tel-controls,.data-actions,.predict-opts,
+  .wprompt,.letter textarea,.btn,.btn-quiet,.stepper,.slider-row,
+  input[type=range],.cell-btns,.depth,.working>summary{display:none !important}
+
+  /* an interactive becomes its prose and its caption, which is the same
+     fallback the noscript reader already gets */
+  canvas{display:none !important}
+  .viewport,.spectral-panel canvas{display:none !important}
+  noscript{display:block}
+  .fallback{display:block !important;border-left:2px solid #999;padding-left:.8rem}
+  .viz-cap{font-size:9pt;color:#333}
+
+  /* dark panels invert rather than printing as a slab */
+  .spectral-panel,.tele-dark,.working .code{
+    background:#fff !important;color:#000 !important;border-color:#999 !important;
+  }
+  .spectral-panel *,.tele-dark *,.working .code *{color:#000 !important}
+
+  /* the working stays open on paper, because that is the part worth reading */
+  .working{border-top:1px solid #999}
+  .working[open],.working{display:block}
+  .working>*:not(summary){display:block !important}
+  details>summary{display:none}
+  details>*:not(summary){display:block !important}
+
+  /* a link on paper says where it goes */
+  a[href^="http"]::after,a[href^="mailto"]::after{
+    content:" (" attr(href) ")";font-family:var(--f-mono);font-size:8.5pt;word-break:break-all;
+  }
+  a[href^="#"]::after{content:""}
+
+  h2,h3{page-break-after:avoid;break-after:avoid}
+  .viz{page-break-inside:auto;break-inside:auto}
+  figure{page-break-inside:avoid;break-inside:avoid}
+}

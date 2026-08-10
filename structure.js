@@ -112,3 +112,39 @@
     head.appendChild(wrap);
   });
 })();
+
+/* =========================================================================
+   THE DATED LINE
+
+   Entry 12 carries a "last updated" date, and a hand typed date is a fact
+   with a shelf life. It went stale twice. It now writes its own words from
+   one attribute, and once it is old enough to mislead somebody it says so
+   in the line itself, the same way the mission planner's status does.
+   ========================================================================= */
+(function () {
+  "use strict";
+  var el = document.querySelector(".updated[data-said]");
+  if (!el) return;
+
+  var said = new Date(el.getAttribute("data-said") + "T00:00:00");
+  if (isNaN(said)) return;
+
+  var days = Math.floor((Date.now() - said.getTime()) / 86400000);
+  var months = ["January","February","March","April","May","June","July",
+                "August","September","October","November","December"];
+
+  var line = el.querySelector('[data-out="updated-line"]');
+  var age = el.querySelector('[data-out="updated-age"]');
+  if (line) {
+    line.textContent = "Last updated " + said.getDate() + " " +
+                       months[said.getMonth()] + " " + said.getFullYear();
+  }
+  if (age) {
+    /* Three weeks is the point at which "currently" stops being a fair word
+       for something. Under that it says nothing, because a date that is a
+       few days old is just a date. */
+    age.textContent = days > 21
+      ? ", which was " + days + " days ago, so treat it as out of date"
+      : "";
+  }
+})();

@@ -16,6 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Caveat:wght@500&family=IBM+Plex+Mono:wght@400&display=swap">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="pages.css">
 </head>
 <body class="page-plain page-guide">
 
@@ -42,74 +43,40 @@
 </section>
 
 
-<!-- ============ 8.1 THREE WAYS IN ============ -->
-<article class="entry" id="ways">
-  <div class="entry-main">
-    <p class="entry-no mono">START HERE</p>
-    <h2>Three ways in. Pick the one that is true.</h2>
-
-    <div class="ways">
-      <div class="way">
-        <p class="mono way-tag">FOUR MINUTES</p>
-        <p class="way-head">I need to know whether she can actually do research.</p>
-        <p>Then you need four things and none of the rest of it.</p>
-        <ol class="way-list">
-          <li><a href="index.html#the-study">Entry 04, the study I ran.</a> A thousand students,
-          survey design, SPSS, hypothesis testing. More usefully, what I now think was wrong with
-          it, which is the part that tells you whether I can read my own work critically.</li>
-          <li><a href="index.html#training">Entry 10, what I taught myself.</a> The Arizona State
-          materials science specialisation, four courses, and the University of London research
-          methods course. Every certificate is linked and every link is live, because verifiable is
-          the whole point.</li>
-          <li><a href="index.html#stalactite">Entry 05, the open question.</a> A question I have
-          not answered, my prediction written down and dated, and an empty box beside it waiting
-          for the real answer, including if the real answer is that I was wrong.</li>
-          <li><a href="assets/promise-grace-research-cv.pdf" download="Promise Grace Research CV.pdf">The CV.</a>
-          One page, and there is a preview of the first page on the site so you do not have to
-          download it to look.</li>
-        </ol>
-        <p>That is genuinely all of it. If you decide from those four that this is not for your
-        group, that is a fair decision and I would rather you made it quickly.</p>
-      </div>
-
-      <div class="way">
-        <p class="mono way-tag">LONGER</p>
-        <p class="way-head">I want to understand something.</p>
-        <p>Then keep reading this page. Below there is one real question worked all the way through
-        using three simulations in a row, and by the end of it you will have learned how the site
-        works and what I actually research at the same time, without either being taught to you
-        separately.</p>
-        <p>It takes about five minutes and there is nothing to install.</p>
-      </div>
-
-      <div class="way">
-        <p class="mono way-tag">NO CHEMISTRY NEEDED</p>
-        <p class="way-head">I have never done chemistry and I am just curious.</p>
-        <p>Then start with three things, in this order, and ignore everything else.</p>
-        <ol class="way-list">
-          <li><a href="index.html#fig-stal">The stalactite.</a> Water drips in a cave, leaves a
-          tiny bit of solid behind, and over thousands of years that becomes rock. That is all a
-          crystal is: something growing very slowly out of a liquid.</li>
-          <li><a href="index.html#fig-titration">The titration.</a> You add drops of one liquid to
-          another until the colour changes. Press the drop button and watch. The interesting part
-          is that it is possible to do it wrong and not know.</li>
-          <li><a href="index.html#explaining">Entry 06, explaining things.</a> No equations. Just
-          the way I explain things to fifteen year olds, which is mostly saying the thing and then
-          saying the thing everybody gets wrong.</li>
-        </ol>
-        <p>Nothing on this site assumes you already know any of it. If a page loses you, that is my
-        fault and I would like to hear about it.</p>
-      </div>
-    </div>
-  </div>
-</article>
-
-
-<!-- ============ 8.3 THE DEPTH CONTROL ============ -->
+<!-- ============ 8.3 THE DEPTH CONTROL, first screen ============ -->
 <article class="entry" id="depth">
   <div class="entry-main">
     <p class="entry-no mono">FIRST THING TO KNOW</p>
     <h2>Every simulation has three settings, and one of them is for you</h2>
+
+    <p>A professor and a fifteen year old should not get the same page, so here is one titration,
+    running once, with its readout shown at all three settings at the same time. Move the burette
+    and all three move together, because they are the same simulation.</p>
+
+    <div class="three-levels" data-mirror="titration">
+      <div class="level">
+        <p class="mono level-tag">PICTURE</p>
+        <div class="level-rows"></div>
+        <p class="level-say">What happens. No numbers at all, because a number you cannot yet read
+        is just something in the way.</p>
+      </div>
+      <div class="level">
+        <p class="mono level-tag">MECHANISM</p>
+        <div class="level-rows"></div>
+        <p class="level-say">Why it happens, with the quantities named. This is the default, and it
+        is where most people want to be.</p>
+      </div>
+      <div class="level">
+        <p class="mono level-tag">MATHS</p>
+        <div class="level-rows"></div>
+        <p class="level-say">The governing quantities, live. Here that is the error your indicator
+        choice is costing you, which is the whole argument of the entry this comes from.</p>
+      </div>
+    </div>
+    <p class="mono figcap-line">One simulation, three readouts, updating together. Every other
+    simulation on the site has a control that switches between these three rather than showing all
+    of them at once.</p>
+
 
     <p>A professor and a fifteen year old should not get the same page. So every simulation here has
     a control with three positions, and it changes what is shown without changing the physics
@@ -119,8 +86,9 @@
     <strong>Mechanism</strong> is why it happens, with the quantities named. That is the default.
     <strong>Maths</strong> shows the governing equation with the numbers live.</p>
 
-    <p>Here is one, so you can feel the difference rather than take my word for it. Press the three
-    buttons under it and watch rows appear and disappear in the readout. The chemistry does not
+    <p>Here is one titration, running once, with its readout shown at all three settings at the same
+    time so you can see the difference rather than take my word for it. Move the burette and all
+    three columns move together, because they are the same simulation. The chemistry does not
     change. What changes is how much of it I am asking you to hold.</p>
 
     <figure class="fig" id="fig-titration">
@@ -187,6 +155,71 @@
     faking is not teaching anybody anything.</p>
   </div>
 </article>
+
+
+<!-- ============ 8.1 THREE WAYS IN ============ -->
+<article class="entry" id="ways">
+  <div class="entry-main">
+    <p class="entry-no mono">START HERE</p>
+    <h2>Three ways in. Pick the one that is true.</h2>
+
+    <div class="ways">
+      <div class="way">
+        <p class="mono way-tag">FOUR MINUTES</p>
+        <p class="way-head">I need to know whether she can actually do research.</p>
+        <p>Then you need four things and none of the rest of it.</p>
+        <ol class="way-list">
+          <li><a href="index.html#the-study">Entry 04, the study I ran.</a> A thousand students,
+          survey design, SPSS, hypothesis testing. More usefully, what I now think was wrong with
+          it, which is the part that tells you whether I can read my own work critically.</li>
+          <li><a href="index.html#training">Entry 10, what I taught myself.</a> The Arizona State
+          materials science specialisation, four courses, and the University of London research
+          methods course. Every certificate is linked and every link is live, because verifiable is
+          the whole point.</li>
+          <li><a href="index.html#stalactite">Entry 05, the open question.</a> A question I have
+          not answered, my prediction written down and dated, and an empty box beside it waiting
+          for the real answer, including if the real answer is that I was wrong.</li>
+          <li><a href="assets/promise-grace-research-cv.pdf" download="Promise Grace Research CV.pdf">The CV.</a>
+          One page, and there is a preview of the first page on the site so you do not have to
+          download it to look.</li>
+        </ol>
+        <p>That is genuinely all of it. If you decide from those four that this is not for your
+        group, that is a fair decision and I would rather you made it quickly.</p>
+      </div>
+
+      <div class="way">
+        <p class="mono way-tag">LONGER</p>
+        <p class="way-head">I want to understand something.</p>
+        <p>Then keep reading this page. Below there is one real question worked all the way through
+        using three simulations in a row, and by the end of it you will have learned how the site
+        works and what I actually research at the same time, without either being taught to you
+        separately.</p>
+        <p>It takes about five minutes and there is nothing to install.</p>
+      </div>
+
+      <div class="way">
+        <p class="mono way-tag">NO CHEMISTRY NEEDED</p>
+        <p class="way-head">I have never done chemistry and I am just curious.</p>
+        <p>Then start with three things, in this order, and ignore everything else.</p>
+        <ol class="way-list">
+          <li><a href="index.html#fig-stal">The stalactite.</a> Water drips in a cave, leaves a
+          tiny bit of solid behind, and over thousands of years that becomes rock. That is all a
+          crystal is: something growing very slowly out of a liquid.</li>
+          <li><a href="index.html#fig-titration">The titration.</a> You add drops of one liquid to
+          another until the colour changes. Press the drop button and watch. The interesting part
+          is that it is possible to do it wrong and not know.</li>
+          <li><a href="index.html#explaining">Entry 06, explaining things.</a> No equations. Just
+          the way I explain things to fifteen year olds, which is mostly saying the thing and then
+          saying the thing everybody gets wrong.</li>
+        </ol>
+        <p>Nothing on this site assumes you already know any of it. If a page loses you, that is my
+        fault and I would like to hear about it.</p>
+      </div>
+    </div>
+  </div>
+</article>
+
+
 
 
 <!-- ============ 8.2 THE WALKTHROUGH ============ -->
@@ -606,7 +639,9 @@
 
 </main>
 
+<script src="pages.js" defer></script>
 <script src="sim.js" defer></script>
+<script src="guide.js" defer></script>
 <script src="sound.js" defer></script>
 <script src="lab-nucleation.js" defer></script>
 <script src="lab-crystal.js" defer></script>

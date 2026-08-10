@@ -40,7 +40,12 @@ window.Pages = (function () {
   var sheet = document.querySelector("main.sheet");
   if (!sheet) return null;
 
-  var pages = Array.prototype.slice.call(sheet.querySelectorAll(".entry"));
+  /* The notebook's pages are entries. The mission planner's are sections,
+     and the contents, index and guide pages are entries again. Rather than
+     hardcode one shape, each page says what counts as a page on its own
+     main element, and the notebook's shape stays the default. */
+  var selector = sheet.getAttribute("data-pages-of") || ".entry";
+  var pages = Array.prototype.slice.call(sheet.querySelectorAll(selector));
   if (pages.length < 2) return null;
 
   var on = true;
@@ -252,6 +257,11 @@ window.Pages = (function () {
   }
 
   function build() {
+    /* The stylesheet targets .is-page rather than .entry, so that the
+       planner's sections get the same treatment without the CSS having to
+       know what shape each page uses. */
+    pages.forEach(function (p) { p.classList.add("is-page"); });
+
     /* page numbers, in her handwriting, small, bottom of each page */
     pages.forEach(function (p, i) {
       if (p.querySelector(".page-num")) return;

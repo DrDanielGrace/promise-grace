@@ -18,6 +18,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Caveat:wght@500&family=IBM+Plex+Mono:wght@400&display=swap">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="pages.css">
 </head>
 <body>
 
@@ -1656,7 +1657,15 @@
     that one in the open on <a class="ulink" href="mission-planner-website/">a separate page</a>:
     the plan I am following, where I am in it, and the parts I got wrong.</p>
 
-    <p class="mono updated">Last updated 6 August 2026</p>
+    <!-- TO UPDATE THIS: change data-said to today's date, YYYY-MM-DD, and
+         nothing else. The words are written from it, and if it goes more than
+         three weeks without being touched the line says so itself rather than
+         quietly passing as current. This entry went stale twice before it was
+         made to admit it. -->
+    <p class="mono updated" data-said="2026-08-10">
+      <span data-out="updated-line">Last updated 10 August 2026</span>
+      <span class="updated-age" data-out="updated-age"></span>
+    </p>
   </div>
 </article>
 <!-- END EDIT ME -->

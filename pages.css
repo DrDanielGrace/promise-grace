@@ -1,0 +1,145 @@
+/* =========================================================================
+   pages.css · the notebook page turning, shared by every page
+
+   This lived inside the notebook's own stylesheet, which meant the other
+   four pages could not have page turning without duplicating it. It only
+   ever used tokens both stylesheets already define, so it moves out whole
+   and both link it.
+   ========================================================================= */
+
+/* =====================================================================
+   PAGE TURNING
+
+   The scroll container keeps its own scrollbar and its own behaviour.
+   Everything below is presentation laid over it, and all of it comes off
+   when data-pages is off.
+   ===================================================================== */
+html[data-pages="on"] { scroll-snap-type: y proximity; }
+
+/* Only pages that fit get a snap point. A tall entry with one is what
+   makes paged sites feel like they are fighting you. */
+html[data-pages="on"] .is-page.snaps { scroll-snap-align: start; }
+
+.is-page { scroll-margin-top: 0.5rem; }
+
+html[data-pages="on"] .is-page {
+  /* the hand takes the horizontal, the scrollbar keeps the vertical */
+  touch-action: pan-y;
+  transition: transform 260ms cubic-bezier(0.22, 0.61, 0.36, 1),
+              box-shadow 260ms ease;
+  will-change: auto;
+}
+html[data-pages="on"] .is-page.is-dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+/* the soft shadow lifting along the leading edge as a page settles */
+@keyframes page-settle {
+  0%   { box-shadow: -14px 0 26px -14px rgba(51,46,92,0.30); }
+  100% { box-shadow: -14px 0 26px -14px rgba(51,46,92,0); }
+}
+html[data-pages="on"] .is-page.is-settling { animation: page-settle 500ms ease-out; }
+
+/* small handwritten page numbers */
+.page-num {
+  font-family: var(--f-hand);
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  text-align: right;
+  margin: 1.6rem 0 0;
+  opacity: 0.72;
+}
+html[data-pages="off"] .page-num { display: none; }
+
+/* ---------- the stacked edges down one side ---------- */
+.page-edges {
+  position: fixed;
+  left: 0; top: 12vh; bottom: 12vh;
+  width: 1.4rem;
+  z-index: 30;
+  display: flex; flex-direction: column;
+}
+html[data-pages="off"] .page-edges { display: none; }
+
+.page-edge {
+  flex: 1 1 auto;
+  min-height: 2.75rem;          /* a thumb has to be able to hit one */
+  display: flex; align-items: center;
+  background: none; border: 0; padding: 0 0 0 0.25rem;
+  cursor: pointer; position: relative;
+}
+.page-edge-line {
+  display: block; width: 0.5rem; height: 1px;
+  background: var(--rule);
+  transition: width 140ms ease, background-color 140ms ease;
+}
+.page-edge.is-read .page-edge-line { width: 0.75rem; background: var(--ink-soft); }
+/* the current page is longer AND darker AND carries the ribbon, so it is
+   never colour on its own doing the work */
+.page-edge.is-here .page-edge-line { width: 1.05rem; height: 2px; background: var(--sage); }
+.page-edge:hover .page-edge-line { width: 1.05rem; background: var(--sage); }
+
+.page-edge-name {
+  position: absolute; left: 1.5rem; top: 50%; transform: translateY(-50%);
+  white-space: nowrap;
+  font-family: var(--f-mono); font-size: 0.68rem;
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--rule); border-radius: 3px;
+  padding: 0.3rem 0.5rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity 120ms ease;
+  max-width: 14rem; overflow: hidden; text-overflow: ellipsis;
+}
+.page-edge:hover .page-edge-name,
+.page-edge:focus-visible .page-edge-name { opacity: 1; }
+
+/* the ribbon, marking where the reader got to */
+.page-ribbon {
+  position: absolute; left: 0; width: 3px;
+  background: var(--sage);
+  transition: top 200ms ease;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ---------- the switch ---------- */
+.pages-toggle {
+  position: fixed; right: 0.85rem; bottom: 4.3rem; z-index: 40;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  min-height: 2.75rem; padding: 0.5rem 0.9rem;
+  font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.05em;
+  background: var(--paper); color: var(--sage);
+  border: 1px solid var(--rule); border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 1px 6px rgba(51,46,92,0.10);
+}
+.pages-toggle:hover { border-color: var(--sage); }
+.pages-mark { width: 0.7rem; height: 0.7rem; border: 1px solid currentColor; }
+.pages-toggle[aria-pressed="true"] .pages-mark { background: currentColor; }
+
+
+/* Gentler on a phone: the edges strip narrows so it never eats the text,
+   and the two controls sit closer in. */
+/* On a phone the strip is depth and a ribbon, and nothing to press. See
+   fitEdges() in pages.js for why. */
+@media (max-width: 40rem) {
+  .page-edges { width: 0.8rem; top: 14vh; bottom: 9rem; }
+  .page-edges.is-decorative { pointer-events: none; }
+  .page-edges.is-decorative .page-edge { min-height: 0; }
+  .page-edges.is-decorative .page-edge-name { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-pages="on"] .is-page { transition: none; }
+  html[data-pages="on"] .is-page.is-settling { animation: none; }
+  .page-ribbon, .page-edge-line, .page-edge-name { transition: none; }
+  html { scroll-snap-type: none; }
+}
+
+@media print {
+  .page-edges, .pages-toggle { display: none; }
+  html { scroll-snap-type: none; }
+  .is-page { transform: none !important; box-shadow: none !important; }
+}
+
+
