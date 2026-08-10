@@ -968,6 +968,18 @@ function bgUpdate(){
   $('#bg-arrow').style.height=Math.min(E/3.2*78,78)+'px';
   $('#bg-gap-txt').textContent=E.toFixed(2)+' eV of push';
 
+  /* The maths view. This lab had a depth control that revealed nothing at
+     all when you reached maths, which is worse than not having one. The
+     honest deeper level here is the constant itself and the edge it puts on
+     a material: hc in electron volts times nanometres, and the longest
+     wavelength silicon can still use, which is that constant over its gap. */
+  var SI=1.12;
+  if($('#bg-hc')) $('#bg-hc').textContent='1239.84 / '+wl+' = '+E.toFixed(3)+' eV';
+  if($('#bg-cut')) $('#bg-cut').textContent=(1239.84/SI).toFixed(0)+' nm';
+  if($('#bg-frac')) $('#bg-frac').textContent =
+    wl <= 1239.84/SI ? 'inside the edge by '+Math.round(1239.84/SI-wl)+' nm, silicon can use it'
+                     : 'past the edge by '+Math.round(wl-1239.84/SI)+' nm, silicon is transparent to it';
+
   var list=$('#bg-mats'); list.innerHTML='';
   MATS.forEach(function(m){
     var on=E>=m.g;
@@ -1054,6 +1066,15 @@ function drawBudget(){
   $('#bud-therm').textContent=L2.thermal.toFixed(1)+'%';
   $('#bud-ult').textContent=L2.ultimate.toFixed(1)+'%';
   $('#bud-flux').innerHTML=(Solar.fluxAbove(eg)*1.602176634e-19/10).toFixed(1)+' mA cm<sup>-2</sup> worth';
+
+  /* The maths view. The three percentages above are quotients, and the
+     numerators are the two running totals the spectrum table holds plus one
+     multiplication. Showing them is the difference between a reader taking
+     the percentages on trust and being able to divide them themselves. */
+  var q=1.602176634e-19;
+  if($('#bud-n')) $('#bud-n').innerHTML=(Solar.fluxAbove(eg)/1e21).toFixed(3)+' &times; 10<sup>21</sup> m<sup>-2</sup> s<sup>-1</sup>';
+  if($('#bud-p')) $('#bud-p').innerHTML=Solar.powerAbove(eg).toFixed(1)+' of '+Solar.PIN.toFixed(1)+' W m<sup>-2</sup>';
+  if($('#bud-harvest')) $('#bud-harvest').innerHTML=(eg*q*Solar.fluxAbove(eg)).toFixed(1)+' W m<sup>-2</sup>';
   var msg=$('#bud-msg');
   if(msg){
     /* They add to a hundred by construction. The three figures shown above

@@ -411,8 +411,63 @@
           p.textContent = line;
           out.appendChild(p);
         });
+        Sim.writeUrl();
       });
     });
+
+    /* The maths view here is the arithmetic of the sample, computed rather
+       than quoted, because it is the part people wave at instead of
+       checking. The margin shrinks with n. The bias underneath it does not,
+       and saying both in the same panel is the point. */
+    (function () {
+      var n = 1000;
+      var moe = 1.96 * Math.sqrt(0.25 / n) * 100;
+      var nOut = $("[data-out='study-n']", wrap.parentNode);
+      var mOut = $("[data-out='study-moe']", wrap.parentNode);
+      var bOut = $("[data-out='study-bias']", wrap.parentNode);
+      if (nOut) nOut.textContent = String(n);
+      if (mOut) mOut.textContent = "plus or minus " + moe.toFixed(1) + " points";
+      if (bOut) bOut.textContent = "self report, which does not shrink with n";
+    })();
+
+    var studyChrome = wrap.parentNode.querySelector("[data-chrome]");
+    if (studyChrome) {
+      Sim.buildDepthControl(studyChrome);
+      Sim.buildCodeControl(
+        studyChrome,
+        "study",
+        "// This one has no physics in it. It is a walk through a study I ran,\n" +
+        "// and the only computed thing on the page is the arithmetic of the\n" +
+        "// sample itself, which is worth writing down because it is the part\n" +
+        "// people wave at rather than check.\n\n" +
+        "n            = 1000;          // students who answered\n" +
+        "population   = 'undergraduate and postgraduate, STEM, one university';\n\n" +
+        "// The margin of error a sample of this size buys you, at 95 percent,\n" +
+        "// for a proportion near a half, which is the worst case:\n" +
+        "margin = 1.96 * Math.sqrt(0.25 / n);      // about 3.1 percentage points\n\n" +
+        "// What that number does NOT cover is the thing that actually went\n" +
+        "// wrong. Sampling error shrinks with n. Self report bias does not\n" +
+        "// shrink with n, and a thousand people can be consistently wrong\n" +
+        "// about themselves in the same direction all day.",
+        [
+          "Everything reported here is what students said about their own behaviour. It was written up as behaviour. That is the flaw, and it is the reason this entry exists.",
+          "The plus or minus three points is sampling error only. It assumes the thousand were drawn at random from the population they are meant to represent, and they were not: they were the students who chose to answer.",
+          "One university, one country, one moment. Nothing here generalises further than that and the original write up should have said so.",
+          "The three method replies are my own account of a decision I made at the time, not a citation. Somebody who does survey methodology properly would put it better.",
+          "No data from the study is plotted on this page. The walkthrough is the argument, and the thesis itself is linked so you can read what I actually claimed."
+        ]
+      );
+    }
+    Sim.state("study", function () {
+      var on = buttons.filter(function (b) { return b.getAttribute("aria-pressed") === "true"; })[0];
+      return on ? on.getAttribute("data-choice") : "";
+    });
+    (function () {
+      var q = new URLSearchParams(location.search).get("study");
+      if (!q) return;
+      var b = buttons.filter(function (x) { return x.getAttribute("data-choice") === q; })[0];
+      if (b) b.click();
+    })();
   });
 
 
@@ -654,6 +709,47 @@
 
     var ctrls = $("[data-controls='stalactite']");
     if (ctrls) on($("[data-act='replay']", ctrls), "click", function () { tk.t = 0; });
+
+    /* No depth control on this one, deliberately. Every other simulation
+       here has something real to reveal at the maths setting, because every
+       other one computes something. This one animates a prediction. A
+       control that changed nothing when you pressed it would be worse than
+       no control, so the page says plainly why it is missing instead. */
+    var stalChrome = wrap.parentNode.querySelector("[data-chrome]");
+    if (stalChrome) {
+      var why = document.createElement("p");
+      why.className = "mono no-depth";
+      why.textContent = "No picture, mechanism and maths control on this one. " +
+        "The other simulations have one because they compute something and can " +
+        "show you more of it. This one is an animation of a guess, so there is " +
+        "no deeper level to go to, and a control that did nothing would be a lie " +
+        "about that.";
+      stalChrome.appendChild(why);
+      Sim.buildCodeControl(
+        stalChrome,
+        "stalactite",
+        "// There is no physics engine behind this one and it would be wrong\n" +
+        "// to imply otherwise. Both panels are an animation of what I think\n" +
+        "// happens, drawn from a shape and a clock.\n\n" +
+        "// Left, under gravity: a drop swells until surface tension loses to\n" +
+        "// weight, then falls, and a little mineral is left behind.\n" +
+        "//   falls when  rho * g * V  >  2 * pi * r * gamma\n" +
+        "// The animation uses a fixed period rather than solving that, so the\n" +
+        "// timing is illustrative. The DIRECTION is not: heavier drops fall\n" +
+        "// sooner and lower gravity delays them without limit.\n\n" +
+        "// Right, at almost no gravity: the same inequality never turns over,\n" +
+        "// so the bead stays put and mineral comes out around all of it.\n" +
+        "// What shape that actually gives is the open question below, and I\n" +
+        "// have drawn my guess, clearly labelled as a guess.",
+        [
+          "This is the one simulation on the site that is not computed. It is an animation of a prediction, and the caption, the figure label and the entry all say so.",
+          "The drop shape is drawn, not solved. A real pendant drop is a solution of the Young-Laplace equation and it does not look very different, but it is not what is on screen.",
+          "The deposition is uniform in the model. Whether it really would be is exactly what I do not know, and it is the thing the empty box below is waiting for.",
+          "No timescale is claimed. A real stalactite grows on the order of a tenth of a millimetre a year, and both panels here run in seconds.",
+          "There is no state to put in the address bar for this one, because there is nothing to set. It has a replay button and nothing else, so no link can carry a configuration and none pretends to."
+        ]
+      );
+    }
   });
 
 
@@ -1099,6 +1195,34 @@
         coordsOut.textContent = Math.round(pt.x * 100) + "% B · " + Math.round(pt.t) + " °C";
       }
 
+      /* The maths view. Inside a two phase field the tie line ends give the
+         composition of each phase, and the lever rule turns the point's
+         position along that line into how much of each you have. These are
+         the numbers a phase diagram exists to give you, so they are the
+         honest thing to put behind the maths setting rather than a restated
+         version of what is already on screen. */
+      var leftOut  = $("[data-out='tie-left']", wrap);
+      var rightOut = $("[data-out='tie-right']", wrap);
+      var fracOut  = $("[data-out='lever']", wrap);
+      if (leftOut && rightOut && fracOut) {
+        if (info.single || info.left === undefined || info.right === undefined) {
+          leftOut.textContent = "one phase, no tie line";
+          rightOut.textContent = "one phase, no tie line";
+          fracOut.textContent = "100% " + info.name;
+        } else {
+          var a = info.left, b = info.right;
+          var span = b - a;
+          var f = span === 0 ? 0 : (pt.x - a) / span;      /* along the tie line */
+          f = Math.max(0, Math.min(1, f));
+          leftOut.textContent  = Math.round(a * 100) + "% B  (" + (info.leftName || "left") + ")";
+          rightOut.textContent = Math.round(b * 100) + "% B  (" + (info.rightName || "right") + ")";
+          fracOut.textContent =
+            Math.round((1 - f) * 100) + "% " + (info.leftName || "left") + "  ·  " +
+            Math.round(f * 100) + "% " + (info.rightName || "right");
+        }
+      }
+      Sim.writeUrl();
+
       if (info.name !== lastRegion) {
         var msg = $("[data-crossing]", wrap);
         if (msg) msg.textContent = crossings[info.name] || "";
@@ -1111,8 +1235,14 @@
     function fromEvent(e) {
       var r = canvas.getBoundingClientRect();
       var sx = W / r.width, sy = H / r.height;
-      var cx = (e.clientX - r.left) * sx;
-      var cy = (e.clientY - r.top) * sy;
+      /* Sim.pointer lifts the grab point clear of a finger, and does nothing
+         at all for a mouse. Dragging a point on a phase diagram with a thumb
+         is the exact case the brief calls miserable: without this the thing
+         you are trying to place is underneath the thing placing it. */
+      var p = (window.Sim && Sim.pointer) ? Sim.pointer(e, canvas)
+                                          : { x: e.clientX - r.left, y: e.clientY - r.top };
+      var cx = p.x * sx;
+      var cy = p.y * sy;
       pt.x = ux(cx);
       pt.t = ut(cy);
       render();
@@ -1194,6 +1324,50 @@
         }
       });
     });
+
+    /* This lab predates the shared engine and draws itself, so it never got
+       the depth control, the code panel or a share of the address bar. All
+       three now, the same as every other simulation on the page. */
+    var phaseChrome = wrap.closest("figure") &&
+                      wrap.closest("figure").querySelector("[data-chrome]");
+    if (phaseChrome) {
+      Sim.buildDepthControl(phaseChrome);
+      Sim.buildCodeControl(
+        phaseChrome,
+        "phase",
+        "// Where the two boundaries sit, for this pair of metals.\n" +
+        "liquidus(x) = tmA + (tmB - tmA)*x - 100*x*(1 - x);\n" +
+        "solidus(x)  = tmA + (tmB - tmA)*x - 380*x*(1 - x);\n\n" +
+        "// Between them you hold two phases at once. The tie line is the\n" +
+        "// horizontal at this temperature, and its ends are the composition\n" +
+        "// of each phase, found by inverting each boundary.\n" +
+        "xLiquid = invert(liquidus, t);\n" +
+        "xSolid  = invert(solidus,  t);\n\n" +
+        "// The lever rule. How far along that line you sit IS how much of\n" +
+        "// each phase you have, and it is the opposite arm that counts.\n" +
+        "f = (x - xSolid) / (xLiquid - xSolid);\n" +
+        "fractionLiquid = f;  fractionSolid = 1 - f;",
+        [
+          "The two systems here are shapes with the right topology, not measured data for any real alloy pair. A complete solubility lens and a eutectic with partial solubility, drawn from smooth functions chosen to put the features where they are legible.",
+          "Equilibrium throughout. Every reading assumes you cooled slowly enough for the solid to keep re-equilibrating with the liquid, which real castings do not, and that is why the solidification simulation next to this one exists.",
+          "The boundaries are inverted numerically to find the tie line ends, so the compositions are exact to the drawn curves rather than to any laboratory measurement.",
+          "The lever rule itself is exact, and it is a mass balance rather than a model. Given the tie line ends, the fractions follow with no physics added.",
+          "Temperatures are in degrees Celsius on an axis chosen to fit both systems on the same picture. Neither pair is named because neither is real."
+        ]
+      );
+    }
+    Sim.state("phase", function () {
+      /* Only when it has been moved off where it starts. */
+      if (Math.abs(pt.x - 0.5) < 0.005 && Math.abs(pt.t - 900) < 1) return "";
+      return pt.x.toFixed(3) + "," + Math.round(pt.t);
+    });
+    (function () {
+      var q = new URLSearchParams(location.search).get("phase");
+      if (!q) return;
+      var bits = String(q).split(",");
+      var x = parseFloat(bits[0]), t = parseFloat(bits[1]);
+      if (isFinite(x) && isFinite(t)) { pt.x = Math.max(0, Math.min(1, x)); pt.t = t; }
+    })();
 
     render();
 

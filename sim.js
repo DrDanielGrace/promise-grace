@@ -331,6 +331,18 @@ window.Sim = (function () {
     return s;
   }
 
+  /* Some simulations draw themselves, because they were built before this
+     engine existed and they redraw on input rather than every frame. They
+     still deserve a share of the address bar. This registers a name and a
+     serialiser and nothing else: the entry sits at the static tier so the
+     scheduler never tries to drive it. */
+  function state(name, serialize) {
+    sims.push({
+      name: name, el: null, api: { serialize: serialize },
+      tier: STATIC_TIER, frames: [], over: 0, under: 0, started: true, ratio: 0
+    });
+  }
+
   function pickMostVisible() {
     var best = null;
     sims.forEach(function (s) {
@@ -416,12 +428,22 @@ window.Sim = (function () {
      ---------------------------------------------------------------------- */
   var TOUCH_OFFSET = 34;   // px, lifts the grabbed point clear of the finger
 
+  /* This existed for a long while and nothing called it, so every drag on
+     the site still put the thing being dragged directly under the thumb.
+     It also only recognised TouchEvent, and everything here uses pointer
+     events, so wiring it up without this second test would have changed
+     nothing on a phone. A pointer knows what kind it is; ask it. */
+  function isTouch(ev) {
+    if (ev.touches && ev.touches[0]) return true;
+    return ev.pointerType === "touch" || ev.pointerType === "pen";
+  }
+
   function pointer(ev, el) {
     var r = el.getBoundingClientRect();
-    var touch = ev.touches && ev.touches[0];
-    var src = touch || ev;
+    var src = (ev.touches && ev.touches[0]) || ev;
+    var touch = isTouch(ev);
     var lift = touch ? TOUCH_OFFSET : 0;
-    return { x: src.clientX - r.left, y: src.clientY - r.top - lift, touch: !!touch };
+    return { x: src.clientX - r.left, y: src.clientY - r.top - lift, touch: touch };
   }
 
   function stepper(input, opts) {
@@ -461,6 +483,7 @@ window.Sim = (function () {
 
   return {
     register: register,
+    state: state,
     fitCanvas: fitCanvas,
     onDepth: onDepth,
     setDepth: setDepth,

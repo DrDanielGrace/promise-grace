@@ -1608,3 +1608,58 @@ details.assumptions > summary {
 @media (min-width: 52rem) {
   .ways { grid-template-columns: 1fr; }
 }
+
+
+/* =====================================================================
+   PREDICTIONS
+   The question comes before the simulation. The simulation runs anyway.
+   ===================================================================== */
+.predict {
+  max-width: var(--measure);
+  margin: 0 0 var(--baseline);
+  padding: 0.9rem 1.1rem;
+  background: var(--paper-deep);
+  border-left: 2px solid var(--ink);
+  border-radius: 3px 9px 4px 8px;
+}
+.predict-q {
+  font-family: var(--f-hand);
+  font-size: 1.2rem; line-height: 1.4;
+  color: var(--ink); margin: 0 0 0.7rem; max-width: none;
+}
+.predict-opts { display: flex; flex-direction: column; gap: 0.4rem; }
+.predict-opts button {
+  min-height: 2.75rem; padding: 0.55rem 0.85rem;
+  text-align: left;
+  font-family: var(--f-body); font-size: 0.97rem;
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--rule); border-radius: 3px;
+  cursor: pointer;
+}
+.predict-opts button:hover { border-color: var(--sage); }
+/* The chosen one is marked by a rule down its edge and by aria-pressed,
+   not by colour on its own. */
+.predict-opts button.is-chosen { border-left: 4px solid var(--ink); font-weight: 600; }
+
+.predict-result {
+  margin: 0.8rem 0 0; max-width: none;
+  padding-left: 0.9rem;
+  font-size: 0.98rem;
+}
+/* Right and wrong differ by which pen marks them, and by the word the
+   sentence opens with, never by colour alone. */
+.predict-result.is-right { border-left: 2px solid var(--sage); color: var(--ink); }
+.predict-result.is-wrong { border-left: 2px solid var(--correction); color: var(--correction); }
+
+@media print {
+  .predict-opts { display: none; }
+  .predict-result { display: block !important; }
+}
+
+/* Why a simulation has no depth control, said rather than left blank. */
+.no-depth {
+  color: var(--ink-soft);
+  max-width: 60ch;
+  margin: 0.6rem 0 0;
+  line-height: 1.55;
+}

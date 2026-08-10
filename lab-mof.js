@@ -78,6 +78,8 @@
     l: host.querySelector('[data-out="linker"]'),
     edge: host.querySelector('[data-out="edge"]'),
     ap: host.querySelector('[data-out="aperture"]'),
+    tight: host.querySelector('[data-out="tightest"]'),
+    near: host.querySelector('[data-out="nearmiss"]'),
     fits: host.querySelector('[data-out="fits"]'),
     msg: host.querySelector('[data-out="mofmsg"]')
   };
@@ -92,6 +94,30 @@
     if (out.ap) out.ap.textContent = fmt(ap, 2);
     var pass = GASES.filter(function (g) { return g.d <= ap; }).map(function (g) { return g.n; });
     if (out.fits) out.fits.textContent = pass.length ? pass.join(", ") : "nothing on this list";
+
+    /* The maths view. A sieve is not described by what passes, it is
+       described by how close the nearest miss is. These two are the margins
+       a separations chemist actually works to, and both come straight out of
+       the aperture already computed above. This lab used to carry a depth
+       control that revealed nothing at all when you reached maths. */
+    var through = GASES.filter(function (g) { return g.d <= ap; });
+    var stopped = GASES.filter(function (g) { return g.d > ap; });
+    if (out.tight) {
+      if (!through.length) {
+        out.tight.textContent = "nothing gets through";
+      } else {
+        var worst = through[through.length - 1];
+        out.tight.textContent = worst.n + " by " + fmt(ap - worst.d, 2) + " angstrom";
+      }
+    }
+    if (out.near) {
+      if (!stopped.length) {
+        out.near.textContent = "nothing is being stopped";
+      } else {
+        var closest = stopped[0];
+        out.near.textContent = closest.n + " misses by " + fmt(closest.d - ap, 2) + " angstrom";
+      }
+    }
     if (out.msg) {
       var blocked = GASES.filter(function (g) { return g.d > ap; });
       out.msg.textContent = blocked.length === 0
