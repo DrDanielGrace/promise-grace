@@ -1,0 +1,163 @@
+/* =========================================================================
+   nav.css · the bar that is on every page
+
+   THE ONE RULE THIS EXISTS TO SATISFY
+
+   Simulations and Mission planner are visible without scrolling, at every
+   width, on every page, and neither of them is ever behind a menu icon.
+   That rules out the usual answer, which is to collapse the whole thing into
+   a hamburger below 600 px and call it responsive. So at narrow widths the
+   bar wraps onto a second line instead of hiding anything. Two short rows
+   beat one row with the two most important destinations inside a button.
+
+   TWO SKINS, ONE BAR
+
+   The simulations are a dark instrument and the notebook is paper, and the
+   contrast between them is the point. So the bar takes its colours from
+   whichever it is sitting on rather than imposing one on both. `body.inst`
+   gets the instrument skin, anything else gets the paper one. No page has
+   to know the bar exists beyond loading it.
+   ========================================================================= */
+
+:root {
+  --nav-h: 3.1rem;
+}
+
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.2rem 1rem;
+  padding: 0.3rem clamp(0.7rem, 3vw, 1.1rem);
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.site-nav-where,
+.site-nav-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.1rem 0.15rem;
+}
+
+.site-nav a,
+.site-nav button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: none;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Where you already are is stated rather than linked. */
+.site-nav [aria-current="page"] { cursor: default; }
+
+
+/* ----------------------------------------------------------------------
+   THE INSTRUMENT SKIN
+   ---------------------------------------------------------------------- */
+body.inst .site-nav {
+  background: #0d0e11;
+  border-bottom: 1px solid #24262d;
+  color: #6f6d69;
+}
+body.inst .site-nav a,
+body.inst .site-nav button { color: #9d9a93; }
+body.inst .site-nav a:hover,
+body.inst .site-nav button:hover { color: #e6e3dc; border-color: #34373f; }
+body.inst .site-nav [aria-current="page"] { color: #c78f4a; border-color: #7a5a30; }
+
+
+/* ----------------------------------------------------------------------
+   THE PAPER SKIN
+
+   Deliberately quiet. The notebook is the thing on this page and the bar is
+   not going to compete with it.
+   ---------------------------------------------------------------------- */
+body:not(.inst) .site-nav {
+  background: #faf6ef;
+  border-bottom: 1px solid #c5c7dc;
+  color: #615a6e;
+}
+body:not(.inst) .site-nav a,
+body:not(.inst) .site-nav button { color: #332e5c; }
+body:not(.inst) .site-nav a:hover,
+body:not(.inst) .site-nav button:hover { border-color: #33543b; }
+body:not(.inst) .site-nav [aria-current="page"] { color: #33543b; border-color: #c5c7dc; }
+
+
+/* ----------------------------------------------------------------------
+   THE CONTROLS THAT MOVED IN
+
+   sound.js and audio.js each pin a control to a corner, which was right
+   when there was no bar. There is a bar now, so they live in it, and the
+   pinning is undone here rather than in either of those files, because
+   neither of them should have to know what page it is on.
+   ---------------------------------------------------------------------- */
+.site-nav .sound-toggle,
+.site-nav .aud-levels {
+  position: static;
+  left: auto; right: auto; bottom: auto;
+  background: none;
+  border: 1px solid transparent;
+  box-shadow: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: uppercase;
+  min-width: 0;
+  padding: 0.4rem 0.6rem;
+}
+body.inst .site-nav .sound-toggle,
+body.inst .site-nav .aud-levels { color: #9d9a93; }
+body.inst .site-nav .sound-toggle[aria-pressed="true"] { color: #c78f4a; border-color: #7a5a30; }
+body:not(.inst) .site-nav .sound-toggle,
+body:not(.inst) .site-nav .aud-levels { color: #332e5c; }
+body:not(.inst) .site-nav .sound-toggle[aria-pressed="true"] { color: #33543b; border-color: #c5c7dc; }
+
+.site-nav .sound-mark { flex: 0 0 auto; }
+
+
+/* ----------------------------------------------------------------------
+   WHAT THE BAR DISPLACES
+
+   The notebook has a bar of its own that appears once you are past the
+   cover. It is pinned to the top, so it is moved down by the height of this
+   one rather than fighting it. styles.css is not touched.
+   ---------------------------------------------------------------------- */
+body.has-sitenav .topbar { top: var(--nav-h); }
+
+@media (max-width: 620px) {
+  body.has-sitenav .topbar { top: calc(var(--nav-h) * 2); }
+}
+
+/* At a phone width the four destinations only stay on one line if the type
+   comes down with the screen. That is the trade: slightly smaller labels,
+   and Simulations and Mission planner still both visible, which is the rule
+   this file exists to keep. The 44 px target is untouched. */
+@media (max-width: 520px) {
+  .site-nav { font-size: 10px; letter-spacing: 0.06em; padding-left: 0.5rem; padding-right: 0.5rem; }
+  .site-nav a, .site-nav button { padding: 0.35rem 0.4rem; }
+  .site-nav-where, .site-nav-tools { gap: 0 0.05rem; }
+}
+
+/* Printing a page does not want a navigation bar on it. */
+@media print {
+  .site-nav { display: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-nav * { transition: none !important; }
+}

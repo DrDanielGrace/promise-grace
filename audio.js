@@ -842,6 +842,19 @@ window.Aud = (function () {
     }
 
     function place() {
+      /* The button may have been moved into the site bar, in which case it
+         is not pinned to anything any more and the panel hangs off it from
+         above rather than sitting above the corner. */
+      var r = btn.getBoundingClientRect();
+      var inBar = btn.closest && btn.closest(".site-nav");
+      if (inBar) {
+        panel.style.bottom = "auto";
+        panel.style.top = Math.round(r.bottom + 8) + "px";
+        panel.style.right = Math.max(8, Math.round(window.innerWidth - r.right)) + "px";
+        return;
+      }
+
+      panel.style.top = "";
       var top = occupied();
       if (top === null) {
         /* sound.js builds its toggle on the same DOMContentLoaded this file
@@ -856,9 +869,16 @@ window.Aud = (function () {
         (lift + Math.round(btn.getBoundingClientRect().height) + 8) + "px";
     }
 
+    reflow = function () { tries = 0; requestAnimationFrame(place); };
     requestAnimationFrame(place);
     window.addEventListener("resize", function () { tries = 0; place(); });
+    window.addEventListener("scroll", function () {
+      if (btn.closest && btn.closest(".site-nav")) place();
+    }, { passive: true });
   }
+
+  /* Replaced by stack() once the panel exists. */
+  var reflow = function () {};
 
 
   /* ----------------------------------------------------------------------
@@ -1086,6 +1106,7 @@ window.Aud = (function () {
     onLevel: function (fn) { levelListeners.push(fn); },
     serialize: serialize,
     deserialize: deserialize,
-    panel: function () { return panel; }
+    panel: function () { return panel; },
+    reflow: function () { reflow(); }
   };
 })();

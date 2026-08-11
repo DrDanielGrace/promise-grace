@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Promise Oluwatosin Grace · Materials Science</title>
+<meta name="description" content="Chemistry graduate researching how reduced gravity changes crystal growth and materials formation. Seeking a Master's position from January 2027.">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Promise Oluwatosin Grace · Materials Science">
+<meta property="og:description" content="Chemistry graduate researching how reduced gravity changes crystal growth and materials formation. Seeking a Master's position from January 2027.">
+<meta property="og:image" content="assets/scans/og-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Caveat:wght@500&family=IBM+Plex+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="pages.css">
+<link rel="stylesheet" href="nav.css">
+</head>
+<body>
+
+<a class="skip" href="#question">Skip to the first entry</a>
+
+<header class="topbar" id="topbar" hidden>
+  <span class="topbar-name">Promise Oluwatosin Grace</span>
+  <nav class="topbar-nav" aria-label="Entries">
+    <a href="#question">Question</a>
+    <a href="#phase-diagrams">Phase diagrams</a>
+    <a href="#stalactite">Stalactite</a>
+    <a href="#explaining">Explaining</a>
+    <a href="#contact">Contact</a>
+    <a href="contents.html">Contents</a>
+    <button type="button" class="hurry-open" data-hurry>In a hurry?</button>
+  </nav>
+</header>
+
+<main class="sheet">
+
+<!-- ============ COVER ============ -->
+<section class="cover" id="cover" aria-labelledby="q">
+  <p class="hand margin-note cover-note">started 2018 · still going</p>
+  <p class="mono eyebrow">MATERIALS SCIENCE · CHEMISTRY · LAGOS</p>
+
+  <h1 class="display" id="q">How does reduced gravity change the way materials form?</h1>
+
+  <p class="lede">I am a chemistry graduate from the University of Ilorin. What I keep coming back to is
+  what happens to crystal growth and solidification when you take gravity out of the equation.
+  This is my notebook. It has my research, the things I have taught, the study I ran, and a few
+  questions I have not worked out yet.</p>
+
+  <p class="cover-links">
+    <a class="ulink" href="#question">Open the notebook ↓</a>
+    <a class="ulink" href="contents.html">Contents</a>
+    <a class="ulink" href="guide.html">How to use this</a>
+    <a class="ulink" href="assets/promise-grace-research-cv.pdf" download="Promise Grace Research CV.pdf" data-cv>Download CV</a>
+  </p>
+
+  <p class="cover-foot">
+    <a class="mono" href="https://orcid.org/0009-0003-6045-432X" rel="noopener">ORCID 0009-0003-6045-432X</a>
+    <span class="quiet">My degree certificate, academic transcript, and WES evaluation are in the name of Ayinde, which is my maiden name.</span>
+  </p>
+</section>
+
+
+<!-- ============ 01 ============ -->
+<article class="entry" id="question" aria-labelledby="question-h">
+  <div class="entry-main">
+    <p class="entry-no mono">ENTRY 01</p>
+    <h2 id="question-h">The question</h2>
+    <p class="hand margin-note">the thing I keep coming back to</p>
+
+    <p>Grow the same crystal twice, once in a laboratory here and once on a space station, and
+    the one grown in orbit comes out bigger and cleaner. That part is not controversial. People
+    have been reproducing it since the seventies.</p>
+
+    <p>What I could not get past is that it sounds backwards. Gravity is a force. It stirs the
+    solution and it keeps delivering fresh material to the crystal face. Take a force away and you
+    would expect less to happen, not better. So what is gravity actually doing that a crystal is
+    better off without?</p>
+
+    <p>Reading about it did not get me anywhere. Building it did, three times, in the order the
+    physics happens. And it starts earlier than I expected, because before anything can grow it has
+    to survive being born, and almost nothing does.</p>
+
+    <div class="predict" data-predict="nucleation">
+      <p class="predict-q">Clusters of molecules form and fall apart in any solution, constantly. Of the ones that form at ordinary supersaturation, what share do you think survive to become crystals?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">Nearly all of them</button>
+        <button type="button" data-a="b">Roughly half</button>
+        <button type="button" data-a="c">Almost none</button>
+      </div>
+      <p class="predict-result" role="status" aria-live="polite" hidden></p>
+    </div>
+
+    <figure class="fig" id="fig-nucleation">
+      <div class="lab" data-lab="nucleation">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">THE BARRIER</p>
+            <canvas data-view="energy" width="300" height="240"
+              aria-label="Free energy against cluster radius. Surface cost rises as radius squared, bulk payoff falls as radius cubed, and their sum peaks at the critical radius. Raising supersaturation moves that peak left and lowers it."></canvas>
+          </div>
+          <div class="lab-view">
+            <p class="mono view-tag">CLUSTERS, LIVE</p>
+            <canvas data-view="field" width="300" height="240"
+              aria-label="Clusters appearing at random. Most shrink and vanish. Occasionally one crosses the critical radius and runs away, and those are marked as survivors."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <label class="mono" for="s-slider">SUPERSATURATION <b data-out="s">3</b></label>
+          <span class="slider-row">
+            <input id="s-slider" type="range" min="1.2" max="10" step="0.05" value="3" data-s>
+          </span>
+          <p class="mono quiet">Push it up and watch how many more get through.</p>
+
+          <button type="button" class="listen-btn" data-listen="nucleation" aria-pressed="false">
+            <span data-listen-label>Listen to it</span>
+          </button>
+          <p class="listen-what" data-listen-desc="nucleation">A dry tick for every cluster that
+          gets across, like rain starting on a window, and nothing at all for the ones that
+          dissolve. When the barrier is high the ticks are few and dull. Lower it and they come
+          thick and close. A cluster that survives all the way is one bottle touched against
+          another, quiet and hollow. The silences are most of what is happening.</p>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line depth-not-picture"><span>CRITICAL RADIUS</span> <b data-out="rstar">0</b> nm</p>
+          <p class="mono readout-line depth-only-maths"><span>BARRIER</span> <b data-out="barrier">0</b> kT</p>
+          <p class="mono readout-line depth-only-maths"><span>RATE J</span> <b data-out="rate">0</b> per m³s</p>
+          <p class="mono readout-line"><span>SURVIVED</span> <b data-out="survived">0</b></p>
+          <p class="mono readout-line depth-not-picture"><span>DISSOLVED</span> <b data-out="died">0</b></p>
+        </div>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">A cluster of molecules has two things happening to it at once. Making a
+      surface costs energy and that cost grows with the square of the radius. Being solid rather
+      than dissolved pays energy back and that payoff grows with the cube. Cubes beat squares
+      eventually, so there is a radius, the critical radius, where the cost stops winning. Below it
+      a cluster is more likely to dissolve than to grow. Above it, it runs away. Clusters appear and
+      vanish constantly, and nucleation is just the rare one that gets across.</p>
+      <figcaption class="mono">FIG. 1a · Classical nucleation. The barrier is computed, the individual cluster paths are illustrative.</figcaption>
+    </figure>
+
+    <p>Every survivor there becomes a crystal competing for the same solute, so that count carries
+    forward into the next one. Now the growth itself, and the part I could not predict from a
+    sentence. Gravity is what keeps sweeping fresh solution past the crystal face. Take it away and
+    the crystal should be worse off, because nothing is feeding it any more.</p>
+
+    <p>Here is where my own intuition let me down. Taking gravity away sounds like removing an
+    obstacle, and removing an obstacle should let a thing go faster. It does the opposite, and the
+    reason is sitting in a ring around the crystal that you cannot see until you look for it.</p>
+
+    <div class="predict" data-predict="crystal">
+      <p class="predict-q">Same solution, same everything, but you take gravity away. Does the crystal grow faster, slower, or at the same rate?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">Faster, nothing is holding it back</button>
+        <button type="button" data-a="b">Slower</button>
+        <button type="button" data-a="c">No difference, gravity is not part of the chemistry</button>
+      </div>
+      <p class="predict-result" role="status" aria-live="polite" hidden></p>
+    </div>
+
+    <figure class="fig" id="fig-crystal">
+      <div class="lab" data-lab="crystal">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">THE CRYSTAL</p>
+            <canvas data-view="crystal" width="300" height="240"
+              aria-label="The growing crystal. At high gravity its faces come out uneven. As gravity falls it grows smooth and even."></canvas>
+          </div>
+          <div class="lab-view">
+            <p class="mono view-tag">CONCENTRATION</p>
+            <canvas data-view="conc" width="300" height="240"
+              aria-label="Solute concentration around the crystal. A depleted shell builds up as gravity falls, shown as a dashed ring that grows thicker."></canvas>
+          </div>
+          <div class="lab-view depth-not-picture">
+            <p class="mono view-tag">FLOW</p>
+            <canvas data-view="flow" width="300" height="240"
+              aria-label="Convection around the crystal. Strong at full gravity, and it disappears as gravity is reduced."></canvas>
+          </div>
+          <div class="lab-view depth-not-picture">
+            <p class="mono view-tag">GROWTH RATE</p>
+            <canvas data-view="rate" width="300" height="240"
+              aria-label="Growth rate against time. Under gravity it stays high. Without it the rate falls away as the crystal feeds itself more slowly."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <label class="mono" for="g-slider">GRAVITY <b data-out="g">1</b> g</label>
+          <span class="slider-row">
+            <input id="g-slider" type="range" min="0" max="1" step="0.001" value="1" data-g
+              aria-describedby="g-help">
+          </span>
+          <button type="button" data-act="replay">Grow it again</button>
+          <p class="mono quiet" id="g-help">Drag, or use the arrow keys, or the plus and minus for an exact value.</p>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line depth-not-picture"><span>PÉCLET</span> <b data-out="pe">0</b></p>
+          <p class="mono readout-line depth-only-maths"><span>SHERWOOD</span> <b data-out="sh">1</b></p>
+          <p class="mono readout-line"><span>RADIUS</span> <b data-out="r">12</b> µm</p>
+          <p class="mono readout-line depth-only-maths"><span>dR/dt</span> <b data-out="rate">0</b> µm/s</p>
+          <p class="mono readout-line depth-not-picture"><span>SHELL</span> <b data-out="shell">0</b> µm</p>
+          <p class="verdict" data-out="verdict" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">Move gravity from 1 g down towards zero and the reason for the difference
+      appears. Under gravity, convection keeps sweeping fresh solution past the crystal, so it grows
+      fast and unevenly. Take gravity away and nothing stirs, so a depleted shell builds up around
+      the crystal, growth slows, and because it is now limited by how fast solute can diffuse in, it
+      becomes steady and even. The Péclet number is the ratio of the two kinds of transport, and the
+      change happens as it passes one.</p>
+      <figcaption class="mono">FIG. 1b · Growth of one crystal against gravity. Size is computed, the defect figure is illustrative.</figcaption>
+    </figure>
+
+    <p>So gravity does not help a crystal, it hurries it. That is a satisfying sentence and it is
+    still only a sentence. Uniform is a word, and a supervisor is entitled to ask what number I
+    would put on it.</p>
+
+    <p>There is one, and it is the reason X ray diffraction exists. Send the crystal you just grew
+    into the beam below and see whether the difference survives being measured.</p>
+
+
+    <div class="predict" data-predict="diffraction">
+      <p class="predict-q">Two crystals of the same substance, same lattice, one tiny and one large. Put both in an X ray beam. What is different about the patterns?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">The peaks sit at different angles</button>
+        <button type="button" data-a="b">The peaks are in the same places but different widths</button>
+        <button type="button" data-a="c">Nothing, same substance, same pattern</button>
+      </div>
+      <p class="predict-result" role="status" aria-live="polite" hidden></p>
+    </div>
+
+    <figure class="fig" id="fig-diffraction">
+      <div class="lab" data-lab="diffraction">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">THE PATTERN</p>
+            <canvas data-view="pattern" width="300" height="240"
+              aria-label="A powder diffraction pattern, intensity against two theta. Peaks sit at the angles Bragg's law allows for the chosen lattice, and reflections forbidden by that lattice are missing entirely. Smaller crystals give broader peaks."></canvas>
+          </div>
+          <div class="lab-view depth-not-picture">
+            <p class="mono view-tag">WILLIAMSON-HALL</p>
+            <canvas data-view="wh" width="300" height="240"
+              aria-label="Beta cos theta plotted against sin theta. The intercept of the fitted line gives the crystallite size and its slope gives the strain, which is how the two kinds of broadening are told apart."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="mono">LATTICE</span>
+          <button type="button" data-lattice="P" aria-pressed="false">Simple</button>
+          <button type="button" data-lattice="I" aria-pressed="false">Body centred</button>
+          <button type="button" data-lattice="F" aria-pressed="true">Face centred</button>
+          <span class="slider-row">
+            <label class="mono" for="d-size">SIZE</label>
+            <input id="d-size" type="range" min="4" max="200" step="1" value="45" data-size>
+          </span>
+          <button type="button" data-act="quiz">Guess the lattice</button>
+          <button type="button" class="listen-btn" data-listen="diffraction">
+            <span data-listen-label>Hear the pattern</span>
+          </button>
+          <p class="listen-what" data-listen-desc="diffraction">This is the one place the site
+          uses pitch, because sharpness really is how long a thing rings. The detector sweeps from
+          left to right and each reflection sounds as it passes, low angles low. A sharp peak holds
+          on, like a wine glass still going after you have taken your finger off it. A broad one is
+          gone almost at once and slightly out of tune with itself, more of a wash than a note. Send
+          both crystals through and you can hear which was grown without gravity before you have
+          read anything.</p>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line"><span>LATTICE</span> <b data-out="lattice">face centred</b></p>
+          <p class="mono readout-line"><span>CRYSTALLITE</span> <b data-out="size">45</b> nm</p>
+          <p class="mono readout-line depth-not-picture"><span>STRAIN</span> <b data-out="strain">0.400%</b></p>
+          <p class="mono readout-line depth-not-picture"><span>REFLECTIONS</span> <b data-out="peaks"></b></p>
+          <p class="mono readout-line depth-not-picture"><span>ABSENT</span> <b data-out="absent"></b></p>
+          <p class="mono readout-line depth-only-maths"><span>SIZE FROM W-H</span> <b data-out="whsize"></b> nm</p>
+          <p class="mono readout-line depth-only-maths"><span>STRAIN FROM W-H</span> <b data-out="whstrain"></b></p>
+          <p class="mono readout-line quiet"><span>SOURCE</span> <b data-out="origin"></b></p>
+          <p class="verdict" data-out="quiz" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">A crystal is a repeating grid, and X rays scattering off it only add up
+      at particular angles, which is Bragg's law. Where the peaks sit tells you the spacing. Which
+      peaks are missing tells you the lattice, because some reflections cancel out exactly. And how
+      wide the peaks are tells you two separate things at once: small crystals broaden every peak,
+      and internal strain broadens the ones at high angle much more than the ones at low angle.
+      Because those two do not scale together, plotting the width against angle pulls them apart.
+      Below both of them sits the instrument's own width, which is why you can never read a size
+      straight off a single peak.</p>
+      <figcaption class="mono">FIG. 1c · Powder diffraction. Positions and widths are computed, peak heights are indicative.</figcaption>
+    </figure>
+    <p class="correction">One thing I had to be careful about here. Both crystals finish the same
+    size, because one crystal drawing on a fixed amount of solute ends up the same size whatever
+    gravity is doing. What gravity changes is the rate, how evenly it grows, and how much disorder
+    gets trapped inside. The peaks broaden because a crystal full of dislocations stops scattering
+    coherently across its whole width, so what the pattern measures is the domain rather than the
+    grain. Size differences between real samples come from how many nuclei survived, which is the
+    panel further up.</p>
+
+
+    <p>Three simulations, and the question has an answer: gravity keeps stirring, stirring makes
+    growth fast and uneven, and uneven is a number rather than an impression.</p>
+
+    <p>What I still cannot tell you is what happens at the very slow end of the same idea, where a
+    crystal takes a cave a thousand years to build. That one is entry 05, and I have not solved it.</p>
+
+    <p>First though, the thing that lets you know what a mixture is going to become before it
+    becomes it.</p>
+  </div>
+</article>
+
+
+<!-- ============ 02 ============ -->
+<article class="entry" id="phase-diagrams" aria-labelledby="phase-diagrams-h">
+  <div class="entry-main">
+    <p class="entry-no mono">ENTRY 02</p>
+    <h2 id="phase-diagrams-h">Phase diagrams, properly explained</h2>
+    <p class="hand margin-note">this took me a while to really get</p>
+
+    <p>A phase diagram is a map. Temperature up the side, composition along the bottom. Every point
+    on it answers one question: if I hold this mixture at this temperature until it settles, what
+    will I actually have?</p>
+
+    <p>The part that catches people is the gap between the two lines. It looks like a boundary,
+    something you cross on the way from liquid to solid. It is not a boundary. It is a place you
+    can sit, holding both at once, and the diagram will tell you exactly how much of each if you
+    know how to ask it.</p>
+
+    <div class="predict" data-predict="phase">
+      <p class="predict-q">You cool a liquid mixture of two metals and it enters the region between the two lines. What is in the beaker at that moment?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">Still all liquid, it has not reached the freezing point</button>
+        <button type="button" data-a="b">All solid, it has passed it</button>
+        <button type="button" data-a="c">Both at once, and in a fixed ratio</button>
+      </div>
+      <p class="predict-result" role="status" aria-live="polite" hidden></p>
+    </div>
+
+    <figure class="fig" id="fig-phase">
+      <div class="phase-wrap" data-lab="phase">
+        <div class="phase-left">
+          <canvas class="phase-canvas" width="520" height="420" tabindex="0"
+            role="application"
+            aria-label="Binary phase diagram. Drag the marker, or use arrow keys, to move through composition and temperature. The region, phases present and lever rule proportions update as you move."></canvas>
+          <p class="mono phase-hint">Drag the marker, or focus it and use the arrow keys</p>
+        </div>
+        <div class="phase-right">
+          <div class="readout">
+            <p class="mono readout-line"><span>REGION</span> <b data-out="region">Liquid</b></p>
+            <p class="mono readout-line"><span>AT</span> <b data-out="coords">50% B · 900 °C</b></p>
+            <p class="mono readout-line depth-only-maths"><span>TIE LINE, LEFT END</span> <b data-out="tie-left">0</b></p>
+            <p class="mono readout-line depth-only-maths"><span>TIE LINE, RIGHT END</span> <b data-out="tie-right">0</b></p>
+            <p class="mono readout-line depth-only-maths"><span>LEVER RULE</span> <b data-out="lever">0</b></p>
+          </div>
+          <div class="beaker" aria-hidden="true">
+            <canvas class="beaker-canvas" width="240" height="240"></canvas>
+          </div>
+          <div class="lever" data-lever>
+            <p class="mono lever-title">LEVER RULE</p>
+            <div class="lever-bars"></div>
+            <p class="lever-none mono">One phase only, so there is nothing to divide.</p>
+          </div>
+          <p class="crossing" data-crossing role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="controls" data-controls="phase">
+        <button type="button" data-preset="eutectic">Eutectic</button>
+        <button type="button" data-preset="complete">Complete solubility</button>
+        <button type="button" data-preset="partial">Partial solubility</button>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+
+      <p class="nojs-note">The diagram maps temperature against composition. Above the liquidus
+      everything is liquid. Below the solidus everything is solid. Between the two you are holding
+      liquid and solid at the same time, and the lever rule tells you how much of each.</p>
+      <figcaption class="mono">FIG. 3a · Binary system, schematic. Temperatures are illustrative.</figcaption>
+    </figure>
+
+    <p>None of that tells you what the metal actually looks like afterwards, which is the reason
+    anyone reads one of these in the first place. Two castings of the same alloy, cooled the same
+    way, differing only in composition. I would have assumed you get the same material slightly
+    richer in one thing. You do not. You get two materials that barely resemble each other.</p>
+
+    <div class="predict" data-predict="solidify">
+      <p class="predict-q">Two different compositions of the same alloy, cooled the same way. Do they end up with the same microstructure?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">Yes, same alloy, same result</button>
+        <button type="button" data-a="b">No, and it is not a small difference</button>
+      </div>
+      <p class="predict-result" role="status" aria-live="polite" hidden></p>
+    </div>
+
+    <figure class="fig" id="fig-solidify">
+      <div class="lab" data-lab="solidify">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">THE PATH DOWN</p>
+            <canvas data-view="diagram" width="300" height="240"
+              aria-label="A binary eutectic diagram with the chosen composition marked as a vertical cooling path. The marker travels down the path as the mixture cools, crossing the liquidus and then the eutectic line."></canvas>
+          </div>
+          <div class="lab-view">
+            <p class="mono view-tag">WHAT YOU GET</p>
+            <canvas data-view="micro" width="300" height="240"
+              aria-label="The microstructure forming. Primary dendrites grow first for any composition away from the eutectic, and the liquid trapped between them finishes as fine alternating lamellae."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="slider-row">
+            <label class="mono" for="s-c">COMPOSITION <b data-out="c">20</b>% B</label>
+            <input id="s-c" type="range" min="0.02" max="0.95" step="0.01" value="0.20" data-c>
+          </span>
+          <span class="slider-row">
+            <label class="mono" for="s-v">COOLING RATE</label>
+            <input id="s-v" type="range" min="0.1" max="4" step="0.1" value="1" data-v>
+          </span>
+          <button type="button" data-act="cool">Cool it</button>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line"><span>TEMPERATURE</span> <b data-out="temp">900</b> °C</p>
+          <p class="mono readout-line depth-not-picture"><span>FREEZING STARTS</span> <b data-out="tliq">0</b> °C</p>
+          <p class="mono readout-line depth-not-picture"><span>PRIMARY PHASE</span> <b data-out="primary">0</b>%</p>
+          <p class="mono readout-line depth-only-maths"><span>EUTECTIC</span> <b data-out="eutectic">0</b>%</p>
+          <p class="mono readout-line depth-only-maths"><span>LAMELLAR SPACING</span> <b data-out="spacing">0</b> µm</p>
+          <p class="verdict" data-out="kind" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">Cooling a mixture that is not at the eutectic composition happens in two
+      stages. First one phase freezes out on its own as branching crystals called dendrites, and
+      because it takes mostly one component with it, the liquid left behind drifts towards the
+      eutectic composition. When it gets there the whole remainder freezes at once as fine
+      alternating layers of both phases. Sit exactly at the eutectic and you skip the first stage
+      entirely: no dendrites, just layers, all at one temperature. Pull the heat out faster and the
+      layers come out finer, because the spacing goes as one over the square root of the rate.</p>
+      <figcaption class="mono">FIG. 3b · Solidification. Fractions and spacings are computed, the shapes are drawn.</figcaption>
+    </figure>
+
+    <h3>Reading one in plain words</h3>
+
+    <p>Start at the top. Everything up there is liquid, because it is too hot for anything to hold
+    together as a solid.</p>
+
+    <p>Come down and you hit a line called the <u class="term">liquidus</u>. That is the temperature
+    where the first solid appears. Not where it all freezes. Where it <em>starts</em>.</p>
+
+    <p>Keep going and you hit the <u class="term">solidus</u>. That is where the last of the liquid
+    finally goes. Below it, everything is solid.</p>
+
+    <p>The gap between those two lines is the part people find strange. In that band you are holding
+    liquid and solid together, at the same temperature, at the same time. Nothing is wrong. That is
+    what the mixture does.</p>
+
+    <p class="correction">Here is where students go wrong. They read the composition axis and think
+    it tells them what the liquid is made of. It does not. It tells you the composition of the
+    <em>whole mixture</em> you started with. Inside the two phase region the liquid and the solid
+    each have their own composition, and neither of them matches the number you started at. Read
+    those off the ends of the tie line, not off the label.</p>
+
+    <p>The lever rule is the part that looks like maths and is really just a seesaw. Draw the
+    horizontal tie line across the two phase region. Your overall composition sits somewhere along
+    it. The further it sits from one end, the more you have of the phase at the <em>other</em> end.
+    Sit in the middle and you have half and half.</p>
+
+    <p class="correction">The second mistake, and it follows from the first: people measure to the
+    near end and report that phase. It is the opposite. Long arm, large amount, and the arm you
+    measure points away from the phase you are counting.</p>
+
+    <p>A eutectic is the composition where the liquidus reaches its lowest point. That mixture melts
+    at a lower temperature than either pure component on its own, which is the whole reason solder
+    works. It also freezes all at once, with no mushy band in between, because at that one
+    composition the liquidus and solidus meet.</p>
+  </div>
+</article>
+
+
+<!-- ============ 03 ============ -->
+<article class="entry" id="titration" aria-labelledby="titration-h">
+  <div class="entry-main">
+    <p class="entry-no mono">ENTRY 03</p>
+    <h2 id="titration-h">A titration you can get wrong</h2>
+    <p class="hand margin-note">every student overshoots the first time</p>
+
+    <p>25.00 cm³ of hydrochloric acid in the flask, sodium hydroxide in the burette, both 0.100 M.
+    A few drops of phenolphthalein. The rough run is already done, so 24.50 cm³ is in and this is
+    the careful one.</p>
+
+    <p>Watch the flask rather than the burette, because there are two separate moments here and
+    almost every student thinks there is one. There is the moment the reaction finishes, and there
+    is the moment the colour changes. Nothing guarantees they happen together, and if they do not,
+    the number you write down is wrong in a way that looks completely reasonable.</p>
+
+    <div class="predict" data-predict="titration">
+      <p class="predict-q">An indicator changes colour. Does that happen at the point where the reaction has actually finished?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">Yes, that is what the indicator is for</button>
+        <button type="button" data-a="b">Only if you picked the right indicator for this acid</button>
+      </div>
+      <p class="predict-result" role="status" aria-live="polite" hidden></p>
+    </div>
+
+    <figure class="fig" id="fig-titration">
+      <div class="lab" data-lab="titration">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">THE CURVE</p>
+            <canvas data-view="curve" width="300" height="240"
+              aria-label="pH against volume of base added. Nearly flat for most of the titration, then almost vertical at the equivalence point. A shaded band shows the pH range over which the chosen indicator changes colour, so you can see whether it overlaps the steep part or misses it."></canvas>
+          </div>
+          <div class="lab-view">
+            <p class="mono view-tag">THE FLASK</p>
+            <canvas data-view="flask" width="300" height="240"
+              aria-label="The conical flask, coloured by how far the chosen indicator has turned at the current pH."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="mono">ACID</span>
+          <button type="button" data-acid="strong" aria-pressed="true">Strong</button>
+          <button type="button" data-acid="weak" aria-pressed="false">Weak</button>
+          <span class="mono">INDICATOR</span>
+          <button type="button" data-ind="phenolphthalein" aria-pressed="true">Phenolphthalein</button>
+          <button type="button" data-ind="methylorange" aria-pressed="false">Methyl orange</button>
+          <button type="button" data-ind="bromothymol" aria-pressed="false">Bromothymol blue</button>
+          <span class="slider-row">
+            <label class="mono" for="t-vb">ADDED</label>
+            <input id="t-vb" type="range" min="0" max="50" step="0.05" value="0" data-vb>
+          </span>
+          <button type="button" data-act="drop">Add one drop</button>
+          <button type="button" data-act="rinse">Rinse and restart</button>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line"><span>ADDED</span> <b data-out="vol">0.00</b> cm³</p>
+          <p class="mono readout-line"><span>pH</span> <b data-out="ph">1.00</b></p>
+          <p class="mono readout-line depth-not-picture"><span>EQUIVALENCE AT</span> <b data-out="equiv">25.00</b> cm³</p>
+          <p class="mono readout-line depth-not-picture"><span>INDICATOR TURNS AT</span> <b data-out="endpoint">25.00</b> cm³</p>
+          <p class="mono readout-line depth-only-maths"><span>TITRATION ERROR</span> <b data-out="terror">0.00%</b></p>
+          <p class="verdict" data-out="tmsg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">Adding base to acid barely changes the pH for most of the way, then
+      changes it enormously over about one drop, then flattens off again. That steep part is the
+      equivalence point, and it is why one drop too many is so easy and so obvious. An indicator is
+      just a dye that changes colour over its own narrow pH range, so it only tells you the truth if
+      that range sits inside the steep part. Against a weak acid the equivalence point lands well
+      above pH 7, because the salt left behind is itself slightly basic, and an indicator chosen for
+      a strong acid will turn far too early and give an answer that is wrong without ever looking
+      wrong.</p>
+      <figcaption class="mono">FIG. 4 · Strong and weak acid against a strong base. Every pH here is computed.</figcaption>
+    </figure>
+
+    <p>There it is. This is the mistake I want students to make early, in a practice run, with cheap
+    reagents. You do not forget the endpoint after you have blown past it once. Half of teaching
+    practical chemistry is engineering safe mistakes.</p>
+
+    <p>Which brings me to a mistake nobody engineered for me. I ran a study on a thousand students
+    and I was pleased with it, and the flaw in it is not in the statistics or the sample size. It is
+    in the first question I asked, and I did not see it for two years.</p>
+  </div>
+</article>
+
+
+<!-- ============ 04 ============ -->
+<article class="entry" id="the-study" aria-labelledby="the-study-h">
+  <div class="entry-main">
+    <p class="entry-no mono">ENTRY 04</p>
+    <h2 id="the-study-h">The study I ran</h2>
+    <p class="hand margin-note">1,000 students, and a few things I would do differently</p>
+
+    <p>This is my undergraduate research project. A thousand students, a survey, SPSS, hypothesis
+    tests, and a grade I was proud of. I still am, mostly. What I want to do here is take it apart
+    in front of you, because the useful thing about it now is not the finding. It is the flaw, and
+    the flaw is not where anybody looks first.</p>
+
+    <div class="predict" data-predict="study">
+      <p class="predict-q">I asked a thousand students whether they used the internet for academic work. Before you read what I found, what do you think the biggest problem with that question is?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">A thousand is too small a sample</button>
+        <button type="button" data-a="b">People answer what sounds good rather than what is true</button>
+        <button type="button" data-a="c">Nothing, it is a clear question</button>
+      </div>
+      <p class="predict-result" role="status" aria-live="polite" hidden></p>
+    </div>
+
+    <ol class="walk" data-lab="study">
+      <li>
+        <h3>The question</h3>
+        <p>Were students actually using the internet for academic work, or were they telling
+        themselves they were?</p>
+      </li>
+
+      <li>
+        <h3>The method</h3>
+        <p>If it were yours to design, which would you pick?</p>
+        <div class="choices" role="group" aria-label="Pick a method">
+          <button type="button" data-choice="interviews">Interviews</button>
+          <button type="button" data-choice="survey">Survey</button>
+          <button type="button" data-choice="observation">Observational study</button>
+        </div>
+        <div class="choice-reply" data-out="reply" role="status" aria-live="polite"></div>
+        <div class="nojs-note">
+          <p><b>Interviews</b> would have told me why, in their own words, and I would have learned
+          things I did not know to ask about. But thirty interviews is a good week of work, and
+          thirty students cannot tell you what a faculty does.</p>
+          <p><b>An observational study</b> would have shown me what they did rather than what they
+          said they did, which is the honest version. It also needs access to their devices or their
+          network, and I had neither.</p>
+          <p><b>A survey</b> is what I chose. It was the only one that reached enough students to
+          say something about the population, and I could run it alongside a full teaching load.
+          I knew going in that I was collecting what people reported about themselves, and that is
+          the trade I made.</p>
+        </div>
+      </li>
+
+      <li>
+        <h3>The sample</h3>
+        <p>1,000 undergraduate and postgraduate students across chemistry education and other STEM
+        fields. I went through department contacts and class groups rather than posting it publicly,
+        because I wanted to know which faculty each response came from.</p>
+      </li>
+
+      <li>
+        <h3>The analysis</h3>
+        <p>SPSS. Descriptives first to see the shape of it, then hypothesis testing to check whether
+        the differences between groups were real or just noise in the sample.</p>
+        <p>Hypothesis testing in plain terms: you assume there is no difference, then you work out
+        how surprising your data would be if that were true. Surprising enough, and you stop
+        believing the assumption.</p>
+      </li>
+
+      <li>
+        <h3>What I would change</h3>
+        <p>The self reporting is the weak point and I knew it at the time. I asked students how they
+        used the internet and I recorded their answers as though they were behaviour. They are not.
+        They are what people believe about themselves, filtered through what they think a
+        researcher wants to hear.</p>
+        <p>I would fix it by pairing the survey with something I could observe. A smaller group
+        keeping a log for two weeks, or reported hours checked against something measurable.</p>
+        <p>The other thing is the sample. Going through department contacts gave me clean faculty
+        data and it also meant I mostly reached students who turn up and are on the class lists.
+        The ones who do not are exactly the ones whose habits I most wanted to see. I would build a
+        route to them next time, even a small one.</p>
+        <p>None of that was obvious to me while I was doing it. What changed is that I learned how
+        to take a study apart and ask what its design can and cannot support, and the first study I
+        turned that on was my own. Everything above this line is me marking my own work. I could not
+        have written it in 2023.</p>
+      </li>
+    </ol>
+      <div class="readout lab-readout">
+        <p class="mono readout-line depth-only-maths"><span>STUDENTS WHO ANSWERED</span> <b data-out="study-n">0</b></p>
+        <p class="mono readout-line depth-only-maths"><span>SAMPLING ERROR AT 95%</span> <b data-out="study-moe">0</b></p>
+        <p class="mono readout-line depth-only-maths"><span>WHAT THAT DOES NOT COVER</span> <b data-out="study-bias">self report</b></p>
+      </div>
+      <div data-chrome class="lab-chrome"></div>
+
+    <p class="citation">
+      Grace, P. O. (2023, October 11). <cite>Validation of Undergraduate and Postgraduate Students'
+      Use of Internet for Academic Purposes in Chemistry Education and Other STEM Related
+      Fields</cite> [Bachelor's thesis, University of Ilorin]. Zenodo.<br>
+      <a class="mono" href="https://doi.org/10.5281/zenodo.21749877" rel="noopener">DOI 10.5281/zenodo.21749877</a>
+      <span class="mono quiet"> · CC BY 4.0</span>
+    </p>
+  </div>
+</article>
+
+
+<!-- ============ 05 ============ -->
+<article class="entry" id="stalactite" aria-labelledby="stalactite-h">
+  <div class="entry-main">
+    <p class="entry-no mono">ENTRY 05</p>
+    <h2 id="stalactite-h">The stalactite question</h2>
+    <p class="hand margin-note">I wrote this years before I knew it mattered</p>
+
+    <figure class="scan-figure">
+      <button type="button" class="scan-btn" data-scan="water-purification">
+        <picture>
+          <source type="image/webp" srcset="assets/scans/water-purification-sm.webp">
+          <img src="assets/scans/water-purification-sm.jpg" loading="lazy" decoding="async"
+            width="520" height="724"
+            alt="A page of handwritten chemistry notes in blue and red pen. The left column covers hard and soft water and distillation. The lower right column defines stalactites and stalagmites, then adds in red: each drop of water leave a tiny bit of solid behind, over many years it grows into a rock. Beneath that, back in blue: they are built bit by bit, not sudden, they grow very slowly, it is like adding cement layer by layer.">
+        </picture>
+        <span class="scan-zoom mono">View larger</span>
+      </button>
+      <figcaption class="mono">Water hardness and purification · the stalactite passage, lower right</figcaption>
+
+      <details class="transcript" id="tr-water-purification">
+        <summary>Read this page as text</summary>
+        <div class="transcript-body">
+          <p class="t-key">Transcribed as written, including the bits that trail off. Red is her
+          correcting pen. Orange is something squeezed in afterwards.</p>
+
+          <p class="t-part">TOP MARGIN, ADDED LATER</p>
+          <p class="t-ins">Deionized water, use of resin to remove all mineral ions</p>
+
+          <p class="t-part">LEFT COLUMN</p>
+          <p>Hard water is hard because <span class="t-ins">or when</span> the water passes through
+          rocks that contain minerals. If it doesn't pass through those rocks, it stays soft.
+          (Ca<sup>2+</sup>, Mg<sup>2+</sup>)</p>
+          <p><span class="t-ins">main soft water</span> Rain water may pick up dust, CO<sub>2</sub>
+          but it is considered soft water. Soft water contains very small amounts of minerals.
+          Na<sup>+</sup>, K<sup>+</sup> <span class="t-ins">better for washing</span></p>
+          <p>Soft water can become hard if it passes through rocks containing Ca<sup>2+</sup>,
+          Mg<sup>2+</sup>.</p>
+          <p class="t-ins">electrolyte (carry electrical signal in the body)</p>
+          <p>Na<sup>+</sup> &amp; K<sup>+</sup> in soft water help with body functions like nerve
+          signals and muscle movement, but the amount in water is too small to meet our daily
+          needs.</p>
+          <p class="correction">Distilled water is water that has been purified by boiling and
+          condensing the vapour back into liquid.</p>
+          <p>Water is boiled &rarr; turns to steam</p>
+          <p>Steam rises &amp; leaves impurities behind</p>
+          <p class="correction">Steam is cooled &rarr; becomes pure water again.</p>
+          <p>100% pure H<sub>2</sub>O (no salts, no germs)</p>
+          <p>Yes, it is drinkable but it is not ideal for regular drinking because it has no mineral
+          (Ca<sup>2+</sup>, Mg<sup>2+</sup>)</p>
+          <p>Most water factories (bottle, sachet) <span class="correction">mostly sell treated
+          water not distilled water.</span></p>
+
+          <p class="t-part">RIGHT COLUMN</p>
+          <p class="t-ins">Distillation, use of boiling &amp; condensing to get very pure water.</p>
+          <p>Aeration is adding air to water. It removes bad smell, unwanted gases, &amp; add oxygen
+          to the water. It improves the quality of water.</p>
+          <p class="correction">Flocculation is the process of making tiny particles combine
+          together into bigger ones so they can settle.</p>
+          <p>Water is not written as a reactant in hardness removal equations because it acts as the
+          solvent, not as a reacting substance.</p>
+          <p>We only write substances that are chemically reacting, not the medium.</p>
+          <p class="correction">Slaked lime only remove hardness <span class="t-ins">not</span>
+          impurities</p>
+          <p>Ca(HCO<sub>3</sub>)<sub>2</sub></p>
+          <p>Boiling <span class="t-gap">[a long rule drawn across the line]</span> H<sub>2</sub>O is
+          formed not added</p>
+          <p>We don't include it in the reactant because it is already present</p>
+
+          <p class="t-part">RIGHT COLUMN, THE STALACTITE PASSAGE</p>
+          <p>Stalactite, Water drips from the roof, leaves behind CaCO<sub>3</sub>, It builds
+          downward.</p>
+          <p>Stalagmite, dripping water fall to the ground, more CaCO<sub>3</sub> is deposited, it
+          builds upward.</p>
+          <p class="correction">Each drop of water leave a tiny bit of solid behind. Over many years,
+          it grows into a rock.</p>
+          <p>They are built bit by bit, not sudden.</p>
+          <p>They grow very slowly. <span class="t-del">at a time</span> It is like adding cement
+          layer by layer <span class="t-gap">[the last line runs off the bottom edge of the
+          photograph]</span></p>
+        </div>
+      </details>
+    </figure>
+
+    <p>I wrote this while preparing a lesson on water hardness. I was explaining to students how
+    caves build themselves. Water drips, leaves a little calcium carbonate behind, and over
+    thousands of years that becomes rock.</p>
+
+    <p>I did not think of it as anything except a nice thing to tell a class. Then I started
+    studying crystal growth properly and realised I had been describing it the whole time. A
+    stalactite is a crystal growing very slowly out of solution, one layer at a time.</p>
+
+    <p>Here is what I cannot stop thinking about. A stalactite exists because gravity makes the
+    water drip. The drip is the whole mechanism. Take gravity away and the water does not fall at
+    all. It holds onto the ceiling as a bead, held by surface tension, and it stays there.</p>
+
+    <p>So what forms instead? Does the mineral come out of solution evenly all around the bead
+    instead of building downward? Would you get a shell rather than a spike? Nothing sinks, so
+    nothing settles unevenly. Does it come out cleaner?</p>
+
+    <p>I do not know. I am fairly sure someone has looked at this, and I have not found the paper
+    yet. But it is the same question as the one I want to research, just written at cave scale
+    instead of laboratory scale. Gravity is not a background condition in crystal growth. It is
+    doing work. I want to find out how much.</p>
+
+    <div class="predict" data-predict="stalactite">
+      <p class="predict-q">A stalactite exists because gravity makes the water drip. Take gravity away, so the drop never falls and just hangs there. What forms?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">A spike, the same as before, only slower</button>
+        <button type="button" data-a="b">A rounded shell instead of a spike</button>
+        <button type="button" data-a="c">Nothing forms at all</button>
+      </div>
+      <p class="predict-result" role="status" aria-live="polite" hidden></p>
+    </div>
+
+    <figure class="fig" id="fig-stal">
+      <div class="two-panel" data-lab="stalactite">
+        <div class="panel">
+          <p class="mono panel-tag tag-correction">1 g</p>
+          <canvas class="stage" width="360" height="320"
+            aria-label="Under Earth gravity a drop forms at a cave ceiling, stretches, and falls, leaving a small mineral deposit behind. Repeated over accelerated time, a spike builds downward."></canvas>
+        </div>
+        <div class="panel">
+          <p class="mono panel-tag tag-sage">≈0 g</p>
+          <canvas class="stage" width="360" height="320"
+            aria-label="In near zero gravity the drop never falls. It holds at the ceiling as a bead under surface tension, and mineral deposits around its whole surface, building a rounded shell outward instead of a spike downward."></canvas>
+        </div>
+      </div>
+      <div class="controls" data-controls="stalactite">
+        <button type="button" data-act="replay">Replay</button>
+      </div>
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">On the left, under gravity, a drop forms, stretches and falls, leaving a
+      little mineral behind each time until a spike has built downward. On the right, with almost no
+      gravity, the drop never falls. It sits at the ceiling as a bead and mineral builds around its
+      whole surface, so a rounded shell grows outward instead.</p>
+      <figcaption class="mono">FIG. 2 · Speculative. This is what I think would happen, not what I know.</figcaption>
+    </figure>
+
+    <!-- THE OPEN QUESTION
+         This block is built to survive being wrong. The prediction is written
+         down and dated on the left. The right hand side is empty and stays
+         empty until the paper turns up, and then whatever it says goes in
+         there, including if it says I was wrong. To fill it in, replace the
+         contents of .answer-pending with the finding and put the date and the
+         citation in .answer-source. Do not edit the prediction. That is the
+         whole point of it being there. -->
+    <div class="ledger" id="stalactite-ledger">
+      <div class="ledger-col ledger-said">
+        <p class="mono ledger-head">WHAT I PREDICTED, 2 AUGUST 2026</p>
+        <p>Without gravity the drop never falls, so nothing builds downward. I think the mineral
+        comes out of solution all round the bead instead, and you get a rounded shell rather than a
+        spike. I also think it comes out cleaner, because nothing is sinking and nothing is settling
+        unevenly.</p>
+        <p class="hand aside-note">Written before I looked for the answer, on purpose.</p>
+      </div>
+      <div class="ledger-col ledger-found">
+        <p class="mono ledger-head">WHAT THE ANSWER TURNED OUT TO BE</p>
+        <p class="answer-pending">Still empty. I have not found the paper yet, and I am not going to
+        write anything here until I do.</p>
+        <p class="mono answer-source quiet">Nothing to cite yet.</p>
+      </div>
+    </div>
+
+    <p>I am leaving that second column visibly empty rather than quietly dropping the question,
+    because the honest ending to this is the one where somebody shows me I had it backwards. If
+    that happens it goes in the box next to my prediction, in my own site, with my prediction still
+    sitting there beside it. That seems like the least I can do for being confident in public.</p>
+
+    <p class="invite">If you know what actually happens here, or you know the paper I have not
+    found, I would really like you to tell me.</p>
+
+    <p class="answer-do">
+      <a class="btn-answer" id="stalactite-mail"
+         href="mailto:promisetosingrace@gmail.com?subject=The%20stalactite%20question&amp;body=Hello%20Promise%2C%0A%0AAbout%20your%20open%20question%20on%20what%20forms%20when%20a%20stalactite%20cannot%20drip%3A%0A%0A%0A%0A%28If%20you%20have%20a%20paper%2C%20a%20DOI%20or%20a%20title%20is%20plenty.%29%0A%0A">
+        Tell me what actually happens
+      </a>
+      <span class="mono quiet">Opens an email with the subject already written. Two clicks and you
+      have said it.</span>
+    </p>
+  </div>
+</article>
+
+
+<!-- ============ 06 ============ -->
+<article class="entry" id="explaining" aria-labelledby="explaining-h">
+  <div class="entry-main">
+    <p class="entry-no mono">ENTRY 06</p>
+    <h2 id="explaining-h">Explaining things</h2>
+    <p class="hand margin-note">two years of finding out which explanations actually work</p>
+
+    <p>Every one of these is lifted from my notes. The pattern is always the same. Say the thing,
+    then say the thing people get wrong, because the second one is what actually sticks.</p>
+
+    <div class="cards">
+
+      <section class="card" aria-labelledby="c1">
+        <h3 id="c1">Why water is not written in the equation</h3>
+        <p class="claim">When you soften hard water, water is everywhere in the reaction and it
+        never appears in the equation. That looks like an error the first time you see it.</p>
+        <p class="claim">It is not. We only write substances that are chemically reacting. Water is
+        the medium they are reacting in.</p>
+        <p class="correction">No new water is formed. All the substances are already dissolved in
+        water before anything happens. Water is the solvent, not a reactant, so it stays out of the
+        equation.</p>
+      </section>
+
+      <section class="card" aria-labelledby="c2">
+        <h3 id="c2">Soft water is not the same as safe water</h3>
+        <p class="claim">Permutit softens water by taking out the calcium and magnesium and putting
+        sodium in their place. Think of it as a swap, not a clean.</p>
+        <p class="correction">Removing hardness does not mean the water is safe or pure to drink. It
+        does not remove all salts, it only replaces some of them. Bacteria are untouched. Soft and
+        safe are two different questions.</p>
+      </section>
+
+      <section class="card" aria-labelledby="c3">
+        <h3 id="c3">Why distilled water is not ideal for drinking</h3>
+        <p class="claim">Boil water, catch the steam, cool it back down and you have distilled water.
+        100 percent pure. No salts, no germs.</p>
+        <p class="correction">So yes, it is drinkable. It is just not good for you day to day,
+        because it has no minerals at all. And most bottled and sachet water is treated water, not
+        distilled water, which people mix up constantly.</p>
+      </section>
+
+      <section class="card" aria-labelledby="c4">
+        <h3 id="c4">Why soft water corrodes lead pipes and hard water does not</h3>
+        <p class="claim">Hard water leaves a mineral coating inside the pipe. That layer of scale
+        sits between the water and the lead, so the water never touches the metal directly.</p>
+        <p class="correction">Soft water lays down no coating. Nothing separates the water from the
+        lead, so lead leaches straight into it. The softer water is the more dangerous one here,
+        which is the opposite of what students expect.</p>
+        <p>What lead does once it is in you is why I teach this properly: hypertension, stroke,
+        kidney damage, and lowered IQ in children.</p>
+      </section>
+
+      <section class="card" aria-labelledby="c5">
+        <h3 id="c5">How caves build themselves</h3>
+        <p class="claim">Stalactites grow down from the roof. Stalagmites grow up from the ground.
+        Water drips through limestone, leaves a tiny bit of calcium carbonate behind each time, and
+        over many years that becomes rock.</p>
+        <p class="claim">They are built bit by bit, not suddenly. It is like adding cement layer by
+        layer. They grow very slowly.</p>
+        <p class="aside-note">This one turned out to matter more than I thought.
+        <a href="#stalactite">It is Entry 05.</a></p>
+      </section>
+
+      <section class="card" aria-labelledby="c6">
+        <h3 id="c6">What makes benzene different</h3>
+        <p class="claim">Benzene is the mother of the aromatic compounds. Six carbons in a ring with
+        alternating double bonds, C<sub>6</sub>H<sub>6</sub>, and it counts as unsaturated because
+        of those double bonds.</p>
+        <p class="correction">Unsaturated normally means it will happily add things across the
+        double bond. Benzene does not. Its main reaction is substitution, where a hydrogen gets
+        swapped out for another group and the ring survives intact. The ring is stable and it does
+        not want to give that up.</p>
+      </section>
+
+      <section class="card" aria-labelledby="c7">
+        <h3 id="c7">Why amino acids change with pH</h3>
+        <p class="claim">An amino acid carries an amino group and a carboxyl group at the same time,
+        so it can act as an acid or a base depending on what is around it.</p>
+        <p class="claim">In the stomach, around pH 2, the amino group picks up a hydrogen and the
+        molecule carries a positive charge. In blood, around pH 7, it is a zwitterion, positive at
+        one end and negative at the other, so it balances out. In the small intestine the carboxyl
+        group loses its hydrogen and the whole thing goes negative.</p>
+        <p class="correction">The charge is not a side effect. It is what keeps the molecule
+        dissolved and it is what prepares it to be absorbed. A neutral molecule would not travel in
+        blood the way this does.</p>
+      </section>
+
+    </div>
+  </div>
+
+  <aside class="channel" aria-labelledby="explaining-h">
+    <p class="mono channel-title">QUESTIONS I SET FOR THIS</p>
+    <ol>
+      <li>Explain why clear water is not always safe for drinking.</li>
+      <li>Distinguish between temporary and permanent hardness of water, based on cause and on
+      method of removal.</li>
+      <li>Explain why white deposits form inside kettles when water is boiled repeatedly.</li>
+      <li>After removing hardness using washing soda, the water still contains sodium sulfate. Is
+      the water pure? Is it safe for drinking? Give a reason.</li>
+      <li>A student used borehole water to wash clothes and noticed the soap did not lather easily.
+      What type of water is this, and explain why the soap did not lather.</li>
+    </ol>
+    <p class="channel-foot">Taken from the right hand column of the water hardness page.</p>
+  </aside>
+</article>
+
+
+<!-- ============ 07 ============ -->
+<article class="entry" id="projects" aria-labelledby="projects-h">
+  <div class="entry-main">
+    <p class="entry-no mono">ENTRY 07</p>
+    <h2 id="projects-h">Things I built for students</h2>
+    <p class="hand margin-note">be creative with it</p>
+
+    <figure class="scan-figure">
+      <button type="button" class="scan-btn" data-scan="student-projects">
+        <picture>
+          <source type="image/webp" srcset="assets/scans/student-projects-sm.webp">
+          <img src="assets/scans/student-projects-sm.jpg" loading="lazy" decoding="async"
+            width="520" height="796"
+            alt="A handwritten page of student project designs, ruled into boxes. Headed SSS 1 and SSS 2 in red. Five projects are set out with topic, what to build, components and labels: a carbon cycle model, a pH colour strip board, an acid rain diorama, a water purification flow board, and a hydrocarbon collage. Written in the top left corner: be creative with it. Along the bottom: creativity, accuracy, presentation, understanding.">
+        </picture>
+        <span class="scan-zoom mono">View larger</span>
+      </button>
+      <figcaption class="mono">Project designs for SSS1 and SSS2, with marking criteria</figcaption>
+
+      <details class="transcript" id="tr-student-projects">
+        <summary>Read this page as text</summary>
+        <div class="transcript-body">
+          <p class="t-key">Transcribed as written, including the note she left herself in the
+          corner. Red is her second pen. Orange is something squeezed in afterwards.</p>
+
+          <p class="t-part">TOP CORNER, TO HERSELF</p>
+          <p class="t-ins">Be creative with it</p>
+
+          <p class="t-part">TOP RIGHT, IN RED, UNRELATED WORKING</p>
+          <p class="correction">H<sub>2</sub>SO<sub>4</sub> + KOH &rarr; H<sub>2</sub>O</p>
+
+          <p class="t-part">SSS 1</p>
+          <p>Topic: Carbon &amp; its compounds. What to build! A mini 3D scene on cardboard box
+          base. Components: Trees (plants). Humans / animals (drawn or clay). Factory or burning
+          candle. Atmosphere arrows showing CO<sub>2</sub> movement. Labels: photosynthesis,
+          respiration, combustion.</p>
+          <p>Topic: pH Scale. What to build: A vertical colour strip board. Sections: Red (strong
+          acid), Orange (weak acid), Green (neutral), Blue (weak base), Purple (strong base).
+          Students paste real tested samples beside colours. Add small "indicator result"
+          circles.</p>
+          <p>Topic: Acids in environment (what to build). A split cardboard scene. Left: normal
+          environment (green tree, clean water). Right: Acid rain damage (yellow leaves, corroded
+          metals). Use cotton wool for clouds. Draw rain drops labelled "acid rain".</p>
+
+          <p class="t-part">SSS 2</p>
+          <p>Topic: Water &amp; Purification. A 3 stage purification flow board: 1) Dirty water
+          2) Filtration system 3) Clean water. Cut out arrows showing movement. Mini "filter column"
+          drawn or built using cotton / sand / charcoal diagrams. Labels: Sedimentation,
+          filtration, decantation.</p>
+          <p>Topic: Hydrocarbons / crude oil. A collage style cardboard display. Sections:
+          Transport (petrol, diesel). Cooking gas, plastic products. Asphalt roads. Paste small real
+          life wrappers or drawings. Connect each product to crude oil origin.</p>
+
+          <p class="t-part">LOWER HALF, DEFINITIONS</p>
+          <p>Efflorescence, when a substance loses its water of crystallization and become powdery
+          when exposed to air. Washing soda left in the open may become
+          <span class="t-ins">white &amp; powdery</span></p>
+          <p>Deliquescent, a substance absorbs so much water from the air that it dissolve in the
+          water it absorbed.</p>
+          <p>Hygroscopic, when a substance absorbs moisture from the air but does not dissolve in
+          it. Eg biscuit.</p>
+          <p>Drying agent, a substance used to remove water or moisture from another substances.
+          <span class="t-ins">Eg small silica gel packets found inside new shoe or bags, dry &amp;
+          free from mould</span></p>
+
+          <p class="t-part">ALONG THE BOTTOM EDGE, THE MARKING CRITERIA</p>
+          <p><span class="t-gap">[first word partly cut off]</span> Creativity, Accuracy,
+          Presentation, understanding</p>
+        </div>
+      </details>
+    </figure>
+
+    <div class="projects">
+      <section class="project" aria-labelledby="p1">
+        <h3 id="p1">Carbon and its compounds</h3>
+        <p>A mini 3D scene built on a cardboard box base. Trees and plants, humans and animals drawn
+        or moulded in clay, a factory or a burning candle, and arrows through the atmosphere showing
+        carbon dioxide moving. Labelled photosynthesis, respiration, combustion.</p>
+      </section>
+      <section class="project" aria-labelledby="p2">
+        <h3 id="p2">The pH scale</h3>
+        <p>A vertical colour strip board. Red for strong acid, orange for weak acid, green for
+        neutral, blue for weak base, purple for strong base. Students paste their own tested samples
+        beside the colours and add small indicator result circles.</p>
+      </section>
+      <section class="project" aria-labelledby="p3">
+        <h3 id="p3">Acids in the environment</h3>
+        <p>A split cardboard diorama. The left side is a normal environment with green trees and
+        clean water. The right side shows acid rain damage, yellowed leaves and corroded metal.
+        Cotton wool for clouds, with drawn raindrops labelled acid rain.</p>
+      </section>
+      <section class="project" aria-labelledby="p4">
+        <h3 id="p4">Water and purification</h3>
+        <p>A three stage flow board. Dirty water, then a filtration system, then clean water.
+        Cut out arrows showing movement, and a small filter column built or drawn from cotton, sand
+        and charcoal. Labelled sedimentation, filtration, decantation.</p>
+      </section>
+      <section class="project" aria-labelledby="p5">
+        <h3 id="p5">Hydrocarbons and crude oil</h3>
+        <p>A collage style display. Transport with petrol and diesel, cooking gas, plastic products,
+        asphalt roads. Students paste real product wrappers and connect each one back to crude oil.</p>
+      </section>
+    </div>
+
+    <p class="mono criteria">Creativity · Accuracy · Presentation · Understanding</p>
+
+    <p>I set these instead of essays because I wanted them to make a thing with their hands. The
+    student who builds the filter column out of cotton and sand and charcoal never has to be told
+    the difference between filtration and decantation again. They watched it happen. An essay on the
+    same topic comes back to me correct and gone by Friday.</p>
+  </div>
+</article>
+
+
+<!-- ============ 08 ============ -->
+<article class="entry" id="bench" aria-labelledby="bench-h">
+  <div class="entry-main">
+    <p class="entry-no mono">ENTRY 08</p>
+    <h2 id="bench-h">At the bench</h2>
+    <p class="hand margin-note">a school lab on a small budget teaches you a lot</p>
+
+    <p>I prepare my own reagents, run titrimetric analysis and qualitative inorganic analysis with
+    the classes, and keep the lab safe and working on very little money. When the equipment cannot
+    do the job, I use PhET simulations rather than skip the practical, because a student who has
+    only ever read about a reaction has not really met it.</p>
+
+    <p>Working with a small budget makes you decide what a practical is actually for. Usually it is
+    one idea, and you can nearly always get to that idea with what is already in the cupboard.</p>
+
+    <div class="gallery">
+      <figure class="scan-figure sm">
+        <button type="button" class="scan-btn" data-scan="water-hardness">
+          <picture>
+            <source type="image/webp" srcset="assets/scans/water-hardness-sm.webp">
+            <img src="assets/scans/water-hardness-sm.jpg" loading="lazy" decoding="async"
+              width="520" height="798"
+              alt="Handwritten notes on permanent water hardness in blue and red pen, split by a red vertical rule. The left column explains why water is not written as a product and why washing soda does not make water pure. The right column is a numbered list of exam questions written for students.">
+          </picture>
+        </button>
+        <figcaption class="mono">Water hardness and purification · SS2</figcaption>
+
+        <details class="transcript" id="tr-water-hardness">
+          <summary>Read this page as text</summary>
+          <div class="transcript-body">
+            <p class="t-key">Transcribed as written. Red is her correcting pen. Orange is something
+            squeezed in afterwards.</p>
+
+            <p class="t-part">TOP MARGIN, ADDED LATER</p>
+            <p class="t-ins">Advanced purification in water plants, CaCO<sub>3</sub> is filtered out
+            then further treatment</p>
+
+            <p class="t-part">LEFT COLUMN</p>
+            <p><u class="term">Permanent Hardness</u></p>
+            <p>Aqueous means inside water</p>
+            <p>Why is H<sub>2</sub>O not written as a product?</p>
+            <p>Because no <span class="t-ins">new</span> water is formed, all substances are already
+            dissolved in water (aqueous)</p>
+            <p class="correction">Na<sub>2</sub>SO<sub>4</sub> remains but the water is no longer
+            hard.</p>
+            <p>The goal of adding caustic soda or washing soda is to remove hardness, it doesn't
+            completely make it pure.</p>
+            <p class="correction">Na<sub>2</sub>SO<sub>4</sub> is not toxic at low levels. It can be
+            safe in small amounts. It may be drinkable but have slightly bitter taste, in higher
+            amounts it can cause stomach upset / diarrhea.</p>
+            <p>Removing hardness does not mean water is fully safe or pure for drinking</p>
+            <p>Permutit is like water cleanser. It softens water by removing Ca<sup>2+</sup> &amp;
+            Mg<sup>2+</sup> and replacing them with Na<sup>+</sup>. It doesn't clean all impurities,
+            <span class="correction">it's for only hardness. It doesn't remove all salts, it only
+            replaces some salts.</span></p>
+            <p>White fibre, cotton cloth</p>
+            <p>Hard water, Ca<sup>2+</sup> &amp; Mg<sup>2+</sup> deposits minerals
+            <span class="t-ins">(coating)</span> (scale) forms <span class="t-del">barrier</span>
+            which doesn't allow water to react with the lead pipe directly.</p>
+            <p>Soft water, Low mineral, dissolves metal <span class="t-ins">(corrosion)</span></p>
+            <p><span class="t-gap">[first words cut off at the edge of the photograph]</span>
+            coating, lead leaches into water.</p>
+            <p><span class="t-gap">[cut off]</span> lead to hypertension or stroke, kidney damage
+            <span class="t-ins">low IQ</span> <span class="t-gap">[the last line runs off the bottom
+            edge of the photograph]</span></p>
+
+            <p class="t-part">RIGHT COLUMN, QUESTIONS SHE WROTE FOR STUDENTS</p>
+            <p>Ass.</p>
+            <p>1) Explain why clear water is not always safe for drinking.</p>
+            <p>2) Distinguish btw temporary &amp; permanent hardness of water based on:
+            a) Cause &nbsp; b) Method of removal</p>
+            <p>3) Explain why white deposits form inside kettles when water is boiled repeatedly.</p>
+            <p>4) After removing hardness using washing soda, the water still contains sodium
+            sulfate (Na<sub>2</sub>SO<sub>4</sub>). a) Is the water pure? Explain
+            b) Is it safe for drinking? Give a reason</p>
+            <p>5) A student used borehole water to wash clothes and noticed that the soap did not
+            lather easily. a) What type of water is that? b) Explain why the soap did not lather.</p>
+          </div>
+        </details>
+      </figure>
+
+      <figure class="scan-figure sm">
+        <button type="button" class="scan-btn" data-scan="bonding-proteins">
+          <picture>
+            <source type="image/webp" srcset="assets/scans/bonding-proteins-sm.webp">
+            <img src="assets/scans/bonding-proteins-sm.jpg" loading="lazy" decoding="async"
+              width="520" height="493"
+              alt="Handwritten notes across three columns covering ionic, covalent, dative, hydrogen and metallic bonding, then amino acids and proteins, including how charge changes with pH in the stomach, in blood and in the small intestine, and how peptide bonds form by condensation.">
+          </picture>
+        </button>
+        <figcaption class="mono">Bonding, amino acids and proteins</figcaption>
+
+        <details class="transcript" id="tr-bonding-proteins">
+          <summary>Read this page as text</summary>
+          <div class="transcript-body">
+            <p class="t-key">Transcribed as written. Red is her correcting pen. Orange is something
+            squeezed in afterwards.</p>
+
+            <p class="t-part">LEFT COLUMN, BONDING</p>
+            <p>&lt;7 A &nbsp; &gt;7 B &nbsp; =7 N</p>
+            <p><u class="term">Ionic</u>, transfer of electrons. One atom gives electrons. Another
+            atom collects electrons. Opposite charge attract, they stick together. Na<sup>+</sup>
+            Cl<sup>-</sup></p>
+            <p>Metal + Non-metal</p>
+            <p><u class="term">Covalent</u>, sharing of electrons. Instead of collecting, atoms
+            share electrons.</p>
+            <p>"Let's share so both of us can be stable"</p>
+            <p>No one becomes fully negative or positive</p>
+            <p>Non-metal + Non-metal &nbsp; H<sub>2</sub>O</p>
+            <p><u class="term">Dative bond / coordinate bond</u> (special type of covalent bond)</p>
+            <p>One atom provides both electrons for the shared pair. NH<sub>4</sub><sup>+</sup></p>
+            <p>Covalent both atoms contribute 1 electron each, <span class="t-ins">NH<sub>3</sub> +
+            H<sup>+</sup></span></p>
+            <p><u class="term">Hydrogen bonding</u> (weak attraction between molecules)</p>
+            <p>It happens when hydrogen is bonded to N, O, F. H becomes slightly positive. It gets
+            attracted to slightly negative atom in another molecule.
+            <span class="t-gap">[line ends cut off at the edge of the photograph]</span></p>
+            <p><u class="term">Metallic bonding</u></p>
+            <p>Happens between metal atoms. Force that holds metal atoms together. It happens inside
+            a metal between metal atoms. A piece of iron is not one giant atom. It is made of
+            billions of iron atoms packed together</p>
+
+            <p class="t-part">MIDDLE COLUMN, PROTEINS</p>
+            <p class="correction">Proteins</p>
+            <p>Amino acids are derived from carboxylic acids. It consist of both carboxyl group and
+            amino group. They are the basic structural units of protein.</p>
+            <p>General molecular formula: H, C with R above and NH<sub>2</sub> below, COOH</p>
+            <p>Because amino acids have both an amino group (-NH<sub>2</sub>) and a carboxyl group
+            (-COOH). This makes them act differently depending on whether the solution they are in
+            is acidic, neutral or basic (pH)</p>
+            <p>Acidic pH <span class="t-ins">amino acid carries (+)</span> pH &lt; 7 stomach</p>
+            <p class="correction">Neutral (zwitterion) Neutral NH<sub>2</sub> carry (+) while COOH
+            carry (-) in blood and also glycine in water. pH = 7</p>
+            <p>Negative, the carboxyl group loses H, leaving a (-) charge. Found in small
+            intestine.</p>
+            <p>In the stomach (acidic environment) amino acids stay charged, which: keeps them
+            soluble in water, prepares them to be absorbed later in the small intestine.</p>
+            <p class="correction">Neutral, This is the stable form in body fluid like blood. Allows
+            amino acids to move easily in water and participate in protein building.</p>
+
+            <p class="t-part">RIGHT COLUMN</p>
+            <p>1) peptide bond &nbsp; 2) maltose &nbsp; 3) protein &nbsp; 4) a) condensation
+            b) hydrolysis &nbsp; 5) maltase</p>
+            <p>Basic form, helps amino acids act in alkaline environments like the small
+            intestine.</p>
+            <p><u class="term">Important for chemical reactions during digestion and
+            metabolism</u></p>
+            <p>Phenyl = a benzene ring minus one hydrogen (C<sub>6</sub>H<sub>5</sub>-), which acts
+            as a substituent group attached to another molecule</p>
+            <p>When a benzene ring is attached to something else as a group, it is called phenyl</p>
+            <p><u class="term">Peptides</u>, molecules made when amino acids join together. They are
+            like small proteins.</p>
+            <p>The amino acids are linked by special bonds called peptide bonds.</p>
+            <p>Amino acid + amino acid &rarr; peptide + water
+            <span class="t-ins">condensation, hydrolysis</span></p>
+            <p><u class="term">Types of peptides</u></p>
+            <p class="correction">Dipeptide &rarr; 2 amino acids linked</p>
+            <p class="correction">Tripeptide &rarr; 3</p>
+            <p class="correction">Polypeptide &rarr; many (can become a protein)</p>
+            <p class="correction">Amino acids &rarr; join &rarr; peptide &rarr; many peptides
+            &rarr; protein</p>
+            <p>Peptides are like the building blocks of proteins.</p>
+            <p>Amino acids are the monomers of protein. Proteins are polymers, which means they are
+            long chains of repeating units <span class="t-ins">(amino acids)</span></p>
+            <p>Single amino acids &rarr; monomer. Polymer, many units &rarr; protein.</p>
+          </div>
+        </details>
+      </figure>
+
+      <figure class="scan-figure sm">
+        <button type="button" class="scan-btn" data-scan="benzene-alkanols">
+          <picture>
+            <source type="image/webp" srcset="assets/scans/benzene-alkanols-sm.webp">
+            <img src="assets/scans/benzene-alkanols-sm.jpg" loading="lazy" decoding="async"
+              width="520" height="763"
+              alt="Handwritten notes on benzene as the mother of aromatic compounds, six carbons in a ring with alternating double bonds and substitution as its main reaction, followed by alkanols, their general formula and their two classifications. Key terms are underlined in red.">
+          </picture>
+        </button>
+        <figcaption class="mono">Benzene, aromatics and alkanols</figcaption>
+
+        <details class="transcript" id="tr-benzene-alkanols">
+          <summary>Read this page as text</summary>
+          <div class="transcript-body">
+            <p class="t-key">Transcribed as written. Red is her correcting pen, and on this page she
+            uses it to underline the terms she wants students to hold on to.</p>
+
+            <p class="t-part">BENZENE</p>
+            <p><u class="term">Benzene (Aromatic Hydrocarbons)</u></p>
+            <p>Benzene is the "<u class="term">mother</u>" of aromatic compounds.</p>
+            <p>It has 6 carbon atoms arranged in a ring with alternating
+            <u class="term">double bonds</u>.</p>
+            <p>Molecular formula for benzene C<sub>6</sub>H<sub>6</sub></p>
+            <p>General is for all aromatic C<sub>n</sub>H<sub>2n-6</sub></p>
+            <p>Unsaturated because of <u class="term">double bonds</u>.</p>
+            <p>If you <u class="term">replace one or more hydrogen</u> atoms in benzene, you get
+            other <u class="term">aromatic hydrocarbons</u>:</p>
+            <p>Toluene C<sub>6</sub>H<sub>5</sub>CH<sub>3</sub> benzene + 1 alkyl group</p>
+            <p>Phenol C<sub>6</sub>H<sub>5</sub>OH benzene + OH group</p>
+            <p>Main reaction = <u class="term">substitution</u></p>
+            <p>H is swapped with other groups.</p>
+
+            <p class="t-part">ALKANOLS</p>
+            <p><u class="term">Alkanols</u></p>
+            <p>Organic compounds that contain <u class="term">-OH</u> (hydroxyl group)</p>
+            <p>Made from <u class="term">alkanes</u> by replacing <u class="term">one hydrogen</u>
+            atom with -OH.</p>
+            <p>General formulae C<sub>n</sub>H<sub>2n+1</sub>OH</p>
+            <p>2 different <u class="term">classifications</u></p>
+            <p>1) Based on the number of hydroxyl (-OH) group.
+            <span class="t-ins">(most common)</span></p>
+            <p>2) Based on the number of alkyl group.</p>
+            <p>Alkanols mostly undergo <u class="term">oxidation</u> and
+            <u class="term">substitution</u> reactions.</p>
+            <p>Give Ass. No 10, 18, 6, 7.</p>
+            <p class="t-key">The right hand third of this page is the reverse side showing through
+            the paper. It is not a second column.</p>
+          </div>
+        </details>
+      </figure>
+    </div>
+
+    <p class="mono skills">Titrimetric analysis · Qualitative inorganic analysis · Reagent
+    preparation · Laboratory safety and management · SPSS · Quantitative survey design · PhET
+    simulation</p>
+  </div>
+</article>
+
+
+<!-- ============ 09 ============ -->
+<article class="entry" id="long-way-round" aria-labelledby="long-way-round-h">
+  <div class="entry-main">
+    <p class="entry-no mono">ENTRY 09</p>
+    <h2 id="long-way-round-h">The long way round</h2>
+    <p class="hand margin-note">worth saying plainly</p>
+
+    <p>My first two years at university were not good. I was learning how to study at the same time
+    as I was learning chemistry, and it showed. It got better every year after that. My final year
+    was my strongest, and the courses I did best in were the hardest ones: coordination chemistry,
+    reaction kinetics, radio nuclear chemistry, organometallics. My research project came out at the
+    top of the range.</p>
+
+    <p>I am not going to pretend the early years did not happen. But I would ask anyone reading this
+    to look at the direction rather than the average.</p>
+  </div>
+</article>
+
+
+<!-- ============ 10 ============ -->
+<article class="entry" id="training" aria-labelledby="training-h">
+  <div class="entry-main">
+    <p class="entry-no mono">ENTRY 10</p>
+    <h2 id="training-h">What I taught myself</h2>
+    <p class="hand margin-note">after work, at the kitchen table</p>
+
+    <p>These are online courses, not a degree. Arizona State put their materials science teaching on
+    Coursera and I worked through the whole specialisation. It is introductory, and I want to say
+    that first, because I am not going to hand you four short courses and call them a master's.</p>
+
+    <p>What they gave me is specific though, so let me say what I can do now that I could not do
+    before.</p>
+
+    <p>I can read a binary phase diagram properly. Not recognise one, read one. Which phases you are
+    holding at any point, in what proportion, and what happens to that as it cools. <a class="ulink"
+    href="#phase-diagrams">Entry 02</a> is me doing that, and I could not have written it in 2023.</p>
+
+    <p>I can work through a unit cell. Coordination number, packing fraction, which planes are close
+    packed and why that decides how a metal gives way when you push on it. That is the vocabulary
+    underneath <a class="ulink" href="#question">Entry 01</a>. Before this I could say a crystal has
+    defects. Now I can say which defects, and what puts them there.</p>
+
+    <p>And I understand solidification as a process instead of an outcome. Nucleation first, then
+    growth, and the structure you end up with depends on how fast you pulled the heat out. That is
+    the whole reason the question on the cover is a real question and not a daydream.</p>
+
+    <p class="aside-note">Coursera lists aerospace engineer as one of the careers this
+    specialisation is for. I noticed that. It is part of why I chose it.</p>
+
+    <ul class="record">
+      <li>
+        <a class="record-name" href="https://coursera.org/verify/specialization/MVIQIBLWV4UL" rel="noopener">Materials Science for Technological Application</a>
+        <span class="record-meta">SPECIALISATION · ARIZONA STATE UNIVERSITY · 27 JUNE 2026</span>
+      </li>
+      <li>
+        <a class="record-name" href="https://coursera.org/verify/Q3EA82VWXTHL" rel="noopener">Introduction to Materials Science</a>
+        <span class="record-meta">22 JUNE 2026</span>
+      </li>
+      <li>
+        <a class="record-name" href="https://coursera.org/verify/PLECA69G68VC" rel="noopener">Crystal Structures and Properties of Metals</a>
+        <span class="record-meta">24 JUNE 2026</span>
+      </li>
+      <li>
+        <a class="record-name" href="https://coursera.org/verify/5GSLYPQ6B7RR" rel="noopener">Shape and Property Control of Metals I and II</a>
+        <span class="record-meta">25 JUNE 2026</span>
+      </li>
+      <li>
+        <a class="record-name" href="https://coursera.org/verify/M3LHU7AS5XFR" rel="noopener">Phase Diagrams I and II</a>
+        <span class="record-meta">27 JUNE 2026</span>
+      </li>
+      <li>
+        <a class="record-name" href="https://coursera.org/verify/5JLOAEYKGG2L" rel="noopener">Understanding Research Methods</a>
+        <span class="record-meta">UNIVERSITY OF LONDON AND SOAS · 30 JUNE 2026</span>
+      </li>
+    </ul>
+
+    <p class="quiet">Taught by Terry Alford and David Theodore at Arizona State, and by Dr J. Simon
+    Rofe and Dr Yenn Lee at SOAS. Every link above goes to the certificate itself. Check any of
+    them.</p>
+
+    <p>The dates sit inside one week. I was teaching a full timetable that month, so it was evenings
+    and the weekend, and once I had started I did not want to put it down.</p>
+
+    <p>The research methods course is the odd one out in that list and it is the one that changed
+    the most. It is why <a class="ulink" href="#the-study">Entry 04</a> reads the way it does.</p>
+  </div>
+</article>
+
+
+<!-- ============ 11 ============ -->
+<article class="entry" id="interests" aria-labelledby="interests-h">
+  <div class="entry-main">
+    <p class="entry-no mono">ENTRY 11</p>
+    <h2 id="interests-h">What I want to work on</h2>
+    <p class="hand margin-note">the honest version</p>
+
+    <p>Everything below is one question wearing different clothes. How matter is arranged decides
+    what a material can do. Move the atoms into a different order and you get a different property
+    out, from the same elements. That is the thread, and it is why this list is not really a list.</p>
+
+    <p>But a list of five interests with nothing separating them is a way of avoiding a question, so
+    let me answer the one you are actually asking. Here is what I have studied and what I have only
+    read about.</p>
+
+    <h3>What I have studied and would defend in a room</h3>
+
+    <p><u class="term">Crystal growth and solidification under reduced gravity.</u> This is the one.
+    It is the whole cover of this notebook and it is where I want to spend my career. Nucleation,
+    growth, phase transitions, and what changes when convection is taken out of the problem. My
+    training goes here and so does everything I have built on this site.</p>
+
+    <p><u class="term">Porous framework materials, so metal organic frameworks and zeolites.</u> I
+    have real grounding here and it comes from my degree rather than from a course. Coordination
+    chemistry and organometallics were my two strongest final year subjects, and a metal organic
+    framework is a coordination compound that someone persuaded to keep going in three dimensions.
+    The node, the linker, and the hole in the middle that does the actual work. I can talk about
+    this properly.</p>
+
+    <p>The thing that took me longest to accept about a framework is that the useful part is the
+    part that is not there. You spend the whole synthesis building a scaffold, and what you are
+    actually making is the hole.</p>
+
+    <p>Which sets up the problem the whole field lives with. Make the hole bigger and more things
+    fit through it, and a filter that lets everything through has stopped being a filter. So the
+    useful frameworks are not the ones with the most space in them. They are the ones that are
+    exactly the wrong size for one particular molecule, and finding out how narrow that margin is
+    turns out to be the interesting part.</p>
+
+<div class="predict" data-predict="mof">
+  <p class="predict-q">A metal organic framework is mostly empty space. Swap its struts for longer ones and the hole in the middle gets bigger. What happens to what can pass through?</p>
+  <div class="predict-opts">
+    <button type="button" data-a="a">More gases get through</button>
+    <button type="button" data-a="b">Fewer, the bigger hole is less selective</button>
+    <button type="button" data-a="c">No change, the hole was never the limit</button>
+  </div>
+  <p class="predict-result" role="status" aria-live="polite" hidden></p>
+</div>
+
+<figure class="fig" id="fig-mof">
+      <div class="lab" data-lab="mof">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">ONE FACE OF THE NET</p>
+            <canvas data-view="cell" width="300" height="240"
+              aria-label="One face of a cubic framework. Metal nodes sit at the corners and organic linkers form the edges between them. The pore in the middle grows as the linker is made longer."></canvas>
+          </div>
+          <div class="lab-view depth-not-picture">
+            <p class="mono view-tag">WHAT FITS THROUGH</p>
+            <canvas data-view="fit" width="300" height="240"
+              aria-label="Gas molecules drawn at their kinetic diameters against the pore aperture. Those smaller than the aperture pass, those larger do not, which is how a framework separates one gas from another."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="slider-row">
+            <label class="mono" for="mof-l">LINKER LENGTH <b data-out="linker">6.9</b> Å</label>
+            <input id="mof-l" type="range" min="3" max="16" step="0.1" value="6.9" data-l>
+          </span>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line depth-not-picture"><span>CELL EDGE</span> <b data-out="edge">0</b> Å</p>
+          <p class="mono readout-line"><span>APERTURE</span> <b data-out="aperture">0</b> Å</p>
+          <p class="mono readout-line"><span>GETS THROUGH</span> <b data-out="fits"></b></p>
+          <p class="mono readout-line depth-only-maths"><span>TIGHTEST FIT THAT PASSES</span> <b data-out="tightest">0</b></p>
+          <p class="mono readout-line depth-only-maths"><span>NEAREST ONE BLOCKED</span> <b data-out="nearmiss">0</b></p>
+          <p class="verdict" data-out="mofmsg" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="depth-not-picture">
+          <p class="mono quiet">MEASURED, NOT MODELLED. There is no surface area computed anywhere
+          in this one, because a slider cannot know it. These came from nitrogen adsorption:</p>
+          <ul class="record" data-real></ul>
+        </div>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">A metal organic framework is metal clusters held apart by organic struts,
+      and the useful part is the empty space left between them. Swap the strut for a longer one and
+      the pore grows, which is unusual: you can design the hole. The number that matters is the
+      aperture, the clear width once you account for the size of the atoms lining it, because a gas
+      only enters if it is smaller than that. Make the aperture sit between two gases and the
+      framework separates them. Surface areas are not calculated here, because they are measured
+      quantities that depend on things geometry cannot see. The reported ones are listed instead,
+      and the largest of them, near 7000 square metres in a single gram, is about one and a half
+      football pitches.</p>
+      <figcaption class="mono">FIG. 7 · Framework geometry. Aperture is computed, surface areas are measured values quoted from the literature.</figcaption>
+    </figure>
+
+    <h3>What I am drawn to and have not earned yet</h3>
+
+    <p><u class="term">Electrochemical materials and energy storage.</u> I have the surrounding
+    chemistry, non aqueous solvents and reaction kinetics, and I do not have the electrochemistry.
+    I know what I would need to read.</p>
+
+    <p><u class="term">Thermoelectric materials.</u> The conflict is what pulls me in. You want to
+    carry charge well and heat badly, and in most materials those two travel together, so the whole
+    field is an argument with that. I have not studied it.</p>
+
+    <p>Heat one end of the bar below and a voltage appears, which is a strange enough thing to
+    happen on its own. Then try to make it bigger. There are two things you can change and they
+    will not both go the way you want.</p>
+
+    <div class="predict" data-predict="thermo">
+      <p class="predict-q">A thermoelectric wants to conduct electricity well and conduct heat badly. How hard is it to get both?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">Straightforward, they are separate properties</button>
+        <button type="button" data-a="b">Hard, because in most materials they move together</button>
+      </div>
+      <p class="predict-result" role="status" aria-live="polite" hidden></p>
+    </div>
+
+    <figure class="fig" id="fig-thermo">
+      <div class="lab" data-lab="thermo">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">ZT AGAINST CARRIERS</p>
+            <canvas data-view="zt" width="300" height="240"
+              aria-label="The thermoelectric figure of merit against carrier concentration. It rises, peaks and falls, and the peak sits where every real thermoelectric material sits."></canvas>
+          </div>
+          <div class="lab-view depth-not-picture">
+            <p class="mono view-tag">THE THREE, DISAGREEING</p>
+            <canvas data-view="bars" width="300" height="240"
+              aria-label="Seebeck coefficient, electrical conductivity and the heat carried by the carriers, shown side by side. Adding carriers raises two of them and lowers the one you most want."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="slider-row">
+            <label class="mono" for="th-n">CARRIERS <b data-out="n">10^19.5</b> /cm³</label>
+            <input id="th-n" type="range" min="16" max="22" step="0.05" value="19.5" data-n>
+          </span>
+          <span class="slider-row">
+            <label class="mono" for="th-t">TEMPERATURE</label>
+            <input id="th-t" type="range" min="300" max="900" step="10" value="600" data-t>
+          </span>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line"><span>ZT</span> <b data-out="zt">0</b></p>
+          <p class="mono readout-line depth-not-picture"><span>BEST AT</span> <b data-out="ztpeak">0</b> /cm³</p>
+          <p class="mono readout-line depth-only-maths"><span>SEEBECK</span> <b data-out="seebeck">0</b> µV/K</p>
+          <p class="mono readout-line depth-only-maths"><span>CONDUCTIVITY</span> <b data-out="sigma">0</b> S/cm</p>
+          <p class="mono readout-line depth-only-maths"><span>HEAT VIA CARRIERS</span> <b data-out="kappae">0</b> W/mK</p>
+          <p class="verdict" data-out="thmsg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">Heat one end of certain materials and a voltage appears across them, which
+      turns waste heat into electricity with no moving parts. The reason it is not everywhere is a
+      real conflict. You want a large voltage per degree, a high electrical conductivity, and a low
+      thermal conductivity, and adding carriers helps the second while hurting the first. Worse, the
+      same electrons that carry charge also carry heat, so pushing the conductivity up drags the
+      thermal conductivity up with it, and that link is not something you can engineer away. The
+      result is that the figure of merit peaks rather than climbing, and every real thermoelectric
+      sits near that peak.</p>
+      <figcaption class="mono">FIG. 6 · Thermoelectric figure of merit. Every quantity here is computed.</figcaption>
+    </figure>
+
+    <p><u class="term">Thin films.</u> Same answer. Interested, not trained. It sits next to the
+    crystal growth work closely enough that I expect to meet it either way.</p>
+
+    <p>This is the one I can show you cheaply, and it is the one that first made me suspicious that
+    colour is not a property of a thing. A soap bubble has no pigment in it anywhere. Drag the
+    thickness and work out where the colour is coming from, because it is not coming from the
+    soap.</p>
+
+<div class="predict" data-predict="thinfilm">
+  <p class="predict-q">A soap bubble has no pigment in it at all. So where do the colours come from?</p>
+  <div class="predict-opts">
+    <button type="button" data-a="a">Dye in the soap</button>
+    <button type="button" data-a="b">The same wave arriving twice, once off each surface</button>
+    <button type="button" data-a="c">White light splitting the way it does in a prism</button>
+  </div>
+  <p class="predict-result" role="status" aria-live="polite" hidden></p>
+</div>
+
+<figure class="fig" id="fig-thinfilm">
+      <div class="lab is-instrument" data-lab="thinfilm">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">WHAT COMES BACK</p>
+            <canvas data-view="spectrum" width="300" height="240"
+              aria-label="Reflectance against wavelength across the visible spectrum. Peaks and troughs move as the film thickness changes, so the colour reflected sweeps through the spectrum."></canvas>
+          </div>
+          <div class="lab-view">
+            <p class="mono view-tag">THE COLOUR</p>
+            <canvas data-view="film" width="300" height="240"
+              aria-label="A patch showing the colour the film reflects at this thickness."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="slider-row">
+            <label class="mono" for="tf-d">THICKNESS <b data-out="d">320</b> nm</label>
+            <input id="tf-d" type="range" min="40" max="900" step="5" value="320" data-d>
+          </span>
+          <span class="mono">BEHIND IT</span>
+          <button type="button" data-sub="1.00" aria-pressed="true">Air, a bubble</button>
+          <button type="button" data-sub="1.52" aria-pressed="false">Glass, a lens coating</button>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line depth-not-picture"><span>STRONGEST AT</span> <b data-out="peak">0</b> nm</p>
+          <p class="mono readout-line depth-not-picture"><span>REFLECTED AT 550 nm</span> <b data-out="r550">0</b>%</p>
+          <p class="mono readout-line depth-only-maths"><span>IDEAL FILM INDEX</span> <b data-out="ideal">0</b></p>
+          <p class="mono readout-line depth-only-maths"><span>QUARTER WAVE AT 550</span> <b data-out="qw">0</b> nm</p>
+          <p class="verdict" data-out="tfmsg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div data-chrome class="lab-chrome"></div>
+
+      <p class="nojs-note">Light hitting a thin film reflects twice, once off the top surface and
+      once off the bottom, and the second one travels a little further. Whether those two agree or
+      cancel depends on the wavelength and on how thick the film is, so some colours come back
+      strongly and others barely at all. That is why a soap bubble is coloured and why the colours
+      run as it drains and thins. Turn it around and you get anti reflection coatings: pick the
+      thickness and the material so that the two reflections cancel instead, and almost nothing
+      comes back. Perfect cancellation on glass would need a film with a refractive index of about
+      1.23, and no durable material has one, so real lens coatings use magnesium fluoride at 1.38
+      and settle for nearly nothing.</p>
+      <figcaption class="mono">FIG. 5 · Two beam interference in a thin film. Reflectance is exact, the colour patch is approximate.</figcaption>
+    </figure>
+
+    <p>I would rather tell you which is which now than have you find out halfway through an
+    interview. If you work on any of the second three, I am not going to pretend I arrive knowing
+    them. I would arrive knowing how to learn them, and there is a page on this site that shows me
+    doing exactly that with something I had never studied.</p>
+  </div>
+</article>
+
+
+<!-- ============ 12 ============ -->
+<!-- ===========================================================================
+     EDIT ME. This is the only dated thing on the site.
+
+     Two lines to change, and change them together or the date lies:
+       the paragraphs below, which say what she is actually doing now
+       the "Last updated" line at the bottom of this block
+
+     A static site is a document. A dated one is a person, which only holds
+     while the date is true. If the text is still accurate and only the date
+     is stale, leave both alone rather than bumping the date on its own.
+     =========================================================================== -->
+<article class="entry entry-dated" id="currently" aria-labelledby="currently-h">
+  <div class="entry-main">
+    <p class="entry-no mono">ENTRY 12</p>
+    <h2 id="currently-h">Currently</h2>
+
+    <p>I am reading about directional solidification and trying to work out how much of it changes
+    when convection is taken out. Still teaching full time, still running practicals. Applications
+    for January 2027 are with me now and I am writing to supervisors one at a time rather than
+    sending the same letter everywhere.</p>
+
+    <p>In the evenings I am teaching myself solar materials science from the beginning, and I keep
+    that one in the open on <a class="ulink" href="mission-planner-website/">a separate page</a>:
+    the plan I am following, where I am in it, and the parts I got wrong.</p>
+
+    <!-- TO UPDATE THIS: change data-said to today's date, YYYY-MM-DD, and
+         nothing else. The words are written from it, and if it goes more than
+         three weeks without being touched the line says so itself rather than
+         quietly passing as current. This entry went stale twice before it was
+         made to admit it. -->
+    <p class="mono updated" data-said="2026-08-10">
+      <span data-out="updated-line">Last updated 10 August 2026</span>
+      <span class="updated-age" data-out="updated-age"></span>
+    </p>
+  </div>
+</article>
+<!-- END EDIT ME -->
+
+
+<!-- ============ 13 ============ -->
+<article class="entry" id="notes" aria-labelledby="notes-h">
+  <div class="entry-main">
+    <p class="entry-no mono">ENTRY 13</p>
+    <h2 id="notes-h">Notes I send</h2>
+    <p class="hand margin-note">mostly papers I am chewing on</p>
+
+    <p>I keep notes on the papers I am reading and the things I am still working out. If you want
+    them, leave your email. I will not send anything else.</p>
+
+    <form class="signup" data-signup novalidate>
+      <label class="mono" for="email">YOUR EMAIL</label>
+      <div class="signup-row">
+        <input type="email" id="email" name="email" autocomplete="email"
+          placeholder="you@university.edu" required>
+        <button type="submit">Send them to me</button>
+      </div>
+
+      <!-- Honeypot. Hidden with CSS rather than type="hidden" so that bots
+           filling every field give themselves away. Kept out of the tab
+           order and out of the accessibility tree, so no real person and no
+           screen reader ever meets it. -->
+      <div class="honey" aria-hidden="true">
+        <label for="company">Company</label>
+        <input type="text" id="company" name="_honey" tabindex="-1" autocomplete="off">
+      </div>
+
+      <p class="signup-msg" data-out="msg" role="status" aria-live="polite"></p>
+      <noscript>
+        <p class="signup-msg">This opens your mail app with a short message already written. Send
+        it and I will add you.</p>
+      </noscript>
+    </form>
+  </div>
+</article>
+
+
+<!-- ============ 14 ============ -->
+<article class="entry" id="contact" aria-labelledby="contact-h">
+  <div class="entry-main">
+    <p class="entry-no mono">ENTRY 14</p>
+    <h2 id="contact-h">Get in touch</h2>
+    <p class="hand margin-note">I reply to everything</p>
+
+    <p>If you work on crystal growth, materials formation, or anything where gravity is a variable
+    instead of a constant, I would like to hear from you.</p>
+
+    <p>That question is where I want to end up. It is not the limit of what I am ready to do now,
+    and I would rather say that plainly than have you read this notebook and assume I would turn
+    down anything that is not about microgravity. I would not. Put me on a good problem in a group
+    where I can learn and I will work.</p>
+
+    <p>To save you an email, here is what I am actually asking for. I am applying in Canada for the
+    January 2027 intake, and for the intakes after it if January closes. A Master's, thesis based
+    or course based. Materials science first, then chemistry, analytical chemistry, environmental
+    chemistry, or applied chemistry. Funding matters, and I would rather be honest about that than
+    find out late. I am putting my own money into this and it does not stretch the whole way, so if
+    there is funding attached to a position it changes what is possible for me.</p>
+
+    <p class="email-wrap">
+      <button type="button" class="email" data-copy="promisetosingrace@gmail.com">
+        promisetosingrace@gmail.com
+      </button>
+      <span class="copy-msg" data-out="copy" role="status" aria-live="polite"></span>
+    </p>
+
+    <figure class="cv-preview">
+      <a href="assets/promise-grace-research-cv.pdf">
+        <picture>
+          <source type="image/webp" srcset="assets/cv-page1.webp">
+          <img src="assets/cv-page1.jpg" loading="lazy" decoding="async" width="880" height="1245"
+            alt="Page one of a two page research CV. It opens with a summary of her interest in how reduced gravity alters materials formation, then lists research interests in microgravity and materials formation, functional and energy materials, porous frameworks and applied chemistry. Below that, a B.Sc. in Chemistry with a Biology minor from the University of Ilorin assessed by World Education Services, the Zenodo publication, the Arizona State materials science specialisation, the University of London research methods course, and the start of her teaching and laboratory experience.">
+        </picture>
+      </a>
+      <figcaption class="mono">Page one of two. Opens the full PDF.</figcaption>
+    </figure>
+
+    <p class="mono outlinks">
+      <a href="https://orcid.org/0009-0003-6045-432X" rel="noopener">ORCID</a> ·
+      <a href="https://doi.org/10.5281/zenodo.21749877" rel="noopener">Zenodo</a> ·
+      <a href="assets/promise-grace-research-cv.pdf" download="Promise Grace Research CV.pdf" data-cv>Download CV</a>
+    </p>
+  </div>
+</article>
+
+
+<footer class="closing">
+  <p class="closing-line">If any of this is close to what you work on, tell me. I would rather have
+  the conversation than get it right on my own.</p>
+  <p class="closing-links">
+    <a class="ulink" href="contents.html">Contents</a>
+    <a class="ulink" href="simulations.html">Every simulation</a>
+    <a class="ulink" href="guide.html">How to use this site</a>
+    <a class="ulink" href="mission-planner-website/index.html">What I am learning</a>
+  </p>
+  <p class="mono colophon">Promise Oluwatosin Grace · Lagos · 2026</p>
+</footer>
+
+</main>
+
+
+<!-- ============ IN A HURRY ============ -->
+<div class="overlay" id="hurry" hidden>
+  <div class="overlay-panel" role="dialog" aria-modal="true" aria-labelledby="hurryh">
+    <button type="button" class="overlay-close" data-close aria-label="Close">×</button>
+    <h2 id="hurryh">The short version</h2>
+
+    <dl class="short">
+      <dt class="mono">RESEARCH QUESTION</dt>
+      <dd>How reduced gravity changes crystal growth and solidification, and what that means for the
+      materials we can make.</dd>
+
+      <dt class="mono">BACKGROUND</dt>
+      <dd>B.Sc. Chemistry, University of Ilorin, 2023. Teaching secondary school chemistry in Lagos
+      since 2025, including practical laboratory work. Looking for a Master's position from January
+      2027 in materials science or chemistry.</dd>
+
+      <dt class="mono">PUBLICATION</dt>
+      <dd>Grace, P. O. (2023, October 11). Validation of Undergraduate and Postgraduate Students'
+      Use of Internet for Academic Purposes in Chemistry Education and Other STEM Related Fields
+      [Bachelor's thesis, University of Ilorin]. Zenodo.<br>
+      <a class="mono" href="https://doi.org/10.5281/zenodo.21749877" rel="noopener">DOI 10.5281/zenodo.21749877</a></dd>
+
+      <dt class="mono">TRAINING</dt>
+      <dd>
+        <a href="https://coursera.org/verify/specialization/MVIQIBLWV4UL" rel="noopener">Materials Science for Technological Application</a>,
+        Arizona State University, 2026. Four courses covering atom bonding, crystal structures,
+        diffusion, and phase diagrams.<br>
+        <a href="https://coursera.org/verify/5JLOAEYKGG2L" rel="noopener">Understanding Research Methods</a>,
+        University of London, 2026.
+      </dd>
+
+      <dt class="mono">CONTACT</dt>
+      <dd><a href="mailto:promisetosingrace@gmail.com">promisetosingrace@gmail.com</a><br>
+      <a href="https://orcid.org/0009-0003-6045-432X" rel="noopener">ORCID 0009-0003-6045-432X</a></dd>
+
+      <dt class="mono">CV</dt>
+      <dd><a href="assets/promise-grace-research-cv.pdf" download="Promise Grace Research CV.pdf" data-cv>Download CV</a> (PDF, two pages)</dd>
+    </dl>
+
+    <p class="short-foot">My degree certificate, academic transcript, and WES evaluation are in the name of Ayinde, which is my maiden name.</p>
+  </div>
+</div>
+
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="overlay lightbox" id="lightbox" hidden>
+  <button type="button" class="overlay-close" data-close aria-label="Close">×</button>
+  <figure class="lightbox-fig">
+    <img src="" alt="" id="lightbox-img">
+    <figcaption class="mono" id="lightbox-cap"></figcaption>
+  </figure>
+</div>
+
+<!-- defer keeps these in order: the engine, then the page, then the labs it drives -->
+<script src="sim.js" defer></script>
+<script src="audio.js" defer></script>
+<script src="sound.js" defer></script>
+<script src="pages.js" defer></script>
+<script src="structure.js" defer></script>
+<script src="predict.js" defer></script>
+<script src="app.js" defer></script>
+<script src="lab-nucleation.js" defer></script>
+<script src="lab-crystal.js" defer></script>
+<script src="lab-diffraction.js" defer></script>
+<script src="lab-solidify.js" defer></script>
+<script src="lab-titration.js" defer></script>
+<script src="lab-thinfilm.js" defer></script>
+<script src="lab-thermo.js" defer></script>
+<script src="lab-mof.js" defer></script>
+<script src="nav.js" defer></script>
+</body>
+</html>
