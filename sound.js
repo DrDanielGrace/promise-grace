@@ -81,16 +81,16 @@ window.Snd = (function () {
       from: 0.02 + Math.random() * span,
       len: len,
       rate: 0.92 + Math.random() * 0.16,
-      gain: o.gain === undefined ? 0.16 : o.gain,
+      gain: o.gain === undefined ? 0.076 : o.gain,
       dark: o.dark || 7000,
       gap: o.gap === undefined ? 90 : o.gap,
       key: "paper"
     });
   }
 
-  function page() { paper({ len: 0.42, gain: 0.22, gap: 260, dark: 8000 }); }
+  function page() { paper({ len: 0.42, gain: 0.105, gap: 260, dark: 8000 }); }
 
-  function scroll() { paper({ len: 0.13, gain: 0.075, gap: 220, dark: 6000 }); }
+  function scroll() { paper({ len: 0.13, gain: 0.036, gap: 220, dark: 6000 }); }
 
   /* ----------------------------------------------------------------------
      THE REST OF THE ROOM
@@ -100,7 +100,7 @@ window.Snd = (function () {
     o = o || {};
     play("glass", {
       bus: o.bus || "sim",
-      gain: o.gain === undefined ? 0.22 : o.gain,
+      gain: o.gain === undefined ? 0.36 : o.gain,
       rate: o.rate || (0.94 + Math.random() * 0.12),
       dark: o.dark || 0,
       pan: (Math.random() - 0.5) * 0.16,
@@ -109,18 +109,18 @@ window.Snd = (function () {
   }
 
   function stopper() {
-    play("stopper", { gain: 0.20, rate: 0.96 + Math.random() * 0.08,
+    play("stopper", { gain: 0.142, rate: 0.96 + Math.random() * 0.08,
                       pan: (Math.random() - 0.5) * 0.14, gap: 400 });
   }
 
   function swirl() {
-    play("swirl", { gain: 0.16, rate: 0.97 + Math.random() * 0.06,
+    play("swirl", { gain: 0.20, rate: 0.97 + Math.random() * 0.06,
                     pan: (Math.random() - 0.5) * 0.18, gap: 400 });
   }
 
   function drop(tight) {
     var t = Math.max(0, Math.min(tight === undefined ? 0 : tight, 1));
-    play("drop", { rate: 0.94 + t * 0.42, gain: 0.20 + t * 0.10,
+    play("drop", { rate: 0.94 + t * 0.42, gain: 0.160 + t * 0.078,
                    pan: (Math.random() - 0.5) * 0.12, gap: 55 });
   }
 
@@ -183,7 +183,7 @@ window.Snd = (function () {
   function slide() {
     if (!on || !A() || !gate("slide", 55)) return;
     grain({ bus: "ui", dur: 0.022, centre: 1500 + Math.random() * 900, q: 0.7,
-            gain: 0.028, shape: 3.0, smooth: 0.45 });
+            gain: 0.077, shape: 3.0, smooth: 0.45 });
   }
 
   /* Something crossed a threshold. A soft low knock, and the direction is
@@ -192,14 +192,14 @@ window.Snd = (function () {
   function cross(up) {
     if (!on || !A() || !gate("cross", 300)) return;
     grain({ dur: up ? 0.085 : 0.07, centre: up ? 320 : 190, q: 1.4,
-            gain: up ? 0.075 : 0.055, shape: 2.4, smooth: 0.82 });
+            gain: up ? 0.196 : 0.144, shape: 2.4, smooth: 0.82 });
   }
 
   /* A nucleus that survived. Real glass, quiet, and a bigger one is darker
      and fuller rather than lower. */
   function settle(sizeFrac) {
     var s = Math.max(0.4, Math.min(sizeFrac || 1, 5));
-    glass({ gain: 0.10 + Math.min(s, 3) * 0.02, dark: 2600 + 2600 / s, gap: 70 });
+    glass({ gain: 0.166 + Math.min(s, 3) * 0.032, dark: 2600 + 2600 / s, gap: 70 });
   }
 
   /* Atoms arriving on a growing face. Almost nothing, and what changes with
@@ -208,7 +208,7 @@ window.Snd = (function () {
     if (!on || !A() || !gate("shimmer", 110)) return;
     var s = Math.max(0, Math.min(strength === undefined ? 1 : strength, 1));
     grain({ dur: 0.03, centre: 2400 + Math.random() * 700, q: 0.8,
-            gain: 0.012 + 0.022 * s, shape: 3.4, smooth: 0.3 });
+            gain: 0.034 + 0.060 * s, shape: 3.4, smooth: 0.3 });
   }
 
   /* The nucleation counter. A dry tick, and the barrier changes how dark
@@ -217,17 +217,17 @@ window.Snd = (function () {
     if (!on || !A()) return;
     var b = Math.max(0, Math.min(barrierFrac === undefined ? 0.5 : barrierFrac, 1));
     grain({ dur: 0.024, centre: 520 + (1 - b) * 1500, q: 1.1,
-            gain: 0.030 + 0.030 * (1 - b), shape: 2.8, smooth: 0.55 });
+            gain: 0.089 + 0.089 * (1 - b), shape: 2.8, smooth: 0.55 });
   }
 
   /* The endpoint. A glass touched, and how wrong the reading is comes
      through as damping: a clean reading rings, a bad one is muffled. */
   function endpoint(errorFrac) {
     var e = Math.max(0, Math.min(errorFrac || 0, 1));
-    glass({ gain: 0.20 - e * 0.06, dark: e > 0.02 ? (5200 - e * 4200) : 0, gap: 200 });
+    glass({ gain: 0.324 - e * 0.094, dark: e > 0.02 ? (5200 - e * 4200) : 0, gap: 200 });
     if (e > 0.02) {
       setTimeout(function () {
-        grain({ dur: 0.09, centre: 170, q: 1.6, gain: 0.05 * e + 0.02,
+        grain({ dur: 0.09, centre: 170, q: 1.6, gain: 0.079 * e + 0.032,
                 shape: 2.2, smooth: 0.85 });
       }, 55);
     }
@@ -263,7 +263,7 @@ window.Snd = (function () {
       var dur = 0.85 - spread * 0.6;
       for (var i = 0; i < voices; i++) {
         var det = voices === 1 ? 0 : ((i / (voices - 1)) - 0.5) * spread * 0.2;
-        voice(f * (1 + det), when, dur, (0.09 * amp) / Math.sqrt(voices),
+        voice(f * (1 + det), when, dur, (0.144 * amp) / Math.sqrt(voices),
               0.004 + spread * 0.14);
       }
     });

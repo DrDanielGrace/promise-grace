@@ -50,6 +50,63 @@ All Creative Commons Zero, all from Freesound, all credited here anyway.
 | `assets/sound/water.mp3` | 342634, "Water in Movement" | paisagemsonoraunila | Water moving | The bed under a crystal growing with convection |
 | `assets/sound/room.mp3` | 453551, "room tone medium soft with heater.flac" | kyles | Room tone with a heater in it | The bed that is left when the convection stops |
 
+### Four more, for the laboratory
+
+Under every page, from the moment sound is switched on. A working chemistry
+laboratory with nobody doing anything loud is almost entirely ventilation
+rather than glassware, so the bed is extraction and air handling, sourced as
+a recording. A synthesised pad announces itself as one inside two seconds.
+
+| File | Freesound | Uploader | What it is | Where it is used |
+|---|---|---|---|---|
+| `assets/sound/vent.mp3` | 108287, "computer_lab.mp3" | BugInTheSYS | Extraction and ventilation in a lab, a low fan with air moving in it | The bed under the whole site |
+| `assets/sound/farglass.mp3` | 489731, "glass_set_down 03.wav" | ShadowSilhouette | A glass set down | Two benches away |
+| `assets/sound/fardoor.mp3` | 152968, "007_door_closing.wav" | JL_barrett | A door closing | Somewhere else in the building |
+| `assets/sound/fartap.mp3` | 383159, "Water from tap" | idabrandao | A tap running | In another room |
+
+Eighty four ventilation candidates were measured, and the one that won did
+so on its spectrum rather than its name. Two things separate air moving from
+a transformer humming: how much energy sits in the mids relative to the low
+end, and how steady it is. An "Electricity Ambience" measured beautifully
+low and had nothing above 4 kHz at all, which is a hum and not a room. The
+one that won carries its mids 10 dB down and its top 20 dB down from the
+total rather than 33 and 41, which is broadband air, and it holds within
+half a decibel across all forty five seconds of itself with no voices and no
+events in it.
+
+**It does not loop.** A loop long enough to hide its seam is a large file to
+put on every page, and a seam you can hear kills the effect outright. So two
+playheads take eleven second windows from random places in the thirty second
+recording and hand over to each other with three and a half second equal
+power crossfades. Ventilation is stationary noise, so a window from anywhere
+in it is the same room, and because each window starts somewhere new there
+is no period: no arrangement of the material recurs. Measured over fifty
+seconds in half second windows: ninety nine windows, quietest -55.2 dBFS,
+loudest -51.0, and not one drop out. A seam or a gap at either hand over
+would have shown as a hole, and there is none.
+
+The three distant sounds are the low quality Freesound previews rather than
+the high, deliberately: they only ever play through an 820 Hz lowpass, so
+there is nothing in the better file that could survive to be heard. That is
+100 KB saved on every page for no audible difference.
+
+### The levels, set against the bed rather than against silence
+
+Silence is not a condition anyone will hear this site in, so balancing in it
+was the wrong test. Measured at the last node before the speakers, with the
+laboratory running, everything now sits in one ladder above the bed:
+
+| | over the bed |
+|---|---|
+| a slider, atoms arriving | +13 to +15 dB |
+| the nucleation tick | +18 dB |
+| something in the next room | +12 to +15 dB |
+| panels, controls appearing, page turns, buttons | +22 to +24 dB |
+| glass, a drop, a cork, a mark, a handoff | +26 to +28 dB |
+| arriving at an instrument, a run completing | +29 to +30 dB |
+
+The bed itself is about -54 dBFS. The four faders start at 75, 75, 50 and 75.
+
 Chosen the same way as the first five and on a wider field: **514
 candidates** downloaded and decoded, each measured on duration, peak, RMS,
 DC offset, decay from peak to twenty decibels down, time to the peak,
@@ -81,9 +138,10 @@ kept. Each window was set from the measured onset so that the transient
 lands a few tens of milliseconds after the trigger: measured latency from
 calling a sound to hearing it is 4 to 17 ms.
 
-Total weight 830 KB, of which 530 KB is the two ambient beds, and those two
-are not fetched at all unless a page actually asks for a bed. Nothing is
-fetched until sound is switched on.
+Total weight 1.2 MB. 530 KB of that is the two simulation beds, which are
+not fetched at all unless a page actually asks for a bed, so switching sound
+on costs 665 KB and a page with no simulation on it never pays for the rest.
+Nothing at all is fetched until sound is switched on.
 
 ### What is synthesised
 

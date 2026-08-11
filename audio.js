@@ -75,7 +75,12 @@ window.Aud = (function () {
     done:      "assets/sound/done.mp3",     /* a crossbar relay releasing */
     settle:    "assets/sound/settle.mp3",   /* seed poured into a jar */
     water:     "assets/sound/water.mp3",    /* the convection bed */
-    room:      "assets/sound/room.mp3"      /* the still bed */
+    room:      "assets/sound/room.mp3",     /* the still bed */
+
+    vent:      "assets/sound/vent.mp3",     /* extraction, the laboratory bed */
+    farglass:  "assets/sound/farglass.mp3", /* a glass set down two benches away */
+    fardoor:   "assets/sound/fardoor.mp3",  /* a door, somewhere else */
+    fartap:    "assets/sound/fartap.mp3"    /* a tap running in another room */
   };
 
   var BUSES = ["ui", "sim", "ambient", "master"];
@@ -84,7 +89,7 @@ window.Aud = (function () {
     ui: "UI", sim: "SIMULATION", ambient: "AMBIENT", master: "MASTER"
   };
 
-  var DEFAULT = { ui: 0.70, sim: 0.70, ambient: 0.55, master: 0.70 };
+  var DEFAULT = { ui: 0.75, sim: 0.75, ambient: 0.50, master: 0.75 };
 
   /* dry, send, and how far back the plane sits */
   var PLANE = {
@@ -392,22 +397,248 @@ window.Aud = (function () {
 
     h.set = function (x) {
       h.target = Math.max(0, Math.min(x, 1));
-      if (!h.gain || !ctx) return;
-      var v = Math.max(0.00012, h.target * (h.cap || 0.5));
-      h.gain.gain.cancelScheduledValues(ctx.currentTime);
-      h.gain.gain.setTargetAtTime(v, ctx.currentTime, o.glide || 0.45);
+      if (h.gain && ctx) {
+        var v = Math.max(0.00012, h.target * (h.cap || 0.5));
+        h.gain.gain.cancelScheduledValues(ctx.currentTime);
+        h.gain.gain.setTargetAtTime(v, ctx.currentTime, o.glide || 0.45);
+      }
+      duck();
     };
     h.stop = function () {
       h.dead = true;
       if (h.gain && ctx) h.gain.gain.setTargetAtTime(0.00012, ctx.currentTime, 0.3);
       if (h.src) { var s = h.src; setTimeout(function () { try { s.stop(); } catch (e) {} }, 1400); }
       delete beds[name];
+      duck();
     };
     return h;
   }
 
+  /* The laboratory is not a simulation and does not stop when one does. */
   function stopBeds() {
     Object.keys(beds).forEach(function (k) { beds[k].stop(); });
+  }
+
+
+  /* ----------------------------------------------------------------------
+     THE LABORATORY
+
+     Under everything, on every page, from the moment sound is switched on.
+
+     WHAT IT IS. A working chemistry laboratory with nobody doing anything
+     loud is almost entirely ventilation: extraction, air handling, a low fan
+     with air moving in it. It is sourced as a recording of exactly that
+     rather than synthesised, because a synthesised pad announces itself as
+     one within about two seconds.
+
+     WHY IT DOES NOT LOOP. A bed with an audible seam is worse than no bed,
+     and a loop long enough to hide its seam is a large file to put on every
+     page. So it is not looped. Two playheads take windows from random
+     places in the recording and hand over to each other with equal power
+     crossfades several seconds long. Ventilation is stationary noise, so a
+     window taken from anywhere in it sounds like the same room, and because
+     each window starts somewhere new there is no period at all: no
+     arrangement of the material ever recurs.
+
+     WHAT HAPPENS ON TOP. Something in the next room, every minute or so, at
+     an interval that is never the same twice. A glass set down two benches
+     away, a door, a tap running briefly somewhere else. Heavily darkened and
+     mostly reverb, because that is what distance does, and quiet enough that
+     you are never sure you heard it.
+
+     DUCKING. When a simulation runs its own bed, this one drops under it
+     rather than stacking, and comes back when the simulation's bed goes.
+     ---------------------------------------------------------------------- */
+  var lab = null;
+  var DISTANT = ["farglass", "fardoor", "fartap"];
+
+  function startLab() {
+    if (lab || !ctx || !bus.ambient) return;
+
+    lab = { duck: null, drone: null, room: null, voices: [], timers: [], dead: false };
+
+    /* One gain for the ducking, so the drone and the things happening in
+       the next room recede together. They are the same room. */
+    lab.duck = ctx.createGain();
+    lab.duck.gain.value = 1;
+    lab.duck.connect(bus.ambient.input);
+
+    lab.drone = ctx.createGain();
+    lab.drone.gain.value = 0.0001;
+    var dlp = ctx.createBiquadFilter();
+    dlp.type = "lowpass"; dlp.frequency.value = 2400; dlp.Q.value = 0.4;
+    lab.drone.connect(dlp); dlp.connect(lab.duck);
+
+    /* Anything happening in another room arrives with its top gone. */
+    lab.room = ctx.createGain();
+    lab.room.gain.value = 1;
+    var rlp = ctx.createBiquadFilter();
+    rlp.type = "lowpass"; rlp.frequency.value = 820; rlp.Q.value = 0.5;
+    lab.room.connect(rlp); rlp.connect(lab.duck);
+
+    whenReady("vent", function () {
+      if (!lab || lab.dead) return;
+      lab.drone.gain.cancelScheduledValues(ctx.currentTime);
+      lab.drone.gain.setTargetAtTime(LAB_LEVEL, ctx.currentTime, 3.0);
+      weave(0, ctx.currentTime + 0.1);
+      weave(1, ctx.currentTime + 0.1);
+    });
+
+    schedule();
+    duck();
+  }
+
+  /* The recording is a quiet one, about -44 dBFS in itself, so this reads
+     high for something described as very quiet. What matters is where it
+     lands: measured at the output it sits near -54 dBFS, which is a room you
+     notice when it stops and not before. */
+  var LAB_LEVEL = 0.81;
+  var WINDOW = 11;         /* seconds of the recording used per hand over */
+  var OVERLAP = 3.5;       /* seconds of equal power crossfade between them */
+
+  /* An equal power fade rather than a linear one, because two linear fades
+     crossing dip in the middle and the dip is audible as a breath. */
+  function curve(rising, n) {
+    var a = new Float32Array(n);
+    for (var i = 0; i < n; i++) {
+      var t = i / (n - 1);
+      a[i] = Math.max(0.0001, rising ? Math.sin(t * Math.PI / 2) : Math.cos(t * Math.PI / 2));
+    }
+    return a;
+  }
+  var RISE = null, FALL = null;
+
+  function weave(voice, at) {
+    if (!lab || lab.dead || !buffers.vent) return;
+    var buf = buffers.vent;
+    if (!RISE) { RISE = curve(true, 64); FALL = curve(false, 64); }
+
+    var span = Math.max(0.2, buf.duration - WINDOW - 0.2);
+    var from = 0.1 + Math.random() * span;
+
+    var src = ctx.createBufferSource();
+    src.buffer = buf;
+
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, at);
+    g.gain.setValueCurveAtTime(RISE, at, OVERLAP);
+    g.gain.setValueAtTime(1, at + OVERLAP);
+    g.gain.setValueCurveAtTime(FALL, at + WINDOW - OVERLAP, OVERLAP);
+
+    var tail = g;
+    if (ctx.createStereoPanner) {
+      var p = ctx.createStereoPanner();
+      /* the two playheads sit either side, which widens the room */
+      p.pan.value = (voice === 0 ? -1 : 1) * (0.22 + Math.random() * 0.14);
+      g.connect(p); tail = p;
+    }
+    src.connect(g);
+    tail.connect(lab.drone);
+
+    src.start(at, from);
+    src.stop(at + WINDOW + 0.1);
+
+    /* The next window starts before this one has finished, which is what
+       makes the hand over a crossfade rather than a join. */
+    var next = at + WINDOW - OVERLAP;
+    var wait = Math.max(300, (next - ctx.currentTime - 0.6) * 1000);
+    var t = setTimeout(function () { weave(voice, next); }, wait);
+    lab.timers.push(t);
+    if (lab.timers.length > 8) lab.timers.shift();
+  }
+
+  /* Something in the next room. Never the same one twice running, and the
+     wait is drawn fresh every time so there is no rhythm to catch. */
+  var lastDistant = -1;
+
+  function schedule() {
+    if (!lab || lab.dead) return;
+    var wait = 26000 + Math.random() * 74000;
+    var t = setTimeout(function () {
+      if (!lab || lab.dead) return;
+      var i = Math.floor(Math.random() * DISTANT.length);
+      if (i === lastDistant) i = (i + 1) % DISTANT.length;
+      lastDistant = i;
+      elsewhere(DISTANT[i]);
+      schedule();
+    }, wait);
+    lab.timers.push(t);
+  }
+
+  /* The measured onsets: the glass at 0.125, the door at 0.070, the tap
+     running all the way through. The tap is the only one taken as a window,
+     because a tap in another room is heard for a few seconds rather than
+     from its beginning to its end. */
+  var FROM = { farglass: 0.10, fardoor: 0.05, fartap: null };
+
+  function elsewhere(name) {
+    var buf = buffers[name];
+    if (!buf) { fetchOne(name); return; }
+    if (!lab || lab.dead) return;
+
+    var from, len;
+    if (FROM[name] === null) {
+      len = 2.4 + Math.random() * 2.2;
+      from = Math.random() * Math.max(0.01, buf.duration - len - 0.05);
+    } else {
+      from = FROM[name];
+      len = buf.duration - from;
+    }
+
+    var src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.playbackRate.value = 0.92 + Math.random() * 0.14;
+
+    var g = ctx.createGain();
+    var t0 = ctx.currentTime + 0.02;
+    var peak = 0.10 + Math.random() * 0.07;
+    var fade = Math.min(0.5, len * 0.3);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.linearRampToValueAtTime(peak, t0 + Math.min(0.12, len * 0.2));
+    g.gain.setValueAtTime(peak, t0 + Math.max(0.02, len - fade));
+    g.gain.linearRampToValueAtTime(0.0001, t0 + len);
+
+    var tail = g;
+    if (ctx.createStereoPanner) {
+      var p = ctx.createStereoPanner();
+      p.pan.value = (Math.random() * 1.4) - 0.7;
+      g.connect(p); tail = p;
+    }
+    src.connect(g);
+    tail.connect(lab.room);
+
+    src.start(t0, from);
+    src.stop(t0 + len + 0.05);
+  }
+
+  /* How far the laboratory gets out of the way when a simulation has a bed
+     of its own. Down quickly enough to be out of the way before the
+     simulation is loud, back slowly enough that you never hear it return. */
+  var DUCK_TO = 0.30;
+
+  function duck() {
+    if (!lab || !lab.duck || !ctx) return;
+    var other = 0;
+    Object.keys(beds).forEach(function (k) {
+      if (beds[k].target > other) other = beds[k].target;
+    });
+    var want = 1 - (1 - DUCK_TO) * Math.min(other, 1);
+    var now = lab.duck.gain.value;
+    lab.duck.gain.cancelScheduledValues(ctx.currentTime);
+    lab.duck.gain.setValueAtTime(now, ctx.currentTime);
+    lab.duck.gain.setTargetAtTime(want, ctx.currentTime, want < now ? 0.5 : 1.1);
+  }
+
+  function stopLab() {
+    if (!lab) return;
+    lab.dead = true;
+    lab.timers.forEach(clearTimeout);
+    if (lab.drone && ctx) lab.drone.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.35);
+    var l = lab;
+    setTimeout(function () {
+      try { l.duck.disconnect(); } catch (e) {}
+    }, 2000);
+    lab = null;
   }
 
 
@@ -641,6 +872,14 @@ window.Aud = (function () {
      milliseconds in, and the windows start just before it, which is what
      keeps the delay between a press and a sound under fifty milliseconds
      without cutting the attack off.
+
+     THE LEVELS WERE SET AGAINST THE LABORATORY BED AND NOT AGAINST SILENCE,
+     because silence is not a condition anybody will hear these in. Balanced
+     in silence they were technically soft and practically inaudible: you
+     pressed a button and wondered whether it had worked. Every gain below
+     is roughly two and a half times what it was, which puts a button about
+     fifteen decibels over the bed and the marks about twenty. Still soft,
+     but no longer something to strain for.
      ---------------------------------------------------------------------- */
   function declare() {
     /* A button. Not a click. A light switch giving under a finger.
@@ -648,10 +887,10 @@ window.Aud = (function () {
     define("button", {
       file: "switch", bus: "ui", gap: 45,
       variants: [
-        { from: 0.072, len: 0.22, gain: 0.125, rate: 1.00, pan: -0.06, dark: 6400 },
-        { from: 0.076, len: 0.21, gain: 0.110, rate: 1.05, pan:  0.05, dark: 5600 },
-        { from: 0.070, len: 0.23, gain: 0.118, rate: 0.96, pan:  0.00, dark: 7000 },
-        { from: 0.074, len: 0.20, gain: 0.104, rate: 1.02, pan:  0.09, dark: 6000 }
+        { from: 0.072, len: 0.22, gain: 0.320, rate: 1.00, pan: -0.06, dark: 6400 },
+        { from: 0.076, len: 0.21, gain: 0.285, rate: 1.05, pan:  0.05, dark: 5600 },
+        { from: 0.070, len: 0.23, gain: 0.305, rate: 0.96, pan:  0.00, dark: 7000 },
+        { from: 0.074, len: 0.20, gain: 0.270, rate: 1.02, pan:  0.09, dark: 6000 }
       ]
     });
 
@@ -660,9 +899,9 @@ window.Aud = (function () {
     define("latch", {
       file: "latch", bus: "ui", gap: 120,
       variants: [
-        { from: 0.000, len: 0.58, gain: 0.088, rate: 0.98, pan: -0.10, dark: 5200 },
-        { from: 0.010, len: 0.56, gain: 0.080, rate: 1.03, pan:  0.08, dark: 4600 },
-        { from: 0.005, len: 0.60, gain: 0.084, rate: 1.00, pan:  0.02, dark: 5800 }
+        { from: 0.000, len: 0.58, gain: 0.182, rate: 0.98, pan: -0.10, dark: 5200 },
+        { from: 0.010, len: 0.56, gain: 0.166, rate: 1.03, pan:  0.08, dark: 4600 },
+        { from: 0.005, len: 0.60, gain: 0.174, rate: 1.00, pan:  0.02, dark: 5800 }
       ]
     });
 
@@ -672,9 +911,9 @@ window.Aud = (function () {
     define("unlatch", {
       file: "latch", bus: "ui", gap: 120,
       variants: [
-        { from: 0.000, len: 0.42, gain: 0.070, rate: 0.90, pan:  0.07, dark: 2400 },
-        { from: 0.012, len: 0.40, gain: 0.064, rate: 0.94, pan: -0.06, dark: 2100 },
-        { from: 0.006, len: 0.44, gain: 0.068, rate: 0.88, pan:  0.00, dark: 2700 }
+        { from: 0.000, len: 0.42, gain: 0.142, rate: 0.90, pan:  0.07, dark: 2400 },
+        { from: 0.012, len: 0.40, gain: 0.131, rate: 0.94, pan: -0.06, dark: 2100 },
+        { from: 0.006, len: 0.44, gain: 0.137, rate: 0.88, pan:  0.00, dark: 2700 }
       ]
     });
 
@@ -685,10 +924,10 @@ window.Aud = (function () {
     define("appear", {
       file: "cloth", bus: "ui", gap: 90,
       variants: [
-        { from: 0.06, len: 0.30, gain: 0.052, rate: 0.94, pan: -0.14, dark: 4200 },
-        { from: 0.58, len: 0.28, gain: 0.046, rate: 1.02, pan:  0.12, dark: 3800 },
-        { from: 1.14, len: 0.32, gain: 0.050, rate: 0.98, pan:  0.02, dark: 4600 },
-        { from: 1.78, len: 0.26, gain: 0.044, rate: 1.06, pan: -0.05, dark: 4000 }
+        { from: 0.06, len: 0.30, gain: 0.187, rate: 0.94, pan: -0.14, dark: 4200 },
+        { from: 0.58, len: 0.28, gain: 0.057, rate: 1.02, pan:  0.12, dark: 3800 },
+        { from: 1.14, len: 0.32, gain: 0.075, rate: 0.98, pan:  0.02, dark: 4600 },
+        { from: 1.78, len: 0.26, gain: 0.187, rate: 1.06, pan: -0.05, dark: 4000 }
       ]
     });
 
@@ -700,9 +939,9 @@ window.Aud = (function () {
     define("arrive", {
       file: "swell", bus: "ui", gap: 400,
       variants: [
-        { from: 0.00, len: 2.00, gain: 0.105, rate: 0.96, pan: -0.05, dark: 1500, fade: 0.55 },
-        { from: 0.10, len: 1.95, gain: 0.098, rate: 1.00, pan:  0.05, dark: 1700, fade: 0.60 },
-        { from: 0.05, len: 1.90, gain: 0.102, rate: 0.92, pan:  0.00, dark: 1400, fade: 0.50 }
+        { from: 0.00, len: 2.00, gain: 0.535, rate: 0.96, pan: -0.05, dark: 1500, fade: 0.55 },
+        { from: 0.10, len: 1.95, gain: 0.501, rate: 1.00, pan:  0.05, dark: 1700, fade: 0.60 },
+        { from: 0.05, len: 1.90, gain: 0.521, rate: 0.92, pan:  0.00, dark: 1400, fade: 0.50 }
       ]
     });
 
@@ -711,9 +950,9 @@ window.Aud = (function () {
     define("leave", {
       file: "shut", bus: "ui", gap: 400,
       variants: [
-        { from: 0.136, len: 0.30, gain: 0.100, rate: 0.88, pan: -0.04, dark: 2400 },
-        { from: 0.140, len: 0.28, gain: 0.094, rate: 0.92, pan:  0.04, dark: 2100 },
-        { from: 0.134, len: 0.32, gain: 0.098, rate: 0.85, pan:  0.00, dark: 2700 }
+        { from: 0.136, len: 0.30, gain: 0.069, rate: 0.88, pan: -0.04, dark: 2400 },
+        { from: 0.140, len: 0.28, gain: 0.064, rate: 0.92, pan:  0.04, dark: 2100 },
+        { from: 0.134, len: 0.32, gain: 0.066, rate: 0.85, pan:  0.00, dark: 2700 }
       ]
     });
 
@@ -723,9 +962,9 @@ window.Aud = (function () {
     define("complete", {
       file: "done", bus: "sim", gap: 300,
       variants: [
-        { from: 0.134, len: 0.22, gain: 0.115, rate: 0.96, pan: -0.07, dark: 3600 },
-        { from: 0.138, len: 0.21, gain: 0.106, rate: 1.01, pan:  0.06, dark: 3200 },
-        { from: 0.132, len: 0.23, gain: 0.110, rate: 0.93, pan:  0.00, dark: 4000 }
+        { from: 0.134, len: 0.22, gain: 0.182, rate: 0.96, pan: -0.07, dark: 3600 },
+        { from: 0.138, len: 0.21, gain: 0.170, rate: 1.01, pan:  0.06, dark: 3200 },
+        { from: 0.132, len: 0.23, gain: 0.176, rate: 0.93, pan:  0.00, dark: 4000 }
       ]
     });
 
@@ -735,9 +974,9 @@ window.Aud = (function () {
     define("handoff", {
       file: "dispatch", bus: "sim", gap: 300,
       variants: [
-        { from: 0.016, len: 0.34, gain: 0.104, rate: 0.98, pan:  0.10, dark: 4200 },
-        { from: 0.020, len: 0.32, gain: 0.096, rate: 1.03, pan: -0.08, dark: 3800 },
-        { from: 0.013, len: 0.36, gain: 0.100, rate: 0.95, pan:  0.00, dark: 4600 }
+        { from: 0.016, len: 0.34, gain: 0.113, rate: 0.98, pan:  0.10, dark: 4200 },
+        { from: 0.020, len: 0.32, gain: 0.105, rate: 1.03, pan: -0.08, dark: 3800 },
+        { from: 0.013, len: 0.36, gain: 0.109, rate: 0.95, pan:  0.00, dark: 4600 }
       ]
     });
 
@@ -749,9 +988,9 @@ window.Aud = (function () {
     define("shell", {
       file: "settle", bus: "sim", gap: 900,
       variants: [
-        { from: 0.14, len: 0.62, gain: 0.115, rate: 0.72, pan: -0.12, dark: 1900, fade: 0.26 },
-        { from: 1.06, len: 0.58, gain: 0.106, rate: 0.78, pan:  0.10, dark: 1750, fade: 0.24 },
-        { from: 1.94, len: 0.66, gain: 0.110, rate: 0.68, pan:  0.00, dark: 2100, fade: 0.28 }
+        { from: 0.14, len: 0.62, gain: 0.075, rate: 0.72, pan: -0.12, dark: 1900, fade: 0.26 },
+        { from: 1.06, len: 0.58, gain: 0.300, rate: 0.78, pan:  0.10, dark: 1750, fade: 0.24 },
+        { from: 1.94, len: 0.66, gain: 0.175, rate: 0.68, pan:  0.00, dark: 2100, fade: 0.28 }
       ]
     });
   }
@@ -767,8 +1006,14 @@ window.Aud = (function () {
       if (!audio()) { on = false; return false; }
       if (ctx.state === "suspended") ctx.resume();
       warm();
+      /* The room comes up with the sound, on every page, not only where a
+         simulation happens to be running. Switching sound off is the only
+         thing that takes it away, and that is meant to feel like a room
+         going quiet. */
+      startLab();
     } else {
       stopBeds();
+      stopLab();
     }
     return on;
   }
@@ -809,6 +1054,12 @@ window.Aud = (function () {
     input: input,
     context: function () { return ctx; },
     warm: warm,
+    lab: function () {
+      if (!lab) return null;
+      return { level: LAB_LEVEL, duck: lab.duck ? lab.duck.gain.value : null,
+               window: WINDOW, overlap: OVERLAP, source: buffers.vent ? +buffers.vent.duration.toFixed(2) : 0 };
+    },
+    elsewhere: elsewhere,
     duration: function (name) { return buffers[name] ? buffers[name].duration : 0; },
     loaded: function (name) { return !!buffers[name]; },
 
