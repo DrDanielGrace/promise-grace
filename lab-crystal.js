@@ -303,8 +303,27 @@
 
     update: function (dt) {
       if (running) {
-        var speed = 1400;                       // accelerated, this is minutes of real growth
-        var d = dRdt() * dt * speed;
+        /* One second on screen is one second of the model, and that is the
+           whole of the time scaling.
+
+           There used to be a multiplier of 1400 here, described as turning
+           hours of growth into seconds. The constants above do not need it:
+           A = K D dC works out at 4.2e-9 m^2/s, so R dR = A Sh dt puts the
+           seed at the 260 um stop in about eight seconds with no flow, and
+           about one with it. Multiplying that by 1400 moved the crystal
+           roughly seven millimetres in the first frame, which is thirty
+           times past the stop, so every run ended on frame one. The growth
+           curve was not failing to draw. It had two points in it at most
+           and nothing to join.
+
+           It also made the readout untrue. dR/dt is reported in micrometres
+           per second, and the crystal was covering that distance 1400 times
+           faster than the number said. Now the number and the thing you are
+           watching are the same rate, and the run itself is the answer to
+           the entry: at 1 g it is over before you have read the readout,
+           and near zero it takes several seconds and visibly slows as it
+           goes. */
+        var d = dRdt() * dt;
         R = Math.min(R + d, R_MAX);
         t += dt;
         rate = dRdt();
@@ -466,7 +485,7 @@
       "Buoyancy velocity taken proportional to g, which holds in the Stokes regime and not at high Rayleigh number.",
       "Sh = 1 + 0.5 sqrt(Pe) is a standard correlation, not a solution of the flow.",
       "The defect and strain figure is illustrative. It is monotonic in growth rate and in Peclet, and it is not computed from the physics.",
-      "Time is accelerated by roughly 1400 times so a run takes seconds instead of hours."
+      "Time is not accelerated. One second here is one second of the model, and the lumped rate constant is what puts a whole run inside a few seconds, so the rate on the readout is the rate you are watching."
     ]
   );
 

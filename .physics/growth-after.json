@@ -1,0 +1,95 @@
+{
+  "captured": "after the fix",
+  "procedure": "set gravity, click replay to return to the seed radius, then read the radius on every animation frame until it stops climbing",
+  "g=1.000": {
+    "g": "1.000",
+    "pe": "14.40",
+    "sh": "2.90",
+    "r": "12.0",
+    "rate": "1014.08",
+    "shell": "4.1",
+    "verdict": "Flow is winning. Fresh solution keeps arriving, so growth stays fast and the shell never builds.",
+    "radiusPerFrame_um": [
+      19.1,
+      24.3,
+      28.9,
+      32.8
+    ],
+    "radius_um": {
+      "0.1s": 62.9,
+      "1s": 254.9,
+      "4s": 260,
+      "8s": 260
+    },
+    "reachedMaxRadius": {
+      "frames": 148,
+      "seconds": 1.04
+    },
+    "framesWatched": 148,
+    "rateAtEnd_um_per_s": 158.82,
+    "growthCurvePixels": 721
+  },
+  "g=0.010": {
+    "g": "0.010",
+    "pe": "0.14",
+    "sh": "1.19",
+    "r": "12.0",
+    "rate": "416.41",
+    "shell": "10.1",
+    "verdict": "Diffusion is winning. The shell has built up, growth is slowing itself down, and the crystal comes out even.",
+    "radiusPerFrame_um": [
+      14.9,
+      17.2,
+      19.4,
+      21.2
+    ],
+    "radius_um": {
+      "0.1s": 36.1,
+      "1s": 112.1,
+      "4s": 237.1,
+      "8s": 260
+    },
+    "reachedMaxRadius": {
+      "frames": 678,
+      "seconds": 4.72
+    },
+    "framesWatched": 678,
+    "rateAtEnd_um_per_s": 30.42,
+    "growthCurvePixels": 771
+  },
+  "g=0.000": {
+    "g": "≈0",
+    "pe": "0.000",
+    "sh": "1.00",
+    "r": "12.0",
+    "rate": "350.00",
+    "shell": "12.0",
+    "verdict": "Diffusion is winning. The shell has built up, growth is slowing itself down, and the crystal comes out even.",
+    "radiusPerFrame_um": [
+      14.5,
+      16.5,
+      18.3,
+      19.9
+    ],
+    "radius_um": {
+      "0.1s": 31.6,
+      "1s": 92.7,
+      "4s": 184,
+      "8s": 259.7
+    },
+    "reachedMaxRadius": {
+      "frames": 1149,
+      "seconds": 8.02
+    },
+    "framesWatched": 1149,
+    "rateAtEnd_um_per_s": 16.15,
+    "growthCurvePixels": 822
+  },
+  "measures": {
+    "radiusPerFrame_um": "the radius readout on each of the first animation frames after replay",
+    "radius_um": "the radius readout at that wall clock time into the run",
+    "reachedMaxRadius": "frames and seconds taken to reach the 260 um stop",
+    "growthCurvePixels": "pixels of curve ink in the GROWTH RATE panel, counted by colour. The axis, its labels and the rule are drawn in other colours and are not counted, so nought means the panel is drawn and the curve in it is empty"
+  },
+  "againstBefore": "Same page, same harness, same three gravities as growth-before.json. The seed readouts are identical at all three, because nothing in the physics moved. What moved is the clock: dR/dt is no longer multiplied by 1400 before it is integrated."
+}
