@@ -451,6 +451,65 @@
     state.setAttribute("data-sent", "1");
   }
 
+  /* ----------------------------------------------------------------------
+     WATCHED THRESHOLDS
+
+     Some simulations announce their own moments. Most do not, and the way
+     to give those a moment worth hearing is not to reach inside seven files
+     and add publishing to each: it is to watch the number that is already
+     on the readout in front of the reader.
+
+     That is deliberately the honest version. The mark fires on the value
+     the reader can see, formatted exactly as they see it, so there is no
+     way for what is heard and what is displayed to disagree. Nothing is
+     recomputed here and no threshold is invented: every one of them is a
+     round number in the same units as the row it watches, declared in
+     frames.js where it can be read in one place.
+
+     Each fires once per crossing and rearms when the value comes back.
+     ---------------------------------------------------------------------- */
+  var armed = {};
+
+  function value(line) {
+    var row = $('[data-line="' + line + '"]');
+    if (!row) return null;
+    var b = row.querySelector("[data-out]");
+    if (!b) return null;
+    var n = parseFloat(String(b.textContent).replace(/[^0-9eE.+-]/g, ""));
+    return isFinite(n) ? n : null;
+  }
+
+  function watch() {
+    if (!frame.watch || stage < 1) return;
+    frame.watch.forEach(function (w, i) {
+      var v = value(w.line);
+      if (v === null) return;
+      /* An indicator that turns early reads as a negative error, and a
+         reading that is ninety one percent wrong is ninety one percent wrong
+         in either direction, so some rows are watched on their size. */
+      if (w.abs) v = Math.abs(v);
+      var hit = w.over !== undefined ? v > w.over : v < w.under;
+      if (hit && !armed[i]) {
+        armed[i] = true;
+        Sim.publish(name + ":mark", {
+          kind: w.voice === undefined ? "forming" : "reading",
+          voice: w.voice === undefined ? "shell" : w.voice,
+          line: w.line, label: w.label, say: w.say, cool: !!w.cool,
+          at: Date.now()
+        });
+      } else if (!hit && armed[i]) {
+        /* a hysteresis band, so a value sitting on the threshold does not
+           chatter. Ten percent of the threshold, or a tenth of a unit. */
+        var band = Math.max(0.1, Math.abs(w.over !== undefined ? w.over : w.under) * 0.1);
+        var clear = w.over !== undefined ? v < w.over - band : v > w.under + band;
+        if (clear) armed[i] = false;
+      }
+    });
+  }
+
+  setInterval(watch, 250);
+
+
   if (window.Sim && Sim.subscribe) {
     Sim.subscribe(name + ":mark", function (d) {
       if (!d || !d.kind) return;

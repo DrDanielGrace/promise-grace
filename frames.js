@@ -24,6 +24,12 @@ window.Frames = {
     lead: "How rare a crystal actually is.",
     fig: "fig-nucleation",
     script: "lab-nucleation.js",
+    /* A cluster has got across. The rate on screen is the measurement; this
+       is the first time the count of survivors is not nought. */
+    watch: [
+      { line: "survived", over: 0.5, label: "FIRST SURVIVOR", cool: true,
+        say: "One cluster has reached the critical radius and run away." }
+    ],
     primary: "[data-s]",
     /* Publishes a survivor count that the crystal growth simulation uses to
        decide how many crystals are sharing the same solute. */
@@ -50,6 +56,12 @@ window.Frames = {
     lead: "How a structure is actually identified.",
     fig: "fig-diffraction",
     script: "lab-diffraction.js",
+    /* Small crystals give broad peaks. Ten nanometres is where the broadening
+       stops being a correction and starts being the whole shape. */
+    watch: [
+      { line: "size", under: 10, label: "CRYSTALLITE 10 nm", cool: true,
+        say: "Below about ten nanometres the peaks are wider than the lattice." }
+    ],
     primary: "[data-size]",
     takes: { from: "Crystal growth", what: "a crystal",
              where: "instrument.html?sim=crystal" },
@@ -61,6 +73,12 @@ window.Frames = {
     lead: "What a composition does to a microstructure.",
     fig: "fig-solidify",
     script: "lab-solidify.js",
+    /* The first solid appears. Both numbers are already on the readout; this
+       is the moment the falling one meets the fixed one. */
+    watch: [
+      { line: "eutectic", over: 0.5, label: "EUTECTIC FORMING", cool: true,
+        say: "What is left of the liquid is now freezing as alternating stripes." }
+    ],
     primary: "[data-c]",
     marks: true
   },
@@ -70,6 +88,14 @@ window.Frames = {
     lead: "What picking the wrong indicator costs you.",
     fig: "fig-titration",
     script: "lab-titration.js",
+    /* An indicator that turns in the wrong place. One percent is generous:
+       the methyl orange case here reads ninety one percent early. */
+    watch: [
+      { line: "terror", over: 1, abs: true, label: "INDICATOR IS LYING", voice: "complete",
+        say: "The reading and the equivalence point are more than one percent apart." },
+      { line: "ph", over: 7, label: "PAST NEUTRAL", cool: true,
+        say: "The steep part of the curve has gone by." }
+    ],
     primary: "[data-vb]",
     marks: true
   },
@@ -79,6 +105,12 @@ window.Frames = {
     lead: "Where a colour comes from when there is no pigment.",
     fig: "fig-thinfilm",
     script: "lab-thinfilm.js",
+    /* The film has cancelled its own reflection, which is what an anti
+       reflection coating is for. */
+    watch: [
+      { line: "r550", under: 0.5, label: "ANTI REFLECTION", cool: true,
+        say: "Almost nothing is coming back at 550 nm." }
+    ],
     primary: "[data-d]",
     marks: true
   },
@@ -88,6 +120,11 @@ window.Frames = {
     lead: "Why a wider pore is a worse sieve.",
     fig: "fig-mof",
     script: "lab-mof.js",
+    /* The hole has opened far enough to stop being a sieve. */
+    watch: [
+      { line: "aperture", over: 5.5, label: "APERTURE 5.5 A", voice: "complete",
+        say: "Wide enough that most of the gas list walks through it." }
+    ],
     primary: "[data-l]",
     marks: true
   },
@@ -97,6 +134,11 @@ window.Frames = {
     lead: "Why the field is hard.",
     fig: "fig-thermo",
     script: "lab-thermo.js",
+    /* ZT of one is the number the field quotes at each other. */
+    watch: [
+      { line: "zt", over: 1, label: "ZT 1", cool: true,
+        say: "Worth building at. Most materials never get here." }
+    ],
     primary: "[data-n]",
     marks: true
   }
