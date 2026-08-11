@@ -67,6 +67,10 @@
      crossed something worth noticing. */
   var SHELL_MARK = 2 * R0;  // 24 um, twice the seed
 
+  /* A mark says what happened, which row of the readout it belongs to, and
+     what it should be called. It does not say what it should sound like:
+     the frame decides that once for all eight simulations, so they sound
+     like the same instrument rather than eight of them. */
   function mark(kind, extra) {
     if (!window.Sim || !Sim.publish) return;
     var d = { kind: kind, at: Date.now(), g: g, peclet: Pe(),
@@ -339,14 +343,24 @@
         var nowAbove = Pe() > 1;
         if (nowAbove !== lastAnnouncedPe) {
           lastAnnouncedPe = nowAbove;
-          mark("peclet", { up: nowAbove });
+          mark("threshold", { up: nowAbove, line: "pe",
+            label: nowAbove ? "PÉCLET 1 ↑" : "PÉCLET 1 ↓",
+            say: nowAbove ? "Flow has taken over from diffusion."
+                          : "Diffusion has taken over from flow." });
         }
         if (!shellMarked && shell() >= SHELL_MARK) {
           shellMarked = true;
-          mark("shell", { threshold_um: SHELL_MARK * 1e6 });
+          mark("forming", { threshold_um: SHELL_MARK * 1e6, line: "shell", cool: true,
+            label: "SHELL " + fmt(SHELL_MARK * 1e6, 1) + " µm",
+            say: "The depleted region has reached twice the seed radius." });
         }
 
-        if (R >= R_MAX) { running = false; mark("complete"); handoff(); }
+        if (R >= R_MAX) {
+          running = false;
+          mark("complete", { line: "r", cool: true, label: "RUN COMPLETE",
+            say: "The crystal reached the end of the sweep." });
+          handoff();
+        }
       }
       flowPhase += dt * (0.4 + g * 2.2);
       drawAll();
@@ -372,7 +386,12 @@
     resend: function () { handoff(); },
 
     /* Called by a frame that has set its own six colours. */
-    repalette: function () { bindPalette(); drawAll(); }
+    repalette: function () { bindPalette(); drawAll(); },
+
+    /* How much is moving in here, between nought and one, for whatever is
+       running the ambient bed. Buoyancy velocity is proportional to g, so
+       this is the gravity and nothing else. */
+    motion: function () { return g; }
   };
 
   function handoff() {
@@ -384,7 +403,9 @@
       strain: strainProxy,
       strainIsProxy: true
     });
-    mark("handoff", { strainIsProxy: true });
+    mark("handoff", { strainIsProxy: true, label: "HANDOFF SENT",
+      say: "Radius computed, strain a declared proxy, both to diffraction.",
+      summary: "R " + fmt(R * 1e6, 1) + " µm" });
   }
 
   /* ---- controls -------------------------------------------------------- */

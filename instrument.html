@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-where="simulations">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Crystal growth under variable gravity · Promise Oluwatosin Grace</title>
-<meta name="description" content="One crystal, fed by diffusion, with the gravity turned down. Péclet, Sherwood, the depleted shell, and the result handed on to diffraction.">
+<title>Instrument · Promise Oluwatosin Grace</title>
+<meta name="description" content="One simulation at full screen: the question first, then one control, then the readout, then everything.">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Crystal growth under variable gravity">
-<meta property="og:description" content="One crystal, fed by diffusion, with the gravity turned down. Péclet, Sherwood, the depleted shell, and the result handed on to diffraction.">
+<meta property="og:title" content="Instrument">
+<meta property="og:description" content="One simulation at full screen, with its physics, its assumptions and the code that runs it.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,20 +22,106 @@
 
 <header class="inst-head">
   <div class="inst-ident">
-    <h1>Crystal growth under variable gravity</h1>
+    <h1 data-inst-title>Instrument</h1>
     <p class="mono inst-run"><span data-run-id>RUN</span></p>
   </div>
   <div class="inst-head-acts">
     <button type="button" class="inst-btn" data-everything aria-pressed="false">Everything</button>
-    <a class="inst-btn inst-btn-quiet" href="notebook.html#fig-crystal" data-leave>Leave</a>
+    <a class="inst-btn inst-btn-quiet" href="simulations.html" data-leave>Leave</a>
   </div>
 </header>
 
 <main id="stage" class="inst-stage">
 
-  <!-- ── the question, which comes before any control ─────────────────── -->
+  <!-- the question, which comes before any control -->
   <section class="inst-open" data-part="open">
-    <div class="predict" data-predict="crystal">
+    <div data-slot="question"></div>
+    <p class="inst-open-note">Commit to an answer and the instrument comes up. Nothing is locked
+    behind it, and <b>Everything</b> above opens the full panel now if you already know this
+    material.</p>
+    <p class="inst-open-do"><button type="button" class="inst-btn inst-btn-go" data-begin>Bring it up</button></p>
+  </section>
+
+  <!-- the instrument -->
+  <div class="inst-body">
+    <div data-slot="lab"></div>
+    <div data-chrome class="lab-chrome" data-part="chrome"></div>
+    <details class="inst-prose" data-part="prose">
+      <summary>What this is</summary>
+      <div data-slot="prose"></div>
+    </details>
+  </div>
+
+  <p class="inst-missing" data-missing hidden>That simulation is not one of the eight that runs in
+  this frame. <a href="simulations.html">The index says where every one of them lives.</a></p>
+</main>
+
+<noscript>
+  <p class="inst-noscript">These need JavaScript to run. Every one of them is also described in
+  prose on <a href="notebook.html">the notebook</a>, which reads without it.</p>
+</noscript>
+
+<template data-frame="nucleation">
+<div class="predict" data-predict="nucleation">
+      <p class="predict-q">Clusters of molecules form and fall apart in any solution, constantly. Of the ones that form at ordinary supersaturation, what share do you think survive to become crystals?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">Nearly all of them</button>
+        <button type="button" data-a="b">Roughly half</button>
+        <button type="button" data-a="c">Almost none</button>
+      </div>
+      <p class="predict-result" role="status" aria-live="polite" hidden></p>
+    </div>
+<!-- lab -->
+<div class="lab" data-lab="nucleation">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">THE BARRIER</p>
+            <canvas data-view="energy" width="300" height="240"
+              aria-label="Free energy against cluster radius. Surface cost rises as radius squared, bulk payoff falls as radius cubed, and their sum peaks at the critical radius. Raising supersaturation moves that peak left and lowers it."></canvas>
+          </div>
+          <div class="lab-view">
+            <p class="mono view-tag">CLUSTERS, LIVE</p>
+            <canvas data-view="field" width="300" height="240"
+              aria-label="Clusters appearing at random. Most shrink and vanish. Occasionally one crosses the critical radius and runs away, and those are marked as survivors."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <label class="mono" for="s-slider">SUPERSATURATION <b data-out="s">3</b></label>
+          <span class="slider-row">
+            <input id="s-slider" type="range" min="1.2" max="10" step="0.05" value="3" data-s>
+          </span>
+          <p class="mono quiet">Push it up and watch how many more get through.</p>
+
+          <button type="button" class="listen-btn" data-listen="nucleation" aria-pressed="false">
+            <span data-listen-label>Listen to it</span>
+          </button>
+          <p class="listen-what" data-listen-desc="nucleation">A dry tick for every cluster that
+          gets across, like rain starting on a window, and nothing at all for the ones that
+          dissolve. When the barrier is high the ticks are few and dull. Lower it and they come
+          thick and close. A cluster that survives all the way is one bottle touched against
+          another, quiet and hollow. The silences are most of what is happening.</p>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line depth-not-picture"><span>CRITICAL RADIUS</span> <b data-out="rstar">0</b> nm</p>
+          <p class="mono readout-line depth-only-maths"><span>BARRIER</span> <b data-out="barrier">0</b> kT</p>
+          <p class="mono readout-line depth-only-maths"><span>RATE J</span> <b data-out="rate">0</b> per m³s</p>
+          <p class="mono readout-line"><span>SURVIVED</span> <b data-out="survived">0</b></p>
+          <p class="mono readout-line depth-not-picture"><span>DISSOLVED</span> <b data-out="died">0</b></p>
+        </div>
+      </div>
+<!-- prose -->
+<p class="nojs-note">A cluster of molecules has two things happening to it at once. Making a
+      surface costs energy and that cost grows with the square of the radius. Being solid rather
+      than dissolved pays energy back and that payoff grows with the cube. Cubes beat squares
+      eventually, so there is a radius, the critical radius, where the cost stops winning. Below it
+      a cluster is more likely to dissolve than to grow. Above it, it runs away. Clusters appear and
+      vanish constantly, and nucleation is just the rare one that gets across.</p>
+<p class="mono inst-fig">FIG. 1a · Classical nucleation. The barrier is computed, the individual cluster paths are illustrative.</p>
+</template>
+<template data-frame="crystal">
+<div class="predict" data-predict="crystal">
       <p class="predict-q">Same solution, same everything, but you take gravity away. Does the crystal grow faster, slower, or at the same rate?</p>
       <div class="predict-opts">
         <button type="button" data-a="a">Faster, nothing is holding it back</button>
@@ -44,117 +130,420 @@
       </div>
       <p class="predict-result" role="status" aria-live="polite" hidden></p>
     </div>
-    <p class="inst-open-note">Commit to an answer and the instrument comes up. Nothing is locked
-    behind it, and <b>Everything</b> above opens the full panel now if you already know this
-    material.</p>
-    <p class="inst-open-do"><button type="button" class="inst-btn inst-btn-go" data-begin>Bring it up</button></p>
-  </section>
-
-  <!-- ── the instrument ───────────────────────────────────────────────── -->
-  <div class="inst-body">
-
-    <div class="lab" data-lab="crystal">
-
-      <div class="lab-views">
-        <div class="lab-view" data-panel="primary">
-          <p class="mono view-tag">THE CRYSTAL</p>
-          <span class="brackets" aria-hidden="true"></span>
-          <canvas data-view="crystal" width="300" height="240"
-            aria-label="The growing crystal. At high gravity its faces come out uneven. As gravity falls it grows smooth and even."></canvas>
+<!-- lab -->
+<div class="lab" data-lab="crystal">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">THE CRYSTAL</p>
+            <canvas data-view="crystal" width="300" height="240"
+              aria-label="The growing crystal. At high gravity its faces come out uneven. As gravity falls it grows smooth and even."></canvas>
+          </div>
+          <div class="lab-view">
+            <p class="mono view-tag">CONCENTRATION</p>
+            <canvas data-view="conc" width="300" height="240"
+              aria-label="Solute concentration around the crystal. A depleted shell builds up as gravity falls, shown as a dashed ring that grows thicker."></canvas>
+          </div>
+          <div class="lab-view depth-not-picture">
+            <p class="mono view-tag">FLOW</p>
+            <canvas data-view="flow" width="300" height="240"
+              aria-label="Convection around the crystal. Strong at full gravity, and it disappears as gravity is reduced."></canvas>
+          </div>
+          <div class="lab-view depth-not-picture">
+            <p class="mono view-tag">GROWTH RATE</p>
+            <canvas data-view="rate" width="300" height="240"
+              aria-label="Growth rate against time. Under gravity it stays high. Without it the rate falls away as the crystal feeds itself more slowly."></canvas>
+          </div>
         </div>
-        <div class="lab-view" data-panel="extra">
-          <p class="mono view-tag">CONCENTRATION</p>
-          <span class="brackets" aria-hidden="true"></span>
-          <canvas data-view="conc" width="300" height="240"
-            aria-label="Solute concentration around the crystal. A depleted shell builds up as gravity falls, shown as a dashed ring that grows thicker."></canvas>
-        </div>
-        <div class="lab-view depth-not-picture" data-panel="extra">
-          <p class="mono view-tag">FLOW</p>
-          <span class="brackets" aria-hidden="true"></span>
-          <canvas data-view="flow" width="300" height="240"
-            aria-label="Convection around the crystal. Strong at full gravity, and it disappears as gravity is reduced."></canvas>
-        </div>
-        <div class="lab-view depth-not-picture" data-panel="extra">
-          <p class="mono view-tag">GROWTH RATE</p>
-          <span class="brackets" aria-hidden="true"></span>
-          <canvas data-view="rate" width="300" height="240"
-            aria-label="Growth rate against time. Under gravity it stays high. Without it the rate falls away as the crystal feeds itself more slowly."></canvas>
-        </div>
-      </div>
 
-      <div class="inst-side">
-
-        <div class="lab-controls" data-part="control">
+        <div class="lab-controls">
           <label class="mono" for="g-slider">GRAVITY <b data-out="g">1</b> g</label>
           <span class="slider-row">
             <input id="g-slider" type="range" min="0" max="1" step="0.001" value="1" data-g
               aria-describedby="g-help">
           </span>
+          <button type="button" data-act="replay">Grow it again</button>
           <p class="mono quiet" id="g-help">Drag, or use the arrow keys, or the plus and minus for an exact value.</p>
-          <p class="inst-late" data-part="late-control">
-            <button type="button" data-act="replay">Grow it again</button>
-          </p>
         </div>
 
-        <div class="readout lab-readout" data-part="readout">
-          <p class="mono readout-line depth-not-picture" data-line="pe"><span>PÉCLET</span> <b data-out="pe">0</b></p>
-          <p class="mono readout-line depth-only-maths" data-line="sh"><span>SHERWOOD</span> <b data-out="sh">1</b></p>
-          <p class="mono readout-line" data-line="r"><span>RADIUS</span> <b data-out="r">12</b> µm</p>
-          <p class="mono readout-line depth-only-maths" data-line="rate"><span>dR/dt</span> <b data-out="rate">0</b> µm/s</p>
-          <p class="mono readout-line" data-line="shell"><span>SHELL</span> <b data-out="shell">0</b> µm</p>
+        <div class="readout lab-readout">
+          <p class="mono readout-line depth-not-picture"><span>PÉCLET</span> <b data-out="pe">0</b></p>
+          <p class="mono readout-line depth-only-maths"><span>SHERWOOD</span> <b data-out="sh">1</b></p>
+          <p class="mono readout-line"><span>RADIUS</span> <b data-out="r">12</b> µm</p>
+          <p class="mono readout-line depth-only-maths"><span>dR/dt</span> <b data-out="rate">0</b> µm/s</p>
+          <p class="mono readout-line depth-not-picture"><span>SHELL</span> <b data-out="shell">0</b> µm</p>
           <p class="verdict" data-out="verdict" role="status" aria-live="polite"></p>
         </div>
-
-        <section class="inst-marks" data-part="marks" aria-label="Marks">
-          <h2 class="mono">MARKS</h2>
-          <ol class="mono" data-marks></ol>
-          <p class="mono inst-marks-empty" data-marks-empty>Nothing yet. The shell reaching twice the
-          seed radius, Péclet passing one, the run finishing and the result leaving all write a line
-          here at the moment you hear them.</p>
-        </section>
-
-        <section class="inst-handoff" data-part="handoff" aria-label="Handoff">
-          <h2 class="mono">HANDOFF</h2>
-          <p class="inst-handoff-what">This run's radius and its declared strain proxy go to the
-          diffraction simulation. It is sent on its own when a run finishes. This sends it again.</p>
-          <p><button type="button" class="inst-btn" data-resend>Send the result to diffraction</button></p>
-          <p class="mono inst-handoff-state" role="status" aria-live="polite" data-handoff-state>Not sent yet.</p>
-        </section>
-
       </div>
-    </div>
-
-    <div data-chrome class="lab-chrome" data-part="chrome"></div>
-
-    <details class="inst-prose" data-part="prose">
-      <summary>What this is</summary>
-      <p>Move gravity from 1 g down towards zero and the reason for the difference appears. Under
-      gravity, convection keeps sweeping fresh solution past the crystal, so it grows fast and
-      unevenly. Take gravity away and nothing stirs, so a depleted shell builds up around the
-      crystal, growth slows, and because it is now limited by how fast solute can diffuse in, it
+<!-- prose -->
+<p class="nojs-note">Move gravity from 1 g down towards zero and the reason for the difference
+      appears. Under gravity, convection keeps sweeping fresh solution past the crystal, so it grows
+      fast and unevenly. Take gravity away and nothing stirs, so a depleted shell builds up around
+      the crystal, growth slows, and because it is now limited by how fast solute can diffuse in, it
       becomes steady and even. The Péclet number is the ratio of the two kinds of transport, and the
       change happens as it passes one.</p>
-      <p class="mono inst-fig">FIG. 1b · Growth of one crystal against gravity. Size is computed, the defect figure is illustrative.</p>
-    </details>
+<p class="mono inst-fig">FIG. 1b · Growth of one crystal against gravity. Size is computed, the defect figure is illustrative.</p>
+</template>
+<template data-frame="diffraction">
+<div class="predict" data-predict="diffraction">
+      <p class="predict-q">Two crystals of the same substance, same lattice, one tiny and one large. Put both in an X ray beam. What is different about the patterns?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">The peaks sit at different angles</button>
+        <button type="button" data-a="b">The peaks are in the same places but different widths</button>
+        <button type="button" data-a="c">Nothing, same substance, same pattern</button>
+      </div>
+      <p class="predict-result" role="status" aria-live="polite" hidden></p>
+    </div>
+<!-- lab -->
+<div class="lab" data-lab="diffraction">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">THE PATTERN</p>
+            <canvas data-view="pattern" width="300" height="240"
+              aria-label="A powder diffraction pattern, intensity against two theta. Peaks sit at the angles Bragg's law allows for the chosen lattice, and reflections forbidden by that lattice are missing entirely. Smaller crystals give broader peaks."></canvas>
+          </div>
+          <div class="lab-view depth-not-picture">
+            <p class="mono view-tag">WILLIAMSON-HALL</p>
+            <canvas data-view="wh" width="300" height="240"
+              aria-label="Beta cos theta plotted against sin theta. The intercept of the fitted line gives the crystallite size and its slope gives the strain, which is how the two kinds of broadening are told apart."></canvas>
+          </div>
+        </div>
 
+        <div class="lab-controls">
+          <span class="mono">LATTICE</span>
+          <button type="button" data-lattice="P" aria-pressed="false">Simple</button>
+          <button type="button" data-lattice="I" aria-pressed="false">Body centred</button>
+          <button type="button" data-lattice="F" aria-pressed="true">Face centred</button>
+          <span class="slider-row">
+            <label class="mono" for="d-size">SIZE</label>
+            <input id="d-size" type="range" min="4" max="200" step="1" value="45" data-size>
+          </span>
+          <button type="button" data-act="quiz">Guess the lattice</button>
+          <button type="button" class="listen-btn" data-listen="diffraction">
+            <span data-listen-label>Hear the pattern</span>
+          </button>
+          <p class="listen-what" data-listen-desc="diffraction">This is the one place the site
+          uses pitch, because sharpness really is how long a thing rings. The detector sweeps from
+          left to right and each reflection sounds as it passes, low angles low. A sharp peak holds
+          on, like a wine glass still going after you have taken your finger off it. A broad one is
+          gone almost at once and slightly out of tune with itself, more of a wash than a note. Send
+          both crystals through and you can hear which was grown without gravity before you have
+          read anything.</p>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line"><span>LATTICE</span> <b data-out="lattice">face centred</b></p>
+          <p class="mono readout-line"><span>CRYSTALLITE</span> <b data-out="size">45</b> nm</p>
+          <p class="mono readout-line depth-not-picture"><span>STRAIN</span> <b data-out="strain">0.400%</b></p>
+          <p class="mono readout-line depth-not-picture"><span>REFLECTIONS</span> <b data-out="peaks"></b></p>
+          <p class="mono readout-line depth-not-picture"><span>ABSENT</span> <b data-out="absent"></b></p>
+          <p class="mono readout-line depth-only-maths"><span>SIZE FROM W-H</span> <b data-out="whsize"></b> nm</p>
+          <p class="mono readout-line depth-only-maths"><span>STRAIN FROM W-H</span> <b data-out="whstrain"></b></p>
+          <p class="mono readout-line quiet"><span>SOURCE</span> <b data-out="origin"></b></p>
+          <p class="verdict" data-out="quiz" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+<!-- prose -->
+<p class="nojs-note">A crystal is a repeating grid, and X rays scattering off it only add up
+      at particular angles, which is Bragg's law. Where the peaks sit tells you the spacing. Which
+      peaks are missing tells you the lattice, because some reflections cancel out exactly. And how
+      wide the peaks are tells you two separate things at once: small crystals broaden every peak,
+      and internal strain broadens the ones at high angle much more than the ones at low angle.
+      Because those two do not scale together, plotting the width against angle pulls them apart.
+      Below both of them sits the instrument's own width, which is why you can never read a size
+      straight off a single peak.</p>
+<p class="mono inst-fig">FIG. 1c · Powder diffraction. Positions and widths are computed, peak heights are indicative.</p>
+</template>
+<template data-frame="solidify">
+<div class="predict" data-predict="solidify">
+      <p class="predict-q">Two different compositions of the same alloy, cooled the same way. Do they end up with the same microstructure?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">Yes, same alloy, same result</button>
+        <button type="button" data-a="b">No, and it is not a small difference</button>
+      </div>
+      <p class="predict-result" role="status" aria-live="polite" hidden></p>
+    </div>
+<!-- lab -->
+<div class="lab" data-lab="solidify">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">THE PATH DOWN</p>
+            <canvas data-view="diagram" width="300" height="240"
+              aria-label="A binary eutectic diagram with the chosen composition marked as a vertical cooling path. The marker travels down the path as the mixture cools, crossing the liquidus and then the eutectic line."></canvas>
+          </div>
+          <div class="lab-view">
+            <p class="mono view-tag">WHAT YOU GET</p>
+            <canvas data-view="micro" width="300" height="240"
+              aria-label="The microstructure forming. Primary dendrites grow first for any composition away from the eutectic, and the liquid trapped between them finishes as fine alternating lamellae."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="slider-row">
+            <label class="mono" for="s-c">COMPOSITION <b data-out="c">20</b>% B</label>
+            <input id="s-c" type="range" min="0.02" max="0.95" step="0.01" value="0.20" data-c>
+          </span>
+          <span class="slider-row">
+            <label class="mono" for="s-v">COOLING RATE</label>
+            <input id="s-v" type="range" min="0.1" max="4" step="0.1" value="1" data-v>
+          </span>
+          <button type="button" data-act="cool">Cool it</button>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line"><span>TEMPERATURE</span> <b data-out="temp">900</b> °C</p>
+          <p class="mono readout-line depth-not-picture"><span>FREEZING STARTS</span> <b data-out="tliq">0</b> °C</p>
+          <p class="mono readout-line depth-not-picture"><span>PRIMARY PHASE</span> <b data-out="primary">0</b>%</p>
+          <p class="mono readout-line depth-only-maths"><span>EUTECTIC</span> <b data-out="eutectic">0</b>%</p>
+          <p class="mono readout-line depth-only-maths"><span>LAMELLAR SPACING</span> <b data-out="spacing">0</b> µm</p>
+          <p class="verdict" data-out="kind" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+<!-- prose -->
+<p class="nojs-note">Cooling a mixture that is not at the eutectic composition happens in two
+      stages. First one phase freezes out on its own as branching crystals called dendrites, and
+      because it takes mostly one component with it, the liquid left behind drifts towards the
+      eutectic composition. When it gets there the whole remainder freezes at once as fine
+      alternating layers of both phases. Sit exactly at the eutectic and you skip the first stage
+      entirely: no dendrites, just layers, all at one temperature. Pull the heat out faster and the
+      layers come out finer, because the spacing goes as one over the square root of the rate.</p>
+<p class="mono inst-fig">FIG. 3b · Solidification. Fractions and spacings are computed, the shapes are drawn.</p>
+</template>
+<template data-frame="titration">
+<div class="predict" data-predict="titration">
+      <p class="predict-q">An indicator changes colour. Does that happen at the point where the reaction has actually finished?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">Yes, that is what the indicator is for</button>
+        <button type="button" data-a="b">Only if you picked the right indicator for this acid</button>
+      </div>
+      <p class="predict-result" role="status" aria-live="polite" hidden></p>
+    </div>
+<!-- lab -->
+<div class="lab" data-lab="titration">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">THE CURVE</p>
+            <canvas data-view="curve" width="300" height="240"
+              aria-label="pH against volume of base added. Nearly flat for most of the titration, then almost vertical at the equivalence point. A shaded band shows the pH range over which the chosen indicator changes colour, so you can see whether it overlaps the steep part or misses it."></canvas>
+          </div>
+          <div class="lab-view">
+            <p class="mono view-tag">THE FLASK</p>
+            <canvas data-view="flask" width="300" height="240"
+              aria-label="The conical flask, coloured by how far the chosen indicator has turned at the current pH."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="mono">ACID</span>
+          <button type="button" data-acid="strong" aria-pressed="true">Strong</button>
+          <button type="button" data-acid="weak" aria-pressed="false">Weak</button>
+          <span class="mono">INDICATOR</span>
+          <button type="button" data-ind="phenolphthalein" aria-pressed="true">Phenolphthalein</button>
+          <button type="button" data-ind="methylorange" aria-pressed="false">Methyl orange</button>
+          <button type="button" data-ind="bromothymol" aria-pressed="false">Bromothymol blue</button>
+          <span class="slider-row">
+            <label class="mono" for="t-vb">ADDED</label>
+            <input id="t-vb" type="range" min="0" max="50" step="0.05" value="0" data-vb>
+          </span>
+          <button type="button" data-act="drop">Add one drop</button>
+          <button type="button" data-act="rinse">Rinse and restart</button>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line"><span>ADDED</span> <b data-out="vol">0.00</b> cm³</p>
+          <p class="mono readout-line"><span>pH</span> <b data-out="ph">1.00</b></p>
+          <p class="mono readout-line depth-not-picture"><span>EQUIVALENCE AT</span> <b data-out="equiv">25.00</b> cm³</p>
+          <p class="mono readout-line depth-not-picture"><span>INDICATOR TURNS AT</span> <b data-out="endpoint">25.00</b> cm³</p>
+          <p class="mono readout-line depth-only-maths"><span>TITRATION ERROR</span> <b data-out="terror">0.00%</b></p>
+          <p class="verdict" data-out="tmsg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+<!-- prose -->
+<p class="nojs-note">Adding base to acid barely changes the pH for most of the way, then
+      changes it enormously over about one drop, then flattens off again. That steep part is the
+      equivalence point, and it is why one drop too many is so easy and so obvious. An indicator is
+      just a dye that changes colour over its own narrow pH range, so it only tells you the truth if
+      that range sits inside the steep part. Against a weak acid the equivalence point lands well
+      above pH 7, because the salt left behind is itself slightly basic, and an indicator chosen for
+      a strong acid will turn far too early and give an answer that is wrong without ever looking
+      wrong.</p>
+<p class="mono inst-fig">FIG. 4 · Strong and weak acid against a strong base. Every pH here is computed.</p>
+</template>
+<template data-frame="thinfilm">
+<div class="predict" data-predict="thinfilm">
+  <p class="predict-q">A soap bubble has no pigment in it at all. So where do the colours come from?</p>
+  <div class="predict-opts">
+    <button type="button" data-a="a">Dye in the soap</button>
+    <button type="button" data-a="b">The same wave arriving twice, once off each surface</button>
+    <button type="button" data-a="c">White light splitting the way it does in a prism</button>
   </div>
-</main>
+  <p class="predict-result" role="status" aria-live="polite" hidden></p>
+</div>
+<!-- lab -->
+<div class="lab is-instrument" data-lab="thinfilm">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">WHAT COMES BACK</p>
+            <canvas data-view="spectrum" width="300" height="240"
+              aria-label="Reflectance against wavelength across the visible spectrum. Peaks and troughs move as the film thickness changes, so the colour reflected sweeps through the spectrum."></canvas>
+          </div>
+          <div class="lab-view">
+            <p class="mono view-tag">THE COLOUR</p>
+            <canvas data-view="film" width="300" height="240"
+              aria-label="A patch showing the colour the film reflects at this thickness."></canvas>
+          </div>
+        </div>
 
-<noscript>
-  <p class="inst-noscript">This one needs JavaScript to run. Without it: move gravity from 1 g down
-  towards zero and the reason for the difference appears. Under gravity, convection keeps sweeping
-  fresh solution past the crystal, so it grows fast and unevenly. Take gravity away and nothing
-  stirs, so a depleted shell builds up around the crystal, growth slows, and because it is now
-  limited by how fast solute can diffuse in, it becomes steady and even. The Péclet number is the
-  ratio of the two kinds of transport, and the change happens as it passes one.</p>
-</noscript>
+        <div class="lab-controls">
+          <span class="slider-row">
+            <label class="mono" for="tf-d">THICKNESS <b data-out="d">320</b> nm</label>
+            <input id="tf-d" type="range" min="40" max="900" step="5" value="320" data-d>
+          </span>
+          <span class="mono">BEHIND IT</span>
+          <button type="button" data-sub="1.00" aria-pressed="true">Air, a bubble</button>
+          <button type="button" data-sub="1.52" aria-pressed="false">Glass, a lens coating</button>
+        </div>
 
+        <div class="readout lab-readout">
+          <p class="mono readout-line depth-not-picture"><span>STRONGEST AT</span> <b data-out="peak">0</b> nm</p>
+          <p class="mono readout-line depth-not-picture"><span>REFLECTED AT 550 nm</span> <b data-out="r550">0</b>%</p>
+          <p class="mono readout-line depth-only-maths"><span>IDEAL FILM INDEX</span> <b data-out="ideal">0</b></p>
+          <p class="mono readout-line depth-only-maths"><span>QUARTER WAVE AT 550</span> <b data-out="qw">0</b> nm</p>
+          <p class="verdict" data-out="tfmsg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+<!-- prose -->
+<p class="nojs-note">Light hitting a thin film reflects twice, once off the top surface and
+      once off the bottom, and the second one travels a little further. Whether those two agree or
+      cancel depends on the wavelength and on how thick the film is, so some colours come back
+      strongly and others barely at all. That is why a soap bubble is coloured and why the colours
+      run as it drains and thins. Turn it around and you get anti reflection coatings: pick the
+      thickness and the material so that the two reflections cancel instead, and almost nothing
+      comes back. Perfect cancellation on glass would need a film with a refractive index of about
+      1.23, and no durable material has one, so real lens coatings use magnesium fluoride at 1.38
+      and settle for nearly nothing.</p>
+<p class="mono inst-fig">FIG. 5 · Two beam interference in a thin film. Reflectance is exact, the colour patch is approximate.</p>
+</template>
+<template data-frame="mof">
+<div class="predict" data-predict="mof">
+  <p class="predict-q">A metal organic framework is mostly empty space. Swap its struts for longer ones and the hole in the middle gets bigger. What happens to what can pass through?</p>
+  <div class="predict-opts">
+    <button type="button" data-a="a">More gases get through</button>
+    <button type="button" data-a="b">Fewer, the bigger hole is less selective</button>
+    <button type="button" data-a="c">No change, the hole was never the limit</button>
+  </div>
+  <p class="predict-result" role="status" aria-live="polite" hidden></p>
+</div>
+<!-- lab -->
+<div class="lab" data-lab="mof">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">ONE FACE OF THE NET</p>
+            <canvas data-view="cell" width="300" height="240"
+              aria-label="One face of a cubic framework. Metal nodes sit at the corners and organic linkers form the edges between them. The pore in the middle grows as the linker is made longer."></canvas>
+          </div>
+          <div class="lab-view depth-not-picture">
+            <p class="mono view-tag">WHAT FITS THROUGH</p>
+            <canvas data-view="fit" width="300" height="240"
+              aria-label="Gas molecules drawn at their kinetic diameters against the pore aperture. Those smaller than the aperture pass, those larger do not, which is how a framework separates one gas from another."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="slider-row">
+            <label class="mono" for="mof-l">LINKER LENGTH <b data-out="linker">6.9</b> Å</label>
+            <input id="mof-l" type="range" min="3" max="16" step="0.1" value="6.9" data-l>
+          </span>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line depth-not-picture"><span>CELL EDGE</span> <b data-out="edge">0</b> Å</p>
+          <p class="mono readout-line"><span>APERTURE</span> <b data-out="aperture">0</b> Å</p>
+          <p class="mono readout-line"><span>GETS THROUGH</span> <b data-out="fits"></b></p>
+          <p class="mono readout-line depth-only-maths"><span>TIGHTEST FIT THAT PASSES</span> <b data-out="tightest">0</b></p>
+          <p class="mono readout-line depth-only-maths"><span>NEAREST ONE BLOCKED</span> <b data-out="nearmiss">0</b></p>
+          <p class="verdict" data-out="mofmsg" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="depth-not-picture">
+          <p class="mono quiet">MEASURED, NOT MODELLED. There is no surface area computed anywhere
+          in this one, because a slider cannot know it. These came from nitrogen adsorption:</p>
+          <ul class="record" data-real></ul>
+        </div>
+      </div>
+<!-- prose -->
+<p class="nojs-note">A metal organic framework is metal clusters held apart by organic struts,
+      and the useful part is the empty space left between them. Swap the strut for a longer one and
+      the pore grows, which is unusual: you can design the hole. The number that matters is the
+      aperture, the clear width once you account for the size of the atoms lining it, because a gas
+      only enters if it is smaller than that. Make the aperture sit between two gases and the
+      framework separates them. Surface areas are not calculated here, because they are measured
+      quantities that depend on things geometry cannot see. The reported ones are listed instead,
+      and the largest of them, near 7000 square metres in a single gram, is about one and a half
+      football pitches.</p>
+<p class="mono inst-fig">FIG. 7 · Framework geometry. Aperture is computed, surface areas are measured values quoted from the literature.</p>
+</template>
+<template data-frame="thermo">
+<div class="predict" data-predict="thermo">
+      <p class="predict-q">A thermoelectric wants to conduct electricity well and conduct heat badly. How hard is it to get both?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">Straightforward, they are separate properties</button>
+        <button type="button" data-a="b">Hard, because in most materials they move together</button>
+      </div>
+      <p class="predict-result" role="status" aria-live="polite" hidden></p>
+    </div>
+<!-- lab -->
+<div class="lab" data-lab="thermo">
+        <div class="lab-views">
+          <div class="lab-view">
+            <p class="mono view-tag">ZT AGAINST CARRIERS</p>
+            <canvas data-view="zt" width="300" height="240"
+              aria-label="The thermoelectric figure of merit against carrier concentration. It rises, peaks and falls, and the peak sits where every real thermoelectric material sits."></canvas>
+          </div>
+          <div class="lab-view depth-not-picture">
+            <p class="mono view-tag">THE THREE, DISAGREEING</p>
+            <canvas data-view="bars" width="300" height="240"
+              aria-label="Seebeck coefficient, electrical conductivity and the heat carried by the carriers, shown side by side. Adding carriers raises two of them and lowers the one you most want."></canvas>
+          </div>
+        </div>
+
+        <div class="lab-controls">
+          <span class="slider-row">
+            <label class="mono" for="th-n">CARRIERS <b data-out="n">10^19.5</b> /cm³</label>
+            <input id="th-n" type="range" min="16" max="22" step="0.05" value="19.5" data-n>
+          </span>
+          <span class="slider-row">
+            <label class="mono" for="th-t">TEMPERATURE</label>
+            <input id="th-t" type="range" min="300" max="900" step="10" value="600" data-t>
+          </span>
+        </div>
+
+        <div class="readout lab-readout">
+          <p class="mono readout-line"><span>ZT</span> <b data-out="zt">0</b></p>
+          <p class="mono readout-line depth-not-picture"><span>BEST AT</span> <b data-out="ztpeak">0</b> /cm³</p>
+          <p class="mono readout-line depth-only-maths"><span>SEEBECK</span> <b data-out="seebeck">0</b> µV/K</p>
+          <p class="mono readout-line depth-only-maths"><span>CONDUCTIVITY</span> <b data-out="sigma">0</b> S/cm</p>
+          <p class="mono readout-line depth-only-maths"><span>HEAT VIA CARRIERS</span> <b data-out="kappae">0</b> W/mK</p>
+          <p class="verdict" data-out="thmsg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+<!-- prose -->
+<p class="nojs-note">Heat one end of certain materials and a voltage appears across them, which
+      turns waste heat into electricity with no moving parts. The reason it is not everywhere is a
+      real conflict. You want a large voltage per degree, a high electrical conductivity, and a low
+      thermal conductivity, and adding carriers helps the second while hurting the first. Worse, the
+      same electrons that carry charge also carry heat, so pushing the conductivity up drags the
+      thermal conductivity up with it, and that link is not something you can engineer away. The
+      result is that the figure of merit peaks rather than climbing, and every real thermoelectric
+      sits near that peak.</p>
+<p class="mono inst-fig">FIG. 6 · Thermoelectric figure of merit. Every quantity here is computed.</p>
+</template>
 <script src="sim.js" defer></script>
 <script src="audio.js" defer></script>
 <script src="sound.js" defer></script>
 <script src="predict.js" defer></script>
-<script src="lab-crystal.js" defer></script>
+<script src="frames.js" defer></script>
 <script src="instrument.js" defer></script>
 <script src="nav.js" defer></script>
+<script src="search.js" defer></script>
 </body>
 </html>

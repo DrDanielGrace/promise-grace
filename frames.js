@@ -1,0 +1,103 @@
+/* =========================================================================
+   frames.js · what the frame needs to know about each simulation
+
+   The markup for every simulation lives in a <template> in instrument.html,
+   lifted verbatim out of the notebook rather than rewritten, so the DOM each
+   lab-*.js binds to is the same DOM it has always bound to. Nothing about
+   the physics, the readouts or the controls changes by being framed.
+
+   What is here is only the part a frame cannot work out for itself: what to
+   call it, where it came from, what result it hands on and to whom, and
+   which of its controls is the one worth meeting first.
+
+   PRIMARY CONTROL. The frame opens with one control and adds the rest
+   later, so each simulation names the control that is worth having on its
+   own. Where that is a slider it is given by its data attribute; where the
+   simulation is really a set of choices it is given as a selector. Anything
+   not named is a late control and arrives with everything else.
+   ========================================================================= */
+
+window.Frames = {
+
+  nucleation: {
+    title: "Nucleation, and why most crystals never happen",
+    lead: "How rare a crystal actually is.",
+    fig: "fig-nucleation",
+    script: "lab-nucleation.js",
+    primary: "[data-s]",
+    /* Publishes a survivor count that the crystal growth simulation uses to
+       decide how many crystals are sharing the same solute. */
+    sends: { to: "Crystal growth", what: "how many clusters survived",
+             where: "instrument.html?sim=crystal" },
+    marks: true
+  },
+
+  crystal: {
+    title: "Crystal growth under variable gravity",
+    lead: "Why taking gravity away makes a crystal grow slower rather than faster.",
+    fig: "fig-crystal",
+    script: "lab-crystal.js",
+    primary: "[data-g]",
+    takes: { from: "Nucleation", what: "a seed count",
+             where: "instrument.html?sim=nucleation" },
+    sends: { to: "Powder diffraction", what: "a radius, and a declared strain proxy",
+             where: "instrument.html?sim=diffraction" },
+    marks: true
+  },
+
+  diffraction: {
+    title: "Powder diffraction, and reading a pattern",
+    lead: "How a structure is actually identified.",
+    fig: "fig-diffraction",
+    script: "lab-diffraction.js",
+    primary: "[data-size]",
+    takes: { from: "Crystal growth", what: "a crystal",
+             where: "instrument.html?sim=crystal" },
+    marks: true
+  },
+
+  solidify: {
+    title: "Solidification, and what a phase diagram is for",
+    lead: "What a composition does to a microstructure.",
+    fig: "fig-solidify",
+    script: "lab-solidify.js",
+    primary: "[data-c]",
+    marks: true
+  },
+
+  titration: {
+    title: "Titration, drop by drop",
+    lead: "What picking the wrong indicator costs you.",
+    fig: "fig-titration",
+    script: "lab-titration.js",
+    primary: "[data-vb]",
+    marks: true
+  },
+
+  thinfilm: {
+    title: "Thin film interference, and why a bubble has colours",
+    lead: "Where a colour comes from when there is no pigment.",
+    fig: "fig-thinfilm",
+    script: "lab-thinfilm.js",
+    primary: "[data-d]",
+    marks: true
+  },
+
+  mof: {
+    title: "A metal organic framework you can turn over",
+    lead: "Why a wider pore is a worse sieve.",
+    fig: "fig-mof",
+    script: "lab-mof.js",
+    primary: "[data-l]",
+    marks: true
+  },
+
+  thermo: {
+    title: "Thermoelectrics, and the argument the field is having",
+    lead: "Why the field is hard.",
+    fig: "fig-thermo",
+    script: "lab-thermo.js",
+    primary: "[data-n]",
+    marks: true
+  }
+};
