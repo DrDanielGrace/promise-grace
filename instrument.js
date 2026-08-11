@@ -369,17 +369,45 @@
     bedFromState();
   }
 
+  /* How much is moving in this simulation, between nought and one.
+
+     Four ways of knowing, in order of how much the simulation is trusted
+     to know it. If it computes the answer it says so itself. Otherwise the
+     frame reads a row of the readout, or the position of the control, or is
+     told plainly that the answer is a constant. A simulation with nothing
+     flowing in it declares that too, and gets the room rather than a bed
+     that pretends water is involved. */
+  function motion() {
+    var b = frame.bed || {};
+    if (b.still) return 0;
+    var m = b.motion || {};
+
+    if (m.api) {
+      var api = window.Sim && Sim.api ? Sim.api(name) : null;
+      var v = api && api.motion ? api.motion() : null;
+      return isFinite(v) ? v : 0;
+    }
+    if (m.fixed !== undefined) return m.fixed;
+    if (m.line) {
+      var r = value(m.line);
+      if (r === null) return 0;
+      return Math.max(0, Math.min((r - m.lo) / (m.hi - m.lo), 1));
+    }
+    if (m.control && primary && primary.type === "range") {
+      var lo = parseFloat(primary.min), hi = parseFloat(primary.max);
+      var at = parseFloat(primary.value);
+      if (!isFinite(lo) || !isFinite(hi) || hi === lo) return 0;
+      return Math.max(0, Math.min((at - lo) / (hi - lo), 1));
+    }
+    return 0;
+  }
+
   function bedFromState() {
     if (!water || !roomtone) return;
-    var api = window.Sim && Sim.api ? Sim.api(name) : null;
-    var m = api && api.motion ? api.motion() : null;
-    if (m === null || m === undefined || !isFinite(m)) {
-      /* nothing declared: hold the still bed and leave the room alone */
-      water.set(0);
-      roomtone.set(0.5);
-      return;
-    }
-    var move = Math.sqrt(Math.max(0, Math.min(m, 1)));
+    /* The square root, because movement in a fluid follows the square root
+       of what is driving it far more often than it follows the driver, and
+       because the last tenth is where most of the audible change lives. */
+    var move = Math.sqrt(Math.max(0, Math.min(motion(), 1)));
     water.set(move);
     roomtone.set(0.35 + 0.65 * (1 - move));
   }
