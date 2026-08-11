@@ -1,0 +1,13 @@
+{
+  "captured": "before Step 1, on the live code",
+  "procedure": "set gravity, click replay to return to the seed radius, read the readout",
+  "g=1.000": {"g":"1.000","pe":"14.40","sh":"2.90","r":"12.0","rate":"1014.08","shell":"4.1",
+    "verdict":"Flow is winning. Fresh solution keeps arriving, so growth stays fast and the shell never builds."},
+  "g=0.010": {"g":"0.010","pe":"0.14","sh":"1.19","r":"12.0","rate":"416.41","shell":"10.1",
+    "verdict":"Diffusion is winning. The shell has built up, growth is slowing itself down, and the crystal comes out even."},
+  "g=0.000": {"g":"\u22480","pe":"0.000","sh":"1.00","r":"12.0","rate":"350.00","shell":"12.0",
+    "verdict":"Diffusion is winning. The shell has built up, growth is slowing itself down, and the crystal comes out even."},
+  "mathsRows": ["SHERWOOD 1.00","dR/dt 350.00 \u00b5m/s"],
+  "assumptionCount": 5,
+  "codeChars": 434
+}

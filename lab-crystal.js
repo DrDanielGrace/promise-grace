@@ -57,6 +57,23 @@
   var running = true;
   var shimmerAcc = 0;       // paces the growth sound off the computed rate
   var wasAbovePe = true;    // for the Peclet threshold, which is the answer
+  var shellMarked = false;  // the shell reaching twice the seed radius
+  var lastAnnouncedPe = true;
+
+  /* Marks are announced and never sounded here. The notebook page hears
+     exactly what it always heard; the instrument frame subscribes to these
+     and decides what they look like and what they sound like there. Nothing
+     below computes a new quantity, it only says when an existing one has
+     crossed something worth noticing. */
+  var SHELL_MARK = 2 * R0;  // 24 um, twice the seed
+
+  function mark(kind, extra) {
+    if (!window.Sim || !Sim.publish) return;
+    var d = { kind: kind, at: Date.now(), g: g, peclet: Pe(),
+              radius_um: R * 1e6, shell_um: shell() * 1e6 };
+    if (extra) Object.keys(extra).forEach(function (k) { d[k] = extra[k]; });
+    Sim.publish("crystal:mark", d);
+  }
 
   function u()  { return U_1G * g; }
   function Pe() { return u() * R / D; }
@@ -73,6 +90,7 @@
 
   function reset() {
     R = R0; t = 0; hist.length = 0; strainProxy = 0; running = true;
+    shellMarked = false;
   }
 
   /* ---- DOM ------------------------------------------------------------- */
@@ -112,8 +130,37 @@
   }
 
   /* ---- drawing --------------------------------------------------------- */
-  var PAPER = "#FAF6EF", INK = "#332E5C", SAGE = "#33543B",
-      CORR = "#8C2F45", RULE = "#C5C7DC", SOFT = "#615A6E";
+  /* One simulation, two frames. On the notebook page these are the notebook's
+     own six colours and nothing has moved. Inside the instrument frame the
+     host sets six custom properties instead and the same drawing code puts
+     luminous data on a dark surface. The defaults below are the notebook
+     values exactly, so a page that sets nothing renders as it always did. */
+  var PALETTE = {
+    paper: [250, 246, 239], ink:  [51, 46, 92], sage: [51, 84, 59],
+    corr:  [140, 47, 69],   rule: [197, 199, 220], soft: [97, 90, 110]
+  };
+
+  function readPalette() {
+    if (!window.getComputedStyle) return;
+    var cs = getComputedStyle(host);
+    Object.keys(PALETTE).forEach(function (k) {
+      var v = cs.getPropertyValue("--lab-" + k);
+      if (!v) return;
+      var m = v.trim().match(/^(\d+)\s*[, ]\s*(\d+)\s*[, ]\s*(\d+)$/);
+      if (m) PALETTE[k] = [+m[1], +m[2], +m[3]];
+    });
+  }
+
+  function rgb(k)          { return "rgb(" + PALETTE[k].join(",") + ")"; }
+  function rgba(k, a)      { return "rgba(" + PALETTE[k].join(",") + "," + a + ")"; }
+
+  var PAPER, INK, SAGE, CORR, RULE, SOFT;
+  function bindPalette() {
+    readPalette();
+    PAPER = rgb("paper"); INK = rgb("ink"); SAGE = rgb("sage");
+    CORR = rgb("corr");   RULE = rgb("rule"); SOFT = rgb("soft");
+  }
+  bindPalette();
 
   function px(v, w) { return (v / R_MAX) * (w * 0.42); }
 
@@ -134,7 +181,7 @@
       if (i === 0) ctx.moveTo(xx, yy); else ctx.lineTo(xx, yy);
     }
     ctx.closePath();
-    ctx.fillStyle = Pe() > 1 ? "rgba(140,47,69,0.16)" : "rgba(51,84,59,0.16)";
+    ctx.fillStyle = Pe() > 1 ? rgba("corr", 0.16) : rgba("sage", 0.16);
     ctx.fill();
     ctx.lineWidth = 1.5;
     ctx.strokeStyle = Pe() > 1 ? CORR : SAGE;
@@ -162,7 +209,7 @@
       var conc = 1 - Math.exp(-frac * 2.4);
       ctx.beginPath();
       ctx.arc(cx, cy, rr, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(51,46,92," + (0.05 + conc * 0.13).toFixed(3) + ")";
+      ctx.fillStyle = rgba("ink", (0.05 + conc * 0.13).toFixed(3));
       ctx.fill();
     }
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -183,7 +230,7 @@
     ctx.clearRect(0, 0, w, h);
     var cx = w / 2, cy = h / 2, r = px(R, w);
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(51,46,92,0.08)"; ctx.fill();
+    ctx.fillStyle = rgba("ink", 0.08); ctx.fill();
     ctx.strokeStyle = INK; ctx.lineWidth = 1; ctx.stroke();
 
     if (!tier.extras && g < 0.2) { label(ctx, w, h, "almost no flow"); return; }
@@ -192,7 +239,7 @@
     var count = Math.max(4, Math.round(22 * strength * (tier.agents || 1)));
     if (count < 1 || strength < 0.004) { label(ctx, w, h, "no convection to speak of"); return; }
 
-    ctx.strokeStyle = "rgba(140,47,69," + (0.25 + strength * 0.5).toFixed(2) + ")";
+    ctx.strokeStyle = rgba("corr", (0.25 + strength * 0.5).toFixed(2));
     ctx.lineWidth = 1.1;
     for (var i = 0; i < count; i++) {
       var a = (i / count) * Math.PI * 2 + flowPhase * 0.6;
@@ -286,7 +333,20 @@
           var above = Pe() > 1;
           if (above !== wasAbovePe) { Snd.cross(above); wasAbovePe = above; }
         }
-        if (R >= R_MAX) { running = false; handoff(); }
+
+        /* The two marks that happen while it runs. The Peclet one is announced
+           whether or not sound is on, because the instrument frame draws it. */
+        var nowAbove = Pe() > 1;
+        if (nowAbove !== lastAnnouncedPe) {
+          lastAnnouncedPe = nowAbove;
+          mark("peclet", { up: nowAbove });
+        }
+        if (!shellMarked && shell() >= SHELL_MARK) {
+          shellMarked = true;
+          mark("shell", { threshold_um: SHELL_MARK * 1e6 });
+        }
+
+        if (R >= R_MAX) { running = false; mark("complete"); handoff(); }
       }
       flowPhase += dt * (0.4 + g * 2.2);
       drawAll();
@@ -304,7 +364,15 @@
       drawAll(); readout();
     },
 
-    serialize: function () { return g === 1 ? "" : fmt(g, 3); }
+    serialize: function () { return g === 1 ? "" : fmt(g, 3); },
+
+    /* The instrument frame puts a visible control on the handoff, because a
+       result that only travels when a run happens to finish is a result
+       nobody knows they can send. The automatic publish is unchanged. */
+    resend: function () { handoff(); },
+
+    /* Called by a frame that has set its own six colours. */
+    repalette: function () { bindPalette(); drawAll(); }
   };
 
   function handoff() {
@@ -316,6 +384,7 @@
       strain: strainProxy,
       strainIsProxy: true
     });
+    mark("handoff", { strainIsProxy: true });
   }
 
   /* ---- controls -------------------------------------------------------- */
@@ -327,6 +396,7 @@
       /* Pitch is gravity, so the sweep from 1 g down to nothing falls. */
       if (window.Snd) Snd.slide();
       wasAbovePe = Pe() > 1;
+      lastAnnouncedPe = wasAbovePe;
     });
     Sim.stepper(slider, { label: "gravity" });
   }

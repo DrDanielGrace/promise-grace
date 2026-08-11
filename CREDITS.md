@@ -26,14 +26,74 @@ between a recording with a body in it and one that is thin or tinny.
 Anything that scored as glare with no body was rejected, which removed most
 of the glass candidates, including several with more promising names.
 
-Total weight 107 KB, and none of it is fetched until sound is switched on.
+### Nine more, for the instrument frame
+
+The full screen instrument needs sounds the notebook never did, and the rule
+is that no two different kinds of interaction may share a recording. A
+button, a panel opening, a control appearing, arriving somewhere and leaving
+it are five different physical events, so they are five different
+recordings. Same again for the simulation: a shell forming, a run finishing
+and a result being sent are three more.
+
+All Creative Commons Zero, all from Freesound, all credited here anyway.
+
+| File | Freesound | Uploader | What it is | Where it is used |
+|---|---|---|---|---|
+| `assets/sound/switch.mp3` | 348221, "Switch Light 02.wav" | tbrook | A light switch giving | A button |
+| `assets/sound/latch.mp3` | 683414, "Hard_Latch_Open_Close_1" | SholeColtis | A latch coming free | A panel opening, and the same latch darkened and slowed for one closing |
+| `assets/sound/cloth.mp3` | 624478, "Cloth - heavy - shake - run - trouser.wav" | ValentinPetiteau | Heavy cloth moving | A control appearing |
+| `assets/sound/swell.mp3` | 24802, "timp_superball_mallet_5.flac" | spt3125 | A timpani rolled with a soft mallet | Arriving at the instrument |
+| `assets/sound/shut.mp3` | 382666, "Close Cabinet Drawer_low pitch.wav" | bbrocer | A cabinet drawer closing | Leaving it |
+| `assets/sound/settle.mp3` | 828577, "pour Coffee seed into plastic jar in a forest" | sszy | Seed poured into a jar | The depleted shell forming |
+| `assets/sound/done.mp3` | 513665, "Crossbar Kiss Off.wav" | 115VAC | A telephone crossbar relay releasing | A run completing |
+| `assets/sound/dispatch.mp3` | 398403, "Letter from a house letterbox" | Caitlin_100 | A letter going through a letterbox | The handoff firing |
+| `assets/sound/water.mp3` | 342634, "Water in Movement" | paisagemsonoraunila | Water moving | The bed under a crystal growing with convection |
+| `assets/sound/room.mp3` | 453551, "room tone medium soft with heater.flac" | kyles | Room tone with a heater in it | The bed that is left when the convection stops |
+
+Chosen the same way as the first five and on a wider field: **514
+candidates** downloaded and decoded, each measured on duration, peak, RMS,
+DC offset, decay from peak to twenty decibels down, time to the peak,
+steadiness across quarter second windows, loop seam, and the same body
+against glare ratio. The whole table is in `.physics/audition.csv` so the
+choices can be checked rather than taken on trust.
+
+What the measurements threw out, in order of how much they removed:
+
+- **Thin.** Anything whose energy above 5 kHz beat its energy below 700 Hz
+  went, which is most of what a search for "switch" returns. Fifty of the
+  sixty switch candidates failed on this alone.
+- **Clipped.** Peak at or over the ceiling.
+- **Synthetic.** The best scoring swell on the numbers was called "Mechanical
+  Synth Swell" and was rejected for exactly that reason. The timpani rolled
+  with a superball mallet that replaced it is a real instrument in a real
+  room and measures deeper anyway.
+- **Wrong event.** A "Wood, Scratchy Hits, Metallic, Piano" scored well as a
+  closing sound and is not one.
+- **Not actually continuous.** For the two beds, anything whose loudness
+  varied by more than about half across quarter second windows is an event
+  pretending to be a bed. The two that won vary by three and four percent,
+  and their heads and tails match to within a third of a decibel, which is
+  why they loop without a seam.
+
+Every file is cut on mp3 frame boundaries rather than re-encoded, so what
+ships is byte for byte what Freesound served, inside the window that was
+kept. Each window was set from the measured onset so that the transient
+lands a few tens of milliseconds after the trigger: measured latency from
+calling a sound to hearing it is 4 to 17 ms.
+
+Total weight 830 KB, of which 530 KB is the two ambient beds, and those two
+are not fetched at all unless a page actually asks for a bed. Nothing is
+fetched until sound is switched on.
 
 ### What is synthesised
 
 Only what cannot be a recording, and none of it is a note. Everything below
 is a short burst of noise, filtered and shaped:
 
-- the slider, which is a fingertip moving across paper
+- the slider, which is a fingertip moving across paper, and which the four
+  faders on the audio panel use too, because a fader is a slider and giving
+  it a recording of its own would have been one more sample doing a job
+  that was already taken
 - the threshold knock, where going up is open and woody and coming back down
   is closed and dull, carried by darkness rather than by pitch
 - the nucleation counter, a dry tick that gets darker and quieter as the
@@ -44,10 +104,14 @@ The one exception is the diffraction ring, which is pitched, because
 sharpness genuinely is how long a thing rings and the sweep across a pattern
 is the best thing the site does with sound.
 
-Everything, recordings included, is mixed through a short synthetic impulse
-about a quarter of a second long. It is the size of a room with a bench in
-it. It is what stops five separate recordings sounding like five separate
-recordings.
+Everything, recordings included, is mixed through a synthetic impulse. There
+are three of them now rather than one, because there are three depth planes:
+a tenth of a second for the interface, which sits close and almost dry; a
+quarter of a second, the room with a bench in it, for events inside a
+simulation; and a second and a third for the ambient beds, which sit at the
+back with the top rolled off, because distance takes the top off things.
+Each bus owns its own convolver rather than sharing one, so a fader only
+ever moves the thing it names.
 
 ### What was thrown away, twice
 

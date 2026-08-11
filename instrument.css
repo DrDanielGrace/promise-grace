@@ -1,0 +1,631 @@
+/* =========================================================================
+   instrument.css · the frame the simulation sits in
+
+   WHAT THIS IS TRYING TO LOOK LIKE
+
+   A piece of laboratory software on a bench, next to something that cost
+   forty thousand pounds. Not a film prop. So: no glow, no grid backgrounds
+   pretending to be technical, no scanning lines, no chrome, no glass, no
+   typography that has been to space.
+
+   What is left is what actually makes that kind of software read as
+   serious. Numbers set in a mono face with tabular figures so a digit
+   changing does not move the one next to it. Units in a lighter weight than
+   the value they belong to. Hairlines rather than borders. Bracket corners
+   at the edge of a viewport, which is a real convention and costs four
+   pseudo elements. One accent, amber, doing every job that needs an accent.
+   A second colour only where the physics genuinely has two states.
+
+   THE PALETTE
+
+   Surfaces are three near blacks a few percent apart, which is what gives a
+   dark interface depth without a single gradient. The data is luminous
+   against them because the data is the only luminous thing.
+
+   The six --lab-* values at the bottom of :root are handed to the crystal
+   simulation, which draws with them instead of the notebook's paper and
+   ink. Same drawing code, two frames. The notebook sets none of these and
+   is untouched.
+   ========================================================================= */
+
+:root {
+  --bg:        #0d0e11;   /* the bench */
+  --surface:   #131419;   /* a panel on it */
+  --raised:    #191a20;   /* a control on the panel */
+  --hair:      #24262d;   /* hairline */
+  --hair-lit:  #34373f;
+
+  --text:      #e6e3dc;
+  --text-dim:  #9d9a93;
+  --text-far:  #6f6d69;
+
+  --accent:    #c78f4a;   /* the one accent */
+  --accent-dim:#7a5a30;
+  --cool:      #7ab296;   /* the other state, and only that */
+
+  --focus:     #d8a765;
+
+  /* Handed to lab-crystal.js. The concentration field is drawn as
+     twenty six rings stacked at low alpha, which on paper darkens towards
+     the ink and on a dark surface lightens towards it. Stacked the other
+     way round it saturates, so the ink here is a good deal dimmer than it
+     looks like it should be. */
+  --lab-paper: 13, 14, 17;
+  --lab-ink:   74, 86, 105;
+  --lab-sage:  122, 178, 150;
+  --lab-corr:  199, 143, 74;
+  --lab-rule:  48, 51, 58;
+  --lab-soft:  124, 127, 135;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body.inst {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 15px/1.55 "Source Serif 4", Georgia, serif;
+  padding-bottom: 5.5rem;   /* clear of the sound toggle and the levels panel */
+}
+
+.mono, .inst .mono {
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.skip {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--surface); color: var(--text);
+  padding: 0.7rem 1rem; z-index: 100;
+}
+.skip:focus { left: 0; }
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+
+/* ----------------------------------------------------------------------
+   THE HEAD
+
+   The run identifier is a real timestamp, written once when the page comes
+   up, because a run identifier that is decorative is worse than none.
+   ---------------------------------------------------------------------- */
+.inst-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  padding: 1.05rem 1.1rem 0.9rem;
+  border-bottom: 1px solid var(--hair);
+  background: linear-gradient(var(--surface), var(--surface)) padding-box;
+}
+
+.inst-ident h1 {
+  margin: 0;
+  font: 400 15px/1.3 "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.inst-run {
+  margin: 0.32rem 0 0;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--text-far);
+}
+
+.inst-head-acts { display: flex; gap: 0.5rem; }
+
+.inst-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.55rem 0.95rem;
+  background: var(--raised);
+  color: var(--text-dim);
+  border: 1px solid var(--hair-lit);
+  border-radius: 2px;
+  font: 400 11px/1 "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 140ms ease, border-color 140ms ease;
+}
+.inst-btn:hover { color: var(--text); border-color: var(--accent-dim); }
+.inst-btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent-dim); }
+.inst-btn-quiet { background: transparent; }
+.inst-btn-go { color: var(--text); border-color: var(--accent-dim); }
+
+
+/* ----------------------------------------------------------------------
+   THE STAGE, AND THE FOUR STEPS OF DISCLOSURE
+
+   0  the question, and nothing else
+   1  the crystal, and gravity. one control
+   2  the readout, once gravity has actually moved
+   3  the other three views, the chrome, the marks and the handoff
+
+   Everything jumps straight to 3. It is on the first screen and it is
+   never the default.
+   ---------------------------------------------------------------------- */
+.inst-stage {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 1.1rem;
+}
+
+.inst-body { display: none; }
+body.inst[data-stage="0"] .inst-open { display: block; }
+body.inst:not([data-stage="0"]) .inst-open { display: none; }
+body.inst:not([data-stage="0"]) .inst-body { display: block; }
+
+body.inst[data-stage="1"] [data-panel="extra"],
+body.inst[data-stage="1"] [data-part="readout"],
+body.inst[data-stage="1"] [data-part="marks"],
+body.inst[data-stage="1"] [data-part="handoff"],
+body.inst[data-stage="1"] [data-part="chrome"],
+body.inst[data-stage="1"] [data-part="prose"],
+body.inst[data-stage="1"] [data-part="late-control"],
+body.inst[data-stage="2"] [data-panel="extra"],
+body.inst[data-stage="2"] [data-part="marks"],
+body.inst[data-stage="2"] [data-part="handoff"],
+body.inst[data-stage="2"] [data-part="chrome"],
+body.inst[data-stage="2"] [data-part="prose"],
+body.inst[data-stage="2"] [data-part="late-control"] { display: none; }
+
+
+/* ----------------------------------------------------------------------
+   THE QUESTION
+   ---------------------------------------------------------------------- */
+.inst-open {
+  max-width: 44rem;
+  margin: 2.4rem auto 0;
+}
+
+.predict {
+  border: 1px solid var(--hair);
+  border-left: 2px solid var(--accent-dim);
+  background: var(--surface);
+  padding: 1.1rem 1.15rem;
+}
+
+.predict-q { margin: 0 0 0.9rem; font-size: 1.02rem; }
+
+.predict-opts { display: grid; gap: 0.45rem; }
+
+.predict-opts button {
+  min-height: 44px;
+  padding: 0.6rem 0.85rem;
+  text-align: left;
+  background: var(--raised);
+  color: var(--text-dim);
+  border: 1px solid var(--hair-lit);
+  border-radius: 2px;
+  font: 400 14px/1.4 "Source Serif 4", Georgia, serif;
+  cursor: pointer;
+}
+.predict-opts button:hover { color: var(--text); }
+.predict-opts button.is-chosen { color: var(--text); border-color: var(--accent-dim); }
+
+.predict-result {
+  margin: 0.9rem 0 0;
+  padding-left: 0.8rem;
+  border-left: 2px solid var(--hair-lit);
+  color: var(--text-dim);
+}
+.predict-result.is-right { border-left-color: var(--cool); }
+.predict-result.is-wrong { border-left-color: var(--accent); }
+
+.inst-open-note { margin: 1.1rem 0 0; color: var(--text-dim); font-size: 0.95rem; }
+.inst-open-note b { color: var(--text); font-weight: 400; }
+.inst-open-do { margin: 1rem 0 0; }
+
+
+/* ----------------------------------------------------------------------
+   THE LAB
+
+   Views on the left, the side column on the right, and on a phone the side
+   column goes underneath and the views stack. Designed at 320 first rather
+   than shrunk onto it.
+   ---------------------------------------------------------------------- */
+.lab {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .lab { grid-template-columns: minmax(0, 1.45fr) minmax(19rem, 0.85fr); align-items: start; }
+}
+
+.lab-views { display: grid; gap: 0.7rem; grid-template-columns: 1fr; }
+
+@media (min-width: 560px) {
+  .lab-views { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+body.inst[data-stage="1"] .lab-views,
+body.inst[data-stage="2"] .lab-views { grid-template-columns: 1fr; }
+
+@media (min-width: 560px) {
+  body.inst[data-stage="1"] .lab-views,
+  body.inst[data-stage="2"] .lab-views { grid-template-columns: minmax(0, 26rem); }
+}
+
+.lab-view {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--hair);
+  padding: 1.55rem 0.7rem 0.7rem;
+}
+
+/* Bracket corners. Two pseudo elements on the panel and two on a span
+   inside it, which is four corners for one extra element. */
+.lab-view::before, .lab-view::after,
+.lab-view .brackets::before, .lab-view .brackets::after {
+  content: "";
+  position: absolute;
+  width: 11px; height: 11px;
+  border: 0 solid var(--hair-lit);
+  pointer-events: none;
+}
+.lab-view::before { top: 6px; left: 6px; border-top-width: 1px; border-left-width: 1px; }
+.lab-view::after { bottom: 6px; right: 6px; border-bottom-width: 1px; border-right-width: 1px; }
+.lab-view .brackets::before { top: 6px; right: 6px; border-top-width: 1px; border-right-width: 1px; }
+.lab-view .brackets::after { bottom: 6px; left: 6px; border-bottom-width: 1px; border-left-width: 1px; }
+
+.view-tag {
+  position: absolute;
+  top: 0.5rem; left: 0.85rem;
+  margin: 0;
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  color: var(--text-far);
+}
+
+.lab-view canvas {
+  display: block;
+  width: 100%;
+  height: 240px;
+  background: transparent;
+}
+
+@media (max-width: 400px) { .lab-view canvas { height: 200px; } }
+
+
+/* ----------------------------------------------------------------------
+   THE SIDE COLUMN
+   ---------------------------------------------------------------------- */
+.inst-side { display: grid; gap: 0.85rem; align-content: start; }
+
+.lab-controls,
+.lab-readout,
+.inst-marks,
+.inst-handoff {
+  background: var(--surface);
+  border: 1px solid var(--hair);
+  padding: 0.9rem 0.95rem;
+}
+
+.lab-controls label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.11em;
+  color: var(--text-dim);
+}
+.lab-controls label b {
+  color: var(--accent);
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: 0;
+  margin: 0 0.15rem 0 0.35rem;
+}
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.55rem 0 0.3rem;
+}
+
+.slider-row input[type="range"] {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  background: transparent;
+  accent-color: var(--accent);
+}
+
+.stepper { display: inline-flex; gap: 0.3rem; flex: 0 0 auto; }
+.stepper button {
+  min-width: 44px; min-height: 44px;
+  background: var(--raised);
+  color: var(--text-dim);
+  border: 1px solid var(--hair-lit);
+  border-radius: 2px;
+  font: 400 15px/1 "IBM Plex Mono", ui-monospace, monospace;
+  cursor: pointer;
+}
+.stepper button:hover { color: var(--text); }
+
+.quiet { font-size: 10px; letter-spacing: 0.05em; color: var(--text-far); margin: 0; }
+
+.inst-late { margin: 0.75rem 0 0; }
+
+.lab-controls button[data-act] {
+  min-height: 44px;
+  padding: 0.55rem 0.9rem;
+  background: var(--raised);
+  color: var(--text-dim);
+  border: 1px solid var(--hair-lit);
+  border-radius: 2px;
+  font: 400 11px/1 "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.lab-controls button[data-act]:hover { color: var(--text); border-color: var(--accent-dim); }
+
+
+/* ----------------------------------------------------------------------
+   THE READOUT
+
+   Right aligned on the value, units in a lighter weight than the number,
+   tabular figures throughout so nothing shuffles as it counts.
+   ---------------------------------------------------------------------- */
+.readout-line {
+  display: grid;
+  grid-template-columns: 1fr auto 2.6rem;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0 0 0.42rem;
+  padding-bottom: 0.42rem;
+  border-bottom: 1px solid var(--hair);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--text-far);
+}
+.readout-line:last-of-type { margin-bottom: 0; }
+.readout-line b {
+  justify-self: end;
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: 0;
+  color: var(--text);
+}
+
+/* The moment a mark sounds, the line it belongs to says so. Heard and seen
+   in the same frame, which is the rule. */
+.readout-line.is-marked b { color: var(--accent); }
+.readout-line.is-marked { border-bottom-color: var(--accent-dim); }
+
+.verdict {
+  margin: 0.85rem 0 0;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--accent);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+.verdict.is-diffusive { border-left-color: var(--cool); }
+
+
+/* ----------------------------------------------------------------------
+   MARKS
+   ---------------------------------------------------------------------- */
+.inst-marks h2, .inst-handoff h2 {
+  margin: 0 0 0.7rem;
+  font: 400 10px/1 "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.14em;
+  color: var(--text-far);
+}
+
+.inst-marks ol { margin: 0; padding: 0; list-style: none; }
+
+.inst-marks li {
+  display: grid;
+  grid-template-columns: 5.6rem 1fr;
+  gap: 0.55rem;
+  padding: 0.34rem 0;
+  border-bottom: 1px solid var(--hair);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.inst-marks li:last-child { border-bottom: 0; }
+.inst-marks li time { color: var(--text-far); }
+.inst-marks li b { color: var(--accent); font-weight: 500; }
+.inst-marks li.is-cool b { color: var(--cool); }
+.inst-marks li span { display: block; color: var(--text-far); margin-top: 0.14rem; }
+
+.inst-marks-empty { margin: 0; font-size: 11px; line-height: 1.5; color: var(--text-far); }
+.inst-marks[data-any="1"] .inst-marks-empty { display: none; }
+
+/* A mark arriving does not slide, flash or pulse. It appears. */
+.inst-marks li.is-new { animation: mark-in 260ms ease-out; }
+@keyframes mark-in { from { opacity: 0; } to { opacity: 1; } }
+
+
+/* ----------------------------------------------------------------------
+   HANDOFF
+   ---------------------------------------------------------------------- */
+.inst-handoff-what {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+.inst-handoff p { margin: 0; }
+.inst-handoff p + p { margin-top: 0.7rem; }
+.inst-handoff-state { font-size: 11px; letter-spacing: 0.06em; color: var(--text-far); }
+.inst-handoff-state[data-sent="1"] { color: var(--accent); }
+/* the handoff has no readout row, so this is the line that lights */
+.inst-handoff-state.is-marked { color: var(--accent); border-left: 2px solid var(--accent); padding-left: 0.55rem; }
+
+
+/* ----------------------------------------------------------------------
+   CHROME: the depth control and the code panel, both built by sim.js
+   ---------------------------------------------------------------------- */
+.lab-chrome {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 0.85rem;
+}
+
+.depth {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.depth-btn {
+  min-height: 44px;
+  padding: 0.5rem 0.9rem;
+  background: var(--surface);
+  color: var(--text-far);
+  border: 1px solid var(--hair);
+  border-radius: 2px;
+  font: 400 11px/1 "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.depth-btn:hover { color: var(--text-dim); }
+.depth-btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent-dim); }
+
+.showcode {
+  background: var(--surface);
+  border: 1px solid var(--hair);
+  padding: 0.75rem 0.95rem;
+}
+.showcode > summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font: 400 11px/1 "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.assumptions-title { margin: 0.4rem 0 0.5rem; font-size: 10px; letter-spacing: 0.14em; color: var(--text-far); }
+.assumptions { margin: 0 0 0.9rem; padding-left: 1.1rem; color: var(--text-dim); font-size: 0.9rem; }
+.assumptions li { margin: 0 0 0.35rem; }
+.code {
+  margin: 0;
+  padding: 0.85rem;
+  overflow-x: auto;
+  background: var(--bg);
+  border: 1px solid var(--hair);
+  font: 400 12px/1.6 "IBM Plex Mono", ui-monospace, monospace;
+  color: var(--text-dim);
+}
+
+.inst-prose {
+  background: var(--surface);
+  border: 1px solid var(--hair);
+  padding: 0.75rem 0.95rem;
+  margin-top: 0.85rem;
+}
+.inst-prose > summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font: 400 11px/1 "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.inst-prose p { color: var(--text-dim); max-width: 62ch; }
+.inst-fig { font-size: 10px; letter-spacing: 0.09em; color: var(--text-far); }
+
+.sim-note {
+  margin: 0.7rem 0 0;
+  font-size: 0.9rem;
+  color: var(--text-far);
+}
+
+.inst-noscript {
+  max-width: 60ch;
+  margin: 2rem auto;
+  padding: 0 1.1rem;
+  color: var(--text-dim);
+}
+
+html[data-depth="picture"] .depth-not-picture { display: none; }
+html:not([data-depth="maths"]) .depth-only-maths { display: none; }
+
+
+/* ----------------------------------------------------------------------
+   THE SOUND TOGGLE, built by sound.js on every page
+
+   It carries no styling of its own, so the instrument gives it some rather
+   than pulling in the notebook's stylesheet for one button.
+   ---------------------------------------------------------------------- */
+.sound-toggle {
+  position: fixed;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0.5rem 0.8rem;
+  background: var(--surface);
+  color: var(--text-far);
+  border: 1px solid var(--hair-lit);
+  border-radius: 2px;
+  font: 400 11px/1 "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+.sound-toggle[aria-pressed="true"] { color: var(--accent); border-color: var(--accent-dim); }
+.sound-mark {
+  width: 7px; height: 7px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+.sound-toggle[aria-pressed="true"] .sound-mark { background: currentColor; }
+
+.sound-invite { display: none; }
+
+
+/* ----------------------------------------------------------------------
+   COMING UP
+
+   An instrument coming up rather than a modal opening: the surface first,
+   then the hairlines, then the numbers settling. Under 700 ms, four small
+   steps, nothing sliding in from off screen and nothing bouncing.
+   ---------------------------------------------------------------------- */
+body.inst[data-boot="1"] .inst-head,
+body.inst[data-boot="1"] .inst-stage { opacity: 0; }
+
+body.inst[data-boot="2"] .inst-head { animation: rise 320ms ease-out both; }
+body.inst[data-boot="2"] .inst-stage { animation: rise 380ms 90ms ease-out both; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* A panel arriving as disclosure advances. Same gesture, smaller. */
+.is-arriving { animation: rise 260ms ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  body.inst[data-boot="1"] .inst-head,
+  body.inst[data-boot="1"] .inst-stage { opacity: 1; }
+  body.inst[data-boot="2"] .inst-head,
+  body.inst[data-boot="2"] .inst-stage,
+  .is-arriving,
+  .inst-marks li.is-new { animation: none; }
+  * { transition: none !important; }
+}

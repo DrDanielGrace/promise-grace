@@ -481,8 +481,18 @@ window.Sim = (function () {
 
   document.documentElement.setAttribute("data-depth", depth);
 
+  /* A frame that wraps a simulation sometimes needs to ask it for something
+     the reader asked for: send your result again, take these colours. The
+     alternative was reaching into the module through a global, which is how
+     two files end up quietly depending on each other's load order. */
+  function api(name) {
+    for (var i = 0; i < sims.length; i++) if (sims[i].name === name) return sims[i].api;
+    return null;
+  }
+
   return {
     register: register,
+    api: api,
     state: state,
     fitCanvas: fitCanvas,
     onDepth: onDepth,

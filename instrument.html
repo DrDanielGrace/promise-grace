@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crystal growth under variable gravity · Promise Oluwatosin Grace</title>
+<meta name="description" content="One crystal, fed by diffusion, with the gravity turned down. Péclet, Sherwood, the depleted shell, and the result handed on to diffraction.">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Crystal growth under variable gravity">
+<meta property="og:description" content="One crystal, fed by diffusion, with the gravity turned down. Péclet, Sherwood, the depleted shell, and the result handed on to diffraction.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="instrument.css">
+</head>
+<body class="inst" data-stage="0">
+
+<a class="skip" href="#stage">Skip to the instrument</a>
+
+<header class="inst-head">
+  <div class="inst-ident">
+    <h1>Crystal growth under variable gravity</h1>
+    <p class="mono inst-run"><span data-run-id>RUN</span></p>
+  </div>
+  <div class="inst-head-acts">
+    <button type="button" class="inst-btn" data-everything aria-pressed="false">Everything</button>
+    <a class="inst-btn inst-btn-quiet" href="index.html#fig-crystal" data-leave>Leave</a>
+  </div>
+</header>
+
+<main id="stage" class="inst-stage">
+
+  <!-- ── the question, which comes before any control ─────────────────── -->
+  <section class="inst-open" data-part="open">
+    <div class="predict" data-predict="crystal">
+      <p class="predict-q">Same solution, same everything, but you take gravity away. Does the crystal grow faster, slower, or at the same rate?</p>
+      <div class="predict-opts">
+        <button type="button" data-a="a">Faster, nothing is holding it back</button>
+        <button type="button" data-a="b">Slower</button>
+        <button type="button" data-a="c">No difference, gravity is not part of the chemistry</button>
+      </div>
+      <p class="predict-result" role="status" aria-live="polite" hidden></p>
+    </div>
+    <p class="inst-open-note">Commit to an answer and the instrument comes up. Nothing is locked
+    behind it, and <b>Everything</b> above opens the full panel now if you already know this
+    material.</p>
+    <p class="inst-open-do"><button type="button" class="inst-btn inst-btn-go" data-begin>Bring it up</button></p>
+  </section>
+
+  <!-- ── the instrument ───────────────────────────────────────────────── -->
+  <div class="inst-body">
+
+    <div class="lab" data-lab="crystal">
+
+      <div class="lab-views">
+        <div class="lab-view" data-panel="primary">
+          <p class="mono view-tag">THE CRYSTAL</p>
+          <span class="brackets" aria-hidden="true"></span>
+          <canvas data-view="crystal" width="300" height="240"
+            aria-label="The growing crystal. At high gravity its faces come out uneven. As gravity falls it grows smooth and even."></canvas>
+        </div>
+        <div class="lab-view" data-panel="extra">
+          <p class="mono view-tag">CONCENTRATION</p>
+          <span class="brackets" aria-hidden="true"></span>
+          <canvas data-view="conc" width="300" height="240"
+            aria-label="Solute concentration around the crystal. A depleted shell builds up as gravity falls, shown as a dashed ring that grows thicker."></canvas>
+        </div>
+        <div class="lab-view depth-not-picture" data-panel="extra">
+          <p class="mono view-tag">FLOW</p>
+          <span class="brackets" aria-hidden="true"></span>
+          <canvas data-view="flow" width="300" height="240"
+            aria-label="Convection around the crystal. Strong at full gravity, and it disappears as gravity is reduced."></canvas>
+        </div>
+        <div class="lab-view depth-not-picture" data-panel="extra">
+          <p class="mono view-tag">GROWTH RATE</p>
+          <span class="brackets" aria-hidden="true"></span>
+          <canvas data-view="rate" width="300" height="240"
+            aria-label="Growth rate against time. Under gravity it stays high. Without it the rate falls away as the crystal feeds itself more slowly."></canvas>
+        </div>
+      </div>
+
+      <div class="inst-side">
+
+        <div class="lab-controls" data-part="control">
+          <label class="mono" for="g-slider">GRAVITY <b data-out="g">1</b> g</label>
+          <span class="slider-row">
+            <input id="g-slider" type="range" min="0" max="1" step="0.001" value="1" data-g
+              aria-describedby="g-help">
+          </span>
+          <p class="mono quiet" id="g-help">Drag, or use the arrow keys, or the plus and minus for an exact value.</p>
+          <p class="inst-late" data-part="late-control">
+            <button type="button" data-act="replay">Grow it again</button>
+          </p>
+        </div>
+
+        <div class="readout lab-readout" data-part="readout">
+          <p class="mono readout-line depth-not-picture" data-line="pe"><span>PÉCLET</span> <b data-out="pe">0</b></p>
+          <p class="mono readout-line depth-only-maths" data-line="sh"><span>SHERWOOD</span> <b data-out="sh">1</b></p>
+          <p class="mono readout-line" data-line="r"><span>RADIUS</span> <b data-out="r">12</b> µm</p>
+          <p class="mono readout-line depth-only-maths" data-line="rate"><span>dR/dt</span> <b data-out="rate">0</b> µm/s</p>
+          <p class="mono readout-line" data-line="shell"><span>SHELL</span> <b data-out="shell">0</b> µm</p>
+          <p class="verdict" data-out="verdict" role="status" aria-live="polite"></p>
+        </div>
+
+        <section class="inst-marks" data-part="marks" aria-label="Marks">
+          <h2 class="mono">MARKS</h2>
+          <ol class="mono" data-marks></ol>
+          <p class="mono inst-marks-empty" data-marks-empty>Nothing yet. The shell reaching twice the
+          seed radius, Péclet passing one, the run finishing and the result leaving all write a line
+          here at the moment you hear them.</p>
+        </section>
+
+        <section class="inst-handoff" data-part="handoff" aria-label="Handoff">
+          <h2 class="mono">HANDOFF</h2>
+          <p class="inst-handoff-what">This run's radius and its declared strain proxy go to the
+          diffraction simulation. It is sent on its own when a run finishes. This sends it again.</p>
+          <p><button type="button" class="inst-btn" data-resend>Send the result to diffraction</button></p>
+          <p class="mono inst-handoff-state" role="status" aria-live="polite" data-handoff-state>Not sent yet.</p>
+        </section>
+
+      </div>
+    </div>
+
+    <div data-chrome class="lab-chrome" data-part="chrome"></div>
+
+    <details class="inst-prose" data-part="prose">
+      <summary>What this is</summary>
+      <p>Move gravity from 1 g down towards zero and the reason for the difference appears. Under
+      gravity, convection keeps sweeping fresh solution past the crystal, so it grows fast and
+      unevenly. Take gravity away and nothing stirs, so a depleted shell builds up around the
+      crystal, growth slows, and because it is now limited by how fast solute can diffuse in, it
+      becomes steady and even. The Péclet number is the ratio of the two kinds of transport, and the
+      change happens as it passes one.</p>
+      <p class="mono inst-fig">FIG. 1b · Growth of one crystal against gravity. Size is computed, the defect figure is illustrative.</p>
+    </details>
+
+  </div>
+</main>
+
+<noscript>
+  <p class="inst-noscript">This one needs JavaScript to run. Without it: move gravity from 1 g down
+  towards zero and the reason for the difference appears. Under gravity, convection keeps sweeping
+  fresh solution past the crystal, so it grows fast and unevenly. Take gravity away and nothing
+  stirs, so a depleted shell builds up around the crystal, growth slows, and because it is now
+  limited by how fast solute can diffuse in, it becomes steady and even. The Péclet number is the
+  ratio of the two kinds of transport, and the change happens as it passes one.</p>
+</noscript>
+
+<script src="sim.js" defer></script>
+<script src="audio.js" defer></script>
+<script src="sound.js" defer></script>
+<script src="predict.js" defer></script>
+<script src="lab-crystal.js" defer></script>
+<script src="instrument.js" defer></script>
+</body>
+</html>
