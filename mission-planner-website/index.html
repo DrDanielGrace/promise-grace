@@ -126,7 +126,7 @@
   <p class="lead">Every bit of maths on this page is a piece of chemistry wearing a different hat. I could not make logarithms stick until I stopped treating them as maths.</p>
 
   <!-- pH LOG -->
-  <article class="viz" data-topic="0-1">
+  <article class="viz" id="viz-ph" data-topic="0-1">
     <h3>Why the pH scale is logarithmic</h3>
     <p class="viz-lead">Drag the concentration. Watch what the linear scale tries to do, and what the log scale does instead.</p>
 
@@ -202,7 +202,7 @@ logPosition = (14 - pH) / 14 * 100;</code></pre>
   </article>
 
   <!-- ARRHENIUS -->
-  <article class="viz" data-topic="0-0">
+  <article class="viz" id="viz-arrhenius" data-topic="0-0">
     <h3>The moment a curve becomes a line</h3>
     <p class="viz-lead">Rate against temperature is a curve you cannot read. Plot the log of it against one over temperature and it straightens out. This is the whole reason chemists take logs of things.</p>
 
@@ -281,7 +281,7 @@ Ea    = -slope * R;                // comes back as 50.0 kJ/mol</code></pre>
   <p class="lead">This part is about light, so the panels go dark. You cannot show an emission line on white paper and you cannot show a band gap without showing which photons make it across.</p>
 
   <!-- BAND GAP -->
-  <article class="viz" data-topic="1-1">
+  <article class="viz" id="viz-bandgap" data-topic="1-1">
     <h3>Band gaps, and which light gets through</h3>
     <p class="viz-lead">Drag the wavelength. A photon can only excite an electron across the gap if it carries enough energy. Too little and the material is transparent to it.</p>
 
@@ -342,7 +342,7 @@ usable = (E >= bandGap);</code></pre>
   </article>
 
   <!-- WHERE THE SUNLIGHT GOES -->
-  <article class="viz" data-topic="4-3">
+  <article class="viz" id="viz-spectrum" data-topic="4-3">
     <h3>Where the sunlight actually goes</h3>
     <p class="viz-lead">One photon at a time is the wrong question. Sunlight arrives as all of them at once. This is the real measured spectrum, and a band gap cuts it into pieces.</p>
 
@@ -409,7 +409,7 @@ ultimate   = harvested / Pin              // what is still available
   </article>
 
   <!-- SHOCKLEY-QUEISSER -->
-  <article class="viz" data-topic="4-2">
+  <article class="viz" id="viz-limit" data-topic="4-2">
     <h3>Why a single solar cell cannot beat about 33 percent</h3>
     <p class="viz-lead">This is the most important graph in photovoltaics and it took me three attempts to understand it. Two losses pull in opposite directions, and the peak is where they cross.</p>
 
@@ -502,7 +502,7 @@ V(J) = VT * log((Jph_top - J)/J0_top + 1)
   <p class="lead">Crystals, structures, and the tool that lets you see them. This is the part that connects back to what I actually want to research.</p>
 
   <!-- BRAGG -->
-  <article class="viz" data-topic="5-2">
+  <article class="viz" id="viz-bragg" data-topic="5-2">
     <h3>Bragg's law, and how we see a lattice we cannot see</h3>
     <p class="viz-lead">You cannot photograph an atom. What you can do is bounce X-rays off the planes of atoms and read the pattern that comes back. Drag the angle and watch the two reflected beams fall in and out of step.</p>
 
@@ -568,7 +568,7 @@ exactAngle = Math.asin(n * lambda / (2 * d));</code></pre>
   </article>
 
   <!-- UNIT CELL -->
-  <article class="viz" data-topic="5-1">
+  <article class="viz" id="viz-cells" data-topic="5-1">
     <h3>Unit cells you can turn over</h3>
     <p class="viz-lead">A crystal is one small arrangement of atoms, repeated. Learn the small arrangement and you have the whole thing. Drag to rotate, or use the arrow keys.</p>
     <div class="viz-body always">

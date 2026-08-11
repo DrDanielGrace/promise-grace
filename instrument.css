@@ -564,6 +564,259 @@ html[data-depth="picture"] .depth-not-picture { display: none; }
 html:not([data-depth="maths"]) .depth-only-maths { display: none; }
 
 
+/* ======================================================================
+   THE INDEX
+
+   A real index, which means a list a person can read down rather than a
+   grid of cards padded out to fill a row. Nothing here is a tile, nothing
+   is boxed, and no row is completed with filler.
+
+   Each entry says three things and stops: what it is called, the one thing
+   it lets you find out, and the quantities it computes. Where a simulation
+   takes a result from another or hands one on, that is on the entry and in
+   its own colour, because that chain is the argument the whole set is
+   making and it was invisible until you stumbled into it.
+   ====================================================================== */
+
+/* An index is a list, and a list does not want the width of a spreadsheet.
+   One column at a proper reading measure, centred, rather than prose set to
+   sixty characters with four hundred pixels of nothing beside it. */
+.inst-index .inst-stage { max-width: 52rem; }
+
+.ix-lede {
+  max-width: 68ch;
+  margin: 1.6rem 0 1.4rem;
+  color: var(--text-dim);
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+.ix-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding-bottom: 1.4rem;
+  border-bottom: 1px solid var(--hair);
+}
+.ix-jump a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.5rem 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--hair);
+  border-radius: 2px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font: 400 11px/1 "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ix-jump a:hover { color: var(--text); border-color: var(--accent-dim); }
+
+.ix-group { margin: 2.4rem 0 0; }
+
+.ix-group > h2 {
+  margin: 0 0 0.2rem;
+  font: 400 11px/1.4 "IBM Plex Mono", ui-monospace, monospace;
+  letter-spacing: 0.16em;
+  color: var(--text-far);
+}
+.ix-group > h2 span {
+  color: var(--accent-dim);
+  letter-spacing: 0.1em;
+  margin-left: 0.6rem;
+}
+
+.ix-list { margin: 0; padding: 0; list-style: none; }
+
+.ix-item {
+  padding: 1.15rem 0 1.2rem;
+  border-top: 1px solid var(--hair);
+}
+
+.ix-name {
+  margin: 0 0 0.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+/* The padding is not decoration. A line of text is about 23 px tall and a
+   thumb needs 44, so the rest is bought above and below the underline
+   rather than by making the type bigger than it wants to be. */
+.ix-name a {
+  display: inline-block;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 1.08rem;
+  line-height: 1.35;
+  border-bottom: 1px solid var(--hair-lit);
+  padding: 1rem 0 0.5rem;
+}
+.ix-name a:hover { border-bottom-color: var(--accent); }
+
+/* The one that is already in the frame says so, once, and quietly. */
+.ix-flag {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  border: 1px solid var(--accent-dim);
+  border-radius: 2px;
+  padding: 0.2rem 0.4rem;
+  white-space: nowrap;
+}
+.ix-flag.is-open { color: var(--text-far); border-color: var(--hair-lit); }
+
+.ix-find {
+  margin: 0 0 0.6rem;
+  max-width: 70ch;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.ix-find b { color: var(--text); font-weight: 400; }
+
+/* The quantities, set as they appear on the readout rather than described. */
+.ix-quant {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.4rem;
+  margin: 0;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+.ix-quant span {
+  padding: 0.22rem 0.45rem;
+  border: 1px solid var(--hair);
+  border-radius: 2px;
+  color: var(--text-far);
+  white-space: nowrap;
+}
+
+.ix-meta {
+  margin: 0.55rem 0 0;
+  font-size: 10px;
+  letter-spacing: 0.09em;
+  color: var(--text-far);
+  line-height: 1.7;
+}
+.ix-meta b { font-weight: 500; letter-spacing: 0.12em; }
+.ix-in { color: var(--cool); }
+.ix-out { color: var(--accent); }
+.ix-sep { padding: 0 0.55rem; color: var(--hair-lit); }
+
+
+/* ----------------------------------------------------------------------
+   THE CHAINS
+
+   Drawn rather than described, because "hands its result to" is a sentence
+   and an arrow with the thing that travels written on it is a fact.
+   ---------------------------------------------------------------------- */
+.ix-chains { border-top: 1px solid var(--hair); padding-top: 1.6rem; }
+.ix-chain-note { margin-top: 0.9rem; }
+
+.ix-chain { margin: 1.4rem 0 0; padding: 0; list-style: none; }
+.ix-chain > li {
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--hair);
+  margin-top: 1rem;
+}
+.ix-chain > li:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
+
+.ix-chain-head {
+  margin: 0 0 0.7rem;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: var(--text-far);
+}
+
+/* Drawn top to bottom rather than left to right, which is how a signal path
+   is drawn on an instrument and, more to the point, is the only arrangement
+   that cannot wrap. A chain that wraps is a chain with a link missing: the
+   arrow ends one line and the thing it points at begins the next. */
+.ix-chain-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.35rem;
+  margin: 0 0 0.8rem;
+  max-width: 30rem;
+}
+.ix-chain-row a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.5rem 0.8rem;
+  background: var(--surface);
+  border: 1px solid var(--hair-lit);
+  border-radius: 2px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.ix-chain-row a:hover { border-color: var(--accent-dim); }
+
+/* A hairline with a head on it. No animation: it is a fact, not a motion. */
+.ix-arrow {
+  flex: 0 0 auto;
+  position: relative;
+  width: 1px;
+  height: 1.5rem;
+  margin-left: 1.2rem;
+  background: var(--accent-dim);
+}
+.ix-arrow::after {
+  content: "";
+  position: absolute;
+  left: -3.5px; bottom: 0;
+  border-left: 3.5px solid transparent;
+  border-right: 3.5px solid transparent;
+  border-top: 6px solid var(--accent-dim);
+}
+
+/* What actually travels along the arrow, written beside it. */
+.ix-carry {
+  margin: -1.35rem 0 0 2.1rem;
+  font-size: 10px;
+  letter-spacing: 0.09em;
+  color: var(--accent);
+}
+
+.ix-chain-say {
+  margin: 0;
+  max-width: 70ch;
+  color: var(--text-far);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.ix-using { border-top: 1px solid var(--hair); padding-top: 1.6rem; }
+.ix-using .ix-find { margin-top: 0.9rem; }
+
+.ix-plain {
+  display: inline-block;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent-dim);
+  padding: 0.85rem 0 0.45rem;
+}
+.ix-plain:hover { color: var(--text); }
+
+.ix-foot {
+  max-width: 52rem;
+  margin: 2.6rem auto 0;
+  padding: 1.2rem 1.1rem 0;
+  border-top: 1px solid var(--hair);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--text-far);
+}
+
+@media (max-width: 420px) {
+  .ix-name a { font-size: 1.02rem; }
+}
+
+
 /* ----------------------------------------------------------------------
    THE SOUND TOGGLE, built by sound.js on every page
 
