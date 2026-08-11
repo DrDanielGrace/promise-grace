@@ -42,8 +42,15 @@
       });
 
       var depth = chrome.querySelector(".depth");
-      if (depth) depth.appendChild(a);
-      else chrome.insertBefore(a, chrome.firstChild);
+      if (depth) {
+        depth.appendChild(a);
+        /* Three buttons fitted on one line at 320 and four do not. The wrap
+           is set here rather than in styles.css, because this link is the
+           only reason the row is now too long for the screen. */
+        depth.style.flexWrap = "wrap";
+      } else {
+        chrome.insertBefore(a, chrome.firstChild);
+      }
     });
   }
 

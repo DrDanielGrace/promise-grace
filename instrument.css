@@ -237,24 +237,28 @@ body.inst[data-stage="2"] [data-part="late-control"] { display: none; }
    column goes underneath and the views stack. Designed at 320 first rather
    than shrunk onto it.
    ---------------------------------------------------------------------- */
+/* minmax(0, 1fr) rather than 1fr, on every one of these. A bare 1fr has an
+   automatic minimum, which is the min-content of what is inside it, and a
+   canvas carries a 300 px intrinsic width in its own attributes. At 320 that
+   pushed the views three pixels off the screen. */
 .lab {
   display: grid;
   gap: 0.85rem;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 @media (min-width: 900px) {
   .lab { grid-template-columns: minmax(0, 1.45fr) minmax(19rem, 0.85fr); align-items: start; }
 }
 
-.lab-views { display: grid; gap: 0.7rem; grid-template-columns: 1fr; }
+.lab-views { display: grid; gap: 0.7rem; grid-template-columns: minmax(0, 1fr); }
 
 @media (min-width: 560px) {
   .lab-views { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 body.inst[data-stage="1"] .lab-views,
-body.inst[data-stage="2"] .lab-views { grid-template-columns: 1fr; }
+body.inst[data-stage="2"] .lab-views { grid-template-columns: minmax(0, 1fr); }
 
 @media (min-width: 560px) {
   body.inst[data-stage="1"] .lab-views,
@@ -263,6 +267,7 @@ body.inst[data-stage="2"] .lab-views { grid-template-columns: 1fr; }
 
 .lab-view {
   position: relative;
+  min-width: 0;
   background: var(--surface);
   border: 1px solid var(--hair);
   padding: 1.55rem 0.7rem 0.7rem;
@@ -305,12 +310,21 @@ body.inst[data-stage="2"] .lab-views { grid-template-columns: 1fr; }
 /* ----------------------------------------------------------------------
    THE SIDE COLUMN
    ---------------------------------------------------------------------- */
-.inst-side { display: grid; gap: 0.85rem; align-content: start; }
+.inst-side {
+  display: grid;
+  gap: 0.85rem;
+  align-content: start;
+  /* the same automatic minimum again: a slider with a stepper beside it has
+     a min-content wider than a phone */
+  grid-template-columns: minmax(0, 1fr);
+}
 
 .lab-controls,
 .lab-readout,
 .inst-marks,
-.inst-handoff {
+.inst-handoff,
+.inst-takes {
+  min-width: 0;
   background: var(--surface);
   border: 1px solid var(--hair);
   padding: 0.9rem 0.95rem;
@@ -330,12 +344,16 @@ body.inst[data-stage="2"] .lab-views { grid-template-columns: 1fr; }
   margin: 0 0.15rem 0 0.35rem;
 }
 
+/* The stepper drops under the slider rather than off the side of a phone.
+   Both stay 44 px either way. */
 .slider-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
   margin: 0.55rem 0 0.3rem;
 }
+.slider-row input[type="range"] { flex: 1 1 8rem; }
 
 .slider-row input[type="range"] {
   flex: 1 1 auto;
@@ -361,7 +379,13 @@ body.inst[data-stage="2"] .lab-views { grid-template-columns: 1fr; }
 
 .inst-late { margin: 0.75rem 0 0; }
 
-.lab-controls button[data-act] {
+/* Every button inside a simulation, not only the ones with an action
+   attribute. The lattice chooser, the acid and indicator buttons and the
+   listen control are all buttons a thumb has to hit, and on the notebook
+   they were sized by a stylesheet this frame does not load. */
+.lab-controls button,
+.lab button,
+.listen-btn {
   min-height: 44px;
   padding: 0.55rem 0.9rem;
   background: var(--raised);
@@ -373,7 +397,12 @@ body.inst[data-stage="2"] .lab-views { grid-template-columns: 1fr; }
   text-transform: uppercase;
   cursor: pointer;
 }
-.lab-controls button[data-act]:hover { color: var(--text); border-color: var(--accent-dim); }
+.lab-controls button:hover,
+.lab button:hover,
+.listen-btn:hover { color: var(--text); border-color: var(--accent-dim); }
+.lab-controls button[aria-pressed="true"],
+.lab button[aria-pressed="true"] { color: var(--accent); border-color: var(--accent-dim); }
+.listen-what { margin: 0.5rem 0 0; font-size: 0.86rem; line-height: 1.5; color: var(--text-far); }
 
 
 /* ----------------------------------------------------------------------
