@@ -70,7 +70,10 @@ for m in re.finditer(r'<details class="transcript" id="([^"]+)">(.*?)</details>'
     summary = re.search(r"<summary[^>]*>(.*?)</summary>", body, re.S)
     rows.append({
         "k": "transcription",
-        "t": text(summary.group(1)) if summary else tid.replace("tr-", "").replace("-", " "),
+        # Every one of these has the same summary, "Read this page as text",
+        # which is right on the page and useless in a list of results. The
+        # id is what actually names it.
+        "t": tid.replace("tr-", "").replace("-", " ").capitalize() + ", in her handwriting",
         "u": "notebook.html#" + tid,
         "s": text(re.sub(r"<summary[^>]*>.*?</summary>", "", body, flags=re.S))[:400],
         "q": [],

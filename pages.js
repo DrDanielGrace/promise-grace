@@ -237,6 +237,11 @@ window.Pages = (function () {
     /* Somebody nearer the event already dealt with it. */
     if (e.defaultPrevented) return;
     if (typing(e.target)) return;
+    /* A focused simulation owns the arrows and the space bar. A slider is
+       already covered by typing(), but a canvas that takes arrow keys is
+       not, and that conflict bit once: the phase diagram moved its point
+       and the page turned underneath it at the same time. */
+    if (e.target && e.target.closest && e.target.closest("[data-lab]")) return;
 
     if (e.key === "ArrowRight") { e.preventDefault(); next(); return; }
     if (e.key === "ArrowLeft")  { e.preventDefault(); prev(); return; }
