@@ -172,7 +172,11 @@ def declared(name):
     m = re.search(r"var " + name + r" = \[(.*?)\n  \];", mp, re.S)
     if not m:
         return None
-    return len(re.findall(r"\n\s*\{", m.group(1)))
+    # Exactly four spaces then a brace, which is a top level entry in the
+    # array. A looser \s* also matches the nested step objects inside each
+    # chain, and would count two chains as seven the moment this was used
+    # for anything but SIMS and ENTRIES.
+    return len(re.findall(r"\n    \{", m.group(1)))
 
 want_entries = declared("ENTRIES")
 want_sims = declared("SIMS")
