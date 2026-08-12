@@ -134,37 +134,18 @@
   }
 
   /* ---- drawing --------------------------------------------------------- */
-  /* One simulation, two frames. On the notebook page these are the notebook's
-     own six colours and nothing has moved. Inside the instrument frame the
-     host sets six custom properties instead and the same drawing code puts
-     luminous data on a dark surface. The defaults below are the notebook
-     values exactly, so a page that sets nothing renders as it always did. */
-  var PALETTE = {
-    paper: [250, 246, 239], ink:  [51, 46, 92], sage: [51, 84, 59],
-    corr:  [140, 47, 69],   rule: [197, 199, 220], soft: [97, 90, 110]
-  };
-
-  function readPalette() {
-    if (!window.getComputedStyle) return;
-    var cs = getComputedStyle(host);
-    Object.keys(PALETTE).forEach(function (k) {
-      var v = cs.getPropertyValue("--lab-" + k);
-      if (!v) return;
-      var m = v.trim().match(/^(\d+)\s*[, ]\s*(\d+)\s*[, ]\s*(\d+)$/);
-      if (m) PALETTE[k] = [+m[1], +m[2], +m[3]];
-    });
-  }
-
-  function rgb(k)          { return "rgb(" + PALETTE[k].join(",") + ")"; }
-  function rgba(k, a)      { return "rgba(" + PALETTE[k].join(",") + "," + a + ")"; }
-
-  var PAPER, INK, SAGE, CORR, RULE, SOFT;
-  function bindPalette() {
-    readPalette();
-    PAPER = rgb("paper"); INK = rgb("ink"); SAGE = rgb("sage");
-    CORR = rgb("corr");   RULE = rgb("rule"); SOFT = rgb("soft");
-  }
-  bindPalette();
+  /* One simulation, every frame. The six colours come from the host element
+     rather than from a constant here, so the same drawing code renders on
+     the notebook's paper, inside the instrument frame, and in dark, without
+     a second copy of itself. This was the only lab that did it; palette.js
+     is that reader, extracted, and the other seven now use it too. */
+  var PAPER, INK, SAGE, CORR, RULE, SOFT, rgba;
+  Lab.bind(host, function (p, redraw) {
+    PAPER = p.paper; INK = p.ink; SAGE = p.sage;
+    CORR = p.corr;   RULE = p.rule; SOFT = p.soft;
+    rgba = p.rgba;
+    if (redraw && typeof drawAll === "function") drawAll();
+  });
 
   function px(v, w) { return (v / R_MAX) * (w * 0.42); }
 
@@ -405,7 +386,13 @@
     resend: function () { handoff(); },
 
     /* Called by a frame that has set its own six colours. */
-    repalette: function () { bindPalette(); drawAll(); },
+    repalette: function () {
+      var p = Lab.read(host);
+      PAPER = p.paper; INK = p.ink; SAGE = p.sage;
+      CORR = p.corr;   RULE = p.rule; SOFT = p.soft;
+      rgba = p.rgba;
+      drawAll();
+    },
 
     /* How much is moving in here, between nought and one, for whatever is
        running the ambient bed. Buoyancy velocity is proportional to g, so

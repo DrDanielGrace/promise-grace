@@ -108,6 +108,12 @@ window.Sim = (function () {
     $$("[data-depth-set]").forEach(function (b) {
       b.setAttribute("aria-pressed", String(b.getAttribute("data-depth-set") === depth));
     });
+    var says = {
+      picture:   "What happens, with no numbers on it.",
+      mechanism: "The quantities, named.",
+      maths:     "The governing equation, with the values live."
+    };
+    $$("[data-depth-say]").forEach(function (p) { p.textContent = says[depth]; });
     if (!quiet) writeUrl();
   }
 
@@ -367,23 +373,57 @@ window.Sim = (function () {
     return Array.prototype.slice.call((ctx || document).querySelectorAll(sel));
   }
 
+  /* The three depths are the strongest educational idea on this site and
+     the control for them used to be three unlabelled buttons that a reader
+     had to press one of to find out what they did. It now says what it is
+     asking, and each button carries a filled or open mark, so which one is
+     in force is never carried by colour alone. */
   function buildDepthControl(host) {
     if (!host || host.querySelector(".depth")) return;
+
     var wrap = document.createElement("div");
     wrap.className = "depth";
-    wrap.setAttribute("role", "group");
-    wrap.setAttribute("aria-label", "How much detail to show");
+
+    var q = document.createElement("p");
+    q.className = "depth-q";
+    q.id = "depth-q-" + Math.random().toString(36).slice(2, 7);
+    q.textContent = "How deep?";
+    wrap.appendChild(q);
+
+    var group = document.createElement("div");
+    group.className = "depth-set";
+    group.setAttribute("role", "group");
+    group.setAttribute("aria-labelledby", q.id);
+
     var labels = { picture: "Picture", mechanism: "Mechanism", maths: "Maths" };
+    var says = {
+      picture:   "What happens, with no numbers on it.",
+      mechanism: "The quantities, named.",
+      maths:     "The governing equation, with the values live."
+    };
+
     DEPTHS.forEach(function (d) {
       var b = document.createElement("button");
       b.type = "button";
       b.className = "depth-btn";
       b.setAttribute("data-depth-set", d);
       b.setAttribute("aria-pressed", String(d === depth));
-      b.textContent = labels[d];
+      b.title = says[d];
+      b.innerHTML = '<span class="depth-mark" aria-hidden="true"></span>' +
+                    '<span class="depth-word"></span>';
+      b.querySelector(".depth-word").textContent = labels[d];
       b.addEventListener("click", function () { setDepth(d); });
-      wrap.appendChild(b);
+      group.appendChild(b);
     });
+
+    wrap.appendChild(group);
+
+    var say = document.createElement("p");
+    say.className = "depth-say";
+    say.setAttribute("data-depth-say", "");
+    say.textContent = says[depth];
+    wrap.appendChild(say);
+
     host.appendChild(wrap);
   }
 

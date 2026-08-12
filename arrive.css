@@ -1,172 +1,434 @@
 /* =========================================================================
-   arrive.css · the landing, which is one screen and then gets out of the way
+   arrive.css · the landing, and the research map that lives on it
 
-   WHAT IT IS NOT
+   WHAT IT WAS
 
-   Not the notebook cover, which is a beautiful thing that belongs on the
-   notebook. Not a hero image. No scroll prompt, because a scroll prompt is
-   a page admitting that the important part is somewhere you cannot see.
+   One screen with a question and three links. That was a good decision and
+   the one screen is kept: no scroll prompt, no hero image, nothing below
+   the fold that the page depends on.
 
-   THE CONSTRAINT THAT SHAPED IT
+   WHAT CHANGED
 
-   The whole thing fits one viewport at 375 and at 1280, so the three ways
-   in are never below anything. That is why the type scales with the
-   viewport rather than sitting at a fixed size: at 1280 the question is
-   large because there is room for it to be, and at 375 it is small because
-   the three destinations underneath it matter more than it does.
+   The screen was informative about where you could go and silent about why
+   you would want to. So the question now has the map beside it, which is
+   the site's actual argument drawn once, and below the fold there are two
+   short things rather than nothing: what she is doing this week, and five
+   named routes rather than three unnamed ones.
 
-   The three are equal weight on purpose. The simulations are first because
-   that is the argument, but none of them is styled as the primary and the
-   other two as afterthoughts.
+   The fold still holds. At 1280 and at 375 the question, the map and the
+   three primary destinations are all above it. Everything after that is
+   for somebody who has decided to stay.
+
+   This file also owns the research map itself, because the map appears
+   here and on the research page and nowhere else, and a third stylesheet
+   for one component is a third stylesheet to keep in step.
    ========================================================================= */
 
-body.inst-arrival {
-  padding-bottom: 0;
+body.arrival-body {
+  margin: 0;
   min-height: 100vh;
   min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
 }
 
 .arrival {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: clamp(0.55rem, 1.9vh, 1.5rem);
   width: 100%;
-  max-width: 58rem;
+  max-width: 78rem;
   margin: 0 auto;
-  padding: clamp(0.8rem, 2.6vh, 2.4rem) clamp(0.9rem, 4vw, 2rem)
-           clamp(0.9rem, 3vh, 2.6rem);
+  padding: clamp(0.9rem, 2.4vh, 2rem) clamp(0.9rem, 4vw, 2.4rem)
+           clamp(2rem, 6vh, 4rem);
+}
+
+/* ----------------------------------------------------------------------
+   THE FIRST SCREEN
+
+   Two columns from 900 up, the words and then the map. Below that the map
+   goes underneath, and below 640 it stops being a map at all: orbit.js
+   renders the same nodes as a list, because a thirteen edge graph on a
+   phone is a graph nobody can read.
+   ---------------------------------------------------------------------- */
+.arrival-top {
+  display: grid;
+  gap: clamp(1.2rem, 4vw, 2.6rem);
+  align-items: center;
+  /* Not the whole viewport. About nine tenths of it, so that the top of
+     "Right now" is visible underneath and the page says there is more
+     without needing an arrow to say so. */
+  min-height: calc(100vh - var(--nav-h) - 11rem);
+  min-height: calc(100dvh - var(--nav-h) - 11rem);
+  padding: clamp(0.6rem, 2vh, 1.4rem) 0;
+}
+
+@media (min-width: 900px) {
+  .arrival-top { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); }
 }
 
 .arrival-eyebrow {
-  margin: 0;
-  font-size: 10px;
+  margin: 0 0 0.9rem;
+  font-family: var(--f-mono);
+  font-size: 10.5px;
   letter-spacing: 0.18em;
-  color: var(--text-far);
+  color: var(--ink-far);
 }
 
 .arrival-q {
   margin: 0;
-  max-width: 20ch;
-  font-family: "Source Serif 4", Georgia, serif;
-  font-weight: 400;
-  font-size: clamp(1.6rem, 4.6vw, 2.9rem);
-  line-height: 1.16;
-  letter-spacing: -0.005em;
-  color: var(--text);
+  max-width: 17ch;
+  font-family: var(--f-display);
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-weight: 600;
+  font-size: clamp(1.9rem, 4.6vw, 3.4rem);
+  line-height: 1.03;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-wrap: balance;
 }
 
-.arrival-say {
-  margin: 0;
-  max-width: 52ch;
-  color: var(--text-dim);
-  font-size: clamp(0.94rem, 1.4vw, 1.05rem);
-  line-height: 1.55;
+.arrival-lede {
+  margin: clamp(0.9rem, 2.2vh, 1.5rem) 0 0;
+  max-width: 46ch;
+  color: var(--ink-soft);
+  font-size: clamp(0.96rem, 1.2vw, 1.05rem);
+  line-height: 1.6;
 }
+.arrival-lede b { font-weight: 600; color: var(--ink); font-variant-numeric: normal; }
 
-
-/* ----------------------------------------------------------------------
-   THE THREE WAYS IN
-
-   Three rows on a phone, three columns from 720 up. Rows rather than cards:
-   no shadow, no rounding beyond the two pixels everything here has, and no
-   fourth one added to make the row come out even.
-   ---------------------------------------------------------------------- */
-.arrival-ways {
-  display: grid;
-  gap: 0.5rem;
-  margin: clamp(0.3rem, 1.5vh, 0.8rem) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-@media (min-width: 720px) {
-  .arrival-ways { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.7rem; }
-}
-
-.arrival-ways a {
-  display: grid;
-  align-content: start;
-  gap: 0.28rem;
-  height: 100%;
-  min-height: 44px;
-  padding: clamp(0.75rem, 2vh, 1.05rem) 0.95rem;
-  background: var(--surface);
-  border: 1px solid var(--hair);
-  border-left: 2px solid var(--hair-lit);
-  border-radius: 2px;
-  text-decoration: none;
-  transition: border-color 160ms ease;
-}
-.arrival-ways a:hover { border-left-color: var(--accent); border-color: var(--hair-lit); }
-
-.arrival-count {
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  color: var(--text-far);
-}
-
-.arrival-name {
-  font-size: clamp(1.05rem, 1.9vw, 1.25rem);
-  line-height: 1.2;
-  color: var(--text);
-}
-
-.arrival-line {
-  font-size: 0.88rem;
-  line-height: 1.45;
-  color: var(--text-dim);
-}
-
-.arrival-foot {
+/* ---- the three primary destinations ---- */
+.arrival-do {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 0 0.2rem;
-  margin: clamp(0.2rem, 1.2vh, 0.6rem) 0 0;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  gap: 0.5rem;
+  margin: clamp(1rem, 2.6vh, 1.7rem) 0 0;
 }
-.arrival-foot a {
+
+.btn {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  padding: 0 0.55rem;
-  color: var(--text-far);
+  padding: 0.55rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  color: var(--brand);
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
   text-decoration: none;
-  border: 1px solid transparent;
-  border-radius: 2px;
+  text-transform: uppercase;
 }
-.arrival-foot a:first-child { padding-left: 0; }
-.arrival-foot a:hover { color: var(--text-dim); }
+.btn:hover { border-color: var(--brand); background: var(--brand-wash); }
+
+.btn-go {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.btn-go:hover { background: var(--brand-deep); border-color: var(--brand-deep); color: #fff; }
 
 
 /* ----------------------------------------------------------------------
-   COMING UP
-
-   The same four step rise the instrument uses, so arriving at the site and
-   arriving at an instrument are recognisably the same gesture at different
-   sizes. Nothing slides in from off screen.
+   THE MAP PANEL
    ---------------------------------------------------------------------- */
-body.inst-arrival[data-boot="1"] .arrival { opacity: 0; }
-body.inst-arrival[data-boot="2"] .arrival > * { animation: rise 340ms ease-out both; }
-body.inst-arrival[data-boot="2"] .arrival > :nth-child(2) { animation-delay: 60ms; }
-body.inst-arrival[data-boot="2"] .arrival > :nth-child(3) { animation-delay: 110ms; }
-body.inst-arrival[data-boot="2"] .arrival > :nth-child(4) { animation-delay: 160ms; }
-body.inst-arrival[data-boot="2"] .arrival > :nth-child(5) { animation-delay: 220ms; }
-
-@media (prefers-reduced-motion: reduce) {
-  body.inst-arrival[data-boot="1"] .arrival { opacity: 1; }
-  body.inst-arrival[data-boot="2"] .arrival > * { animation: none; }
+.arrival-map {
+  min-width: 0;
+  padding: clamp(0.8rem, 2vw, 1.2rem);
+  background: var(--soft-blue);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--radius-lg);
 }
 
-/* Very short viewports, which is a phone in landscape. Let it scroll rather
-   than crushing the three destinations into strips. */
-@media (max-height: 460px) {
-  .arrival { justify-content: flex-start; }
-  .arrival-q { font-size: 1.35rem; }
+.arrival-map-h,
+.arrival-map-note {
+  margin: 0;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+.arrival-map-note { margin-top: 0.5rem; text-align: right; }
+
+
+/* =========================================================================
+   THE RESEARCH MAP
+
+   Shared by the homepage and the research page. Nothing here moves on its
+   own: the only transition is a path lighting up under a pointer or a
+   focus ring, and under reduced motion even that is a change of width
+   rather than a fade.
+   ========================================================================= */
+
+.rmap-host { min-width: 0; }
+
+.rmap {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.rmap-edge {
+  fill: none;
+  stroke: var(--rule);
+  stroke-width: 2;
+  transition: stroke 160ms var(--ease), stroke-width 160ms var(--ease);
+}
+.rmap-edge.is-lit {
+  stroke: var(--brand);
+  stroke-width: 2.6;
+}
+
+.rmap-box {
+  fill: var(--surface);
+  stroke: var(--rule);
+  stroke-width: 1.2;
+  transition: fill 160ms var(--ease), stroke 160ms var(--ease);
+}
+
+.rmap-label {
+  font-family: var(--f-mono);
+  font-size: 17px;
+  letter-spacing: 0.02em;
+  fill: var(--ink);
+  transition: fill 160ms var(--ease);
+}
+
+.rmap-node { cursor: pointer; }
+.rmap-node:focus { outline: none; }
+.rmap-node:focus-visible .rmap-box {
+  stroke: var(--brand);
+  stroke-width: 2.4;
+}
+
+/* The four kinds, coloured by the site's hierarchy rather than at random.
+   A question is the brand, a mechanism is lavender, an instrument is the
+   brand again because an instrument is where the argument is made, and an
+   outcome is gold because gold is what this site uses for a result. */
+.rmap-node[data-kind="question"]   .rmap-box { stroke: var(--brand); }
+.rmap-node[data-kind="concept"]    .rmap-box { stroke: var(--lavender); }
+.rmap-node[data-kind="instrument"] .rmap-box { fill: var(--brand-wash); }
+.rmap-node[data-kind="result"]     .rmap-box { stroke: var(--gold); fill: var(--butter-wash); }
+
+.rmap-node.is-near .rmap-box  { stroke: var(--brand); }
+.rmap-node.is-near .rmap-label { fill: var(--ink); }
+
+.rmap-node.is-lit .rmap-box,
+.rmap-node:hover .rmap-box {
+  fill: var(--brand);
+  stroke: var(--brand);
+}
+.rmap-node.is-lit .rmap-label,
+.rmap-node:hover .rmap-label { fill: #fff; }
+
+.rmap-say {
+  margin: 0.7rem 0 0;
+  min-height: 2.9em;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rmap-edge, .rmap-box, .rmap-label { transition: none; }
+}
+
+/* ---- the same nodes, on a phone ---- */
+.rmap-list {
+  margin: 0.6rem 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+.rmap-list li {
+  position: relative;
+  padding-left: 1.5rem;
+}
+/* the chain, drawn as one line down the left rather than thirteen arrows */
+.rmap-list li::before {
+  content: "";
+  position: absolute;
+  left: 0.42rem; top: 0; bottom: 0;
+  width: 1px;
+  background: var(--rule);
+}
+.rmap-list li:first-child::before { top: 1.1rem; }
+.rmap-list li:last-child::before { bottom: calc(100% - 1.1rem); }
+.rmap-list li::after {
+  content: "";
+  position: absolute;
+  left: 0.17rem; top: 0.95rem;
+  width: 0.58rem; height: 0.58rem;
+  border: 1px solid var(--brand);
+  border-radius: 50%;
+  background: var(--paper);
+}
+.rmap-list li[data-kind="instrument"]::after { background: var(--brand); }
+.rmap-list li[data-kind="result"]::after { border-color: var(--gold); background: var(--gold); }
+.rmap-list li[data-kind="concept"]::after { border-color: var(--lavender); }
+
+.rmap-list a {
+  display: block;
+  padding: 0.5rem 0.3rem;
+  min-height: 44px;
+  text-decoration: none;
+  color: inherit;
+}
+.rmap-list a:hover .rmap-list-name { color: var(--brand); text-decoration: underline; }
+.rmap-list-name {
+  display: block;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.rmap-list-say {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+
+/* =========================================================================
+   RIGHT NOW
+
+   The dated status, which is read from Mission Control rather than typed
+   here. If the fetch fails the sentence in the markup stands, so the
+   section is never empty and never lies about being live.
+   ========================================================================= */
+.arrival-now {
+  margin: clamp(1.6rem, 5vh, 3rem) 0 0;
+  padding: 1rem 0 1rem 1.1rem;
+  border-left: 3px solid var(--gold);
+  max-width: 52rem;
+}
+.arrival-now-h {
+  margin: 0 0 0.35rem;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+}
+.arrival-now-line {
+  margin: 0;
+  max-width: 54ch;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+.arrival-now-go { margin: 0.5rem 0 0; }
+.arrival-now-go a {
+  font-family: var(--f-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+
+/* =========================================================================
+   THE ROUTES
+   ========================================================================= */
+.arrival-routes { margin: clamp(1.8rem, 5vh, 3.2rem) 0 0; }
+
+.arrival-routes-h {
+  margin: 0 0 0.9rem;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+
+.arrival-ways {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.5rem), 1fr));
+}
+
+.arrival-ways a {
+  display: block;
+  height: 100%;
+  padding: 0.85rem 0.95rem 0.95rem;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-top: 2px solid var(--brand);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+}
+.arrival-ways a:hover {
+  border-color: var(--brand);
+  border-top-color: var(--brand);
+  background: var(--brand-wash);
+}
+
+.arrival-count {
+  display: block;
+  font-family: var(--f-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+.arrival-count b { font-weight: 500; color: var(--brand); }
+
+.arrival-name {
+  display: block;
+  margin: 0.4rem 0 0;
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.arrival-line {
+  display: block;
+  margin: 0.3rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+
+/* =========================================================================
+   THE FOOT
+   ========================================================================= */
+.arrival-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1.3rem;
+  margin: clamp(1.6rem, 4vh, 2.6rem) 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule-soft);
+  font-family: var(--f-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+}
+.arrival-foot a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.arrival-foot a:hover { color: var(--brand); text-decoration: underline; }
+
+
+/* The rise on arrival, which is the same one the instrument uses so that
+   going in and coming back out are the same gesture in two directions. */
+body[data-boot="1"] .arrival-top { opacity: 0; }
+body[data-boot="2"] .arrival-top {
+  opacity: 1;
+  transition: opacity 420ms var(--ease);
 }

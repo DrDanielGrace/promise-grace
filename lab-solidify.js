@@ -83,8 +83,14 @@
 
   function fmt(x, d) { return (Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d); }
 
-  var INK = "#332E5C", SAGE = "#33543B", CORR = "#8C2F45",
-      RULE = "#C5C7DC", SOFT = "#615A6E", ASIDE = "#8A5A2B";
+  /* The six come from the host rather than from here. See palette.js. */
+  var INK, SAGE, CORR, RULE, SOFT, ASIDE, PAPER_DEEP, RGBA;
+  Lab.bind(host, function (p, redraw) {
+    INK = p.ink; SAGE = p.sage; CORR = p.corr;
+    RULE = p.rule; SOFT = p.soft; ASIDE = p.aside; RGBA = p.rgba;
+    PAPER_DEEP = p.rgba("paper", 1);
+    if (redraw && typeof draw === "function") draw();
+  });
 
   function readout() {
     var fp = primaryFraction();
@@ -150,7 +156,7 @@
   function drawMicro() {
     var f = Sim.fitCanvas(cvMicro, tier.res), ctx = f.ctx, w = f.w, h = f.h;
     ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = "#F1EBE0"; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = PAPER_DEEP; ctx.fillRect(0, 0, w, h);
 
     var progress = T > liquidus(C) ? 0
       : T <= TE ? 1
@@ -162,7 +168,7 @@
     /* eutectic background, lamellae, only once the eutectic line is reached */
     if (T <= TE && !singlePhase()) {
       for (var x = 0; x < w; x += lam) {
-        ctx.fillStyle = ((x / lam) | 0) % 2 ? "rgba(51,84,59,0.30)" : "rgba(51,46,92,0.14)";
+        ctx.fillStyle = ((x / lam) | 0) % 2 ? RGBA("sage", 0.30) : RGBA("ink", 0.14);
         ctx.fillRect(x, 0, lam * 0.55, h);
       }
     }
@@ -171,7 +177,7 @@
     if (fp > 0.005 && progress > 0) {
       var n = Math.max(1, Math.round(fp * 9 * (tier.agents || 1)));
       var grown = Math.min(progress, 1);
-      ctx.strokeStyle = C < CE ? "rgba(51,46,92,0.75)" : "rgba(140,47,69,0.7)";
+      ctx.strokeStyle = C < CE ? RGBA("ink", 0.75) : RGBA("corr", 0.7);
       ctx.lineWidth = 2;
       for (var i = 0; i < n; i++) {
         var cx = ((i + 0.5) / n) * w, cy = h * (0.2 + 0.6 * ((i * 37 % 10) / 10));

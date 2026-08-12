@@ -1,22 +1,26 @@
 /* =========================================================================
    nav.css · the bar that is on every page
 
-   THE ONE RULE THIS EXISTS TO SATISFY
+   WHAT CHANGED
 
-   Simulations and Mission planner are visible without scrolling, at every
-   width, on every page, and neither of them is ever behind a menu icon.
-   That rules out the usual answer, which is to collapse the whole thing into
-   a hamburger below 600 px and call it responsive. So at narrow widths the
-   bar wraps onto a second line instead of hiding anything. Two short rows
-   beat one row with the two most important destinations inside a button.
+   It used to carry four destinations and two skins, one for the paper pages
+   and one for the dark bench, because the site was two products. It is one
+   product now, so there is one skin, taken from tokens.css.
 
-   TWO SKINS, ONE BAR
+   THE RULE IT EXISTS TO SATISFY, WHICH HAS NOT CHANGED
 
-   The simulations are a dark instrument and the notebook is paper, and the
-   contrast between them is the point. So the bar takes its colours from
-   whichever it is sitting on rather than imposing one on both. `body.inst`
-   gets the instrument skin, anything else gets the paper one. No page has
-   to know the bar exists beyond loading it.
+   The destinations are reachable without scrolling, at every width, on
+   every page. What has changed is that there are now seven of them rather
+   than four, and seven will not fit across a phone. So the bar is built in
+   two parts: the four that carry the argument stay visible at every width,
+   and the three that are reference material fold into a disclosure that is
+   open by default from 900 up. Nothing is ever more than one press away and
+   nothing important is ever behind an icon.
+
+   THE HOME CONTROL
+
+   The name is a link to the homepage and is the first thing in the bar,
+   because until now the site had no way of saying where its front door was.
    ========================================================================= */
 
 :root {
@@ -30,134 +34,332 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.2rem 1rem;
-  padding: 0.3rem clamp(0.7rem, 3vw, 1.1rem);
-  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  gap: 0.15rem 0.9rem;
+  padding: 0.3rem clamp(0.7rem, 3vw, 1.15rem);
+  background: color-mix(in srgb, var(--paper) 93%, transparent);
+  backdrop-filter: blur(9px);
+  border-bottom: 1px solid var(--rule-soft);
+  font-family: var(--f-mono);
   font-size: 11px;
   letter-spacing: 0.09em;
   text-transform: uppercase;
+  color: var(--ink-far);
+}
+
+/* Where the name sits, then the destinations, then the tools pushed right. */
+.site-nav-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0.35rem 0.5rem 0.35rem 0;
+  text-decoration: none;
+  color: var(--ink);
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+}
+.site-nav-home:hover { color: var(--brand); }
+
+/* The mark: a unit cell, four corners and a body-centred atom, which is the
+   first thing the materials science specialisation teaches and the only
+   piece of decoration on the site that is also a fact. */
+.site-nav-mark {
+  flex: none;
+  width: 18px; height: 18px;
+  color: var(--brand);
 }
 
 .site-nav-where,
+.site-nav-more,
 .site-nav-tools {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.1rem 0.15rem;
+  gap: 0.1rem 0.1rem;
 }
+
+/* Home, destinations, second rank, then the tools pushed to the far end.
+   The second rank is last in the DOM because on a phone it becomes a row of
+   its own underneath everything, and a row of its own has to be last in the
+   source for the tab order to be the reading order. */
+.site-nav-home  { order: 0; }
+.site-nav-where { order: 1; }
+.site-nav-more  { order: 2; }
+.site-nav-tools { order: 3; margin-left: auto; }
 
 .site-nav a,
 .site-nav button {
   display: inline-flex;
   align-items: center;
+  gap: 0.35rem;
   min-height: 44px;
-  padding: 0.4rem 0.6rem;
+  padding: 0.4rem 0.55rem;
   border: 1px solid transparent;
-  border-radius: 2px;
+  border-radius: var(--radius);
   background: none;
+  color: var(--ink-soft);
   font: inherit;
   text-decoration: none;
   cursor: pointer;
   white-space: nowrap;
 }
 
+.site-nav a:hover,
+.site-nav button:hover {
+  color: var(--brand);
+  border-color: var(--rule);
+  background: var(--brand-wash);
+}
+
 /* Where you already are is stated rather than linked. */
-.site-nav [aria-current="page"] { cursor: default; }
-
-
-/* ----------------------------------------------------------------------
-   THE INSTRUMENT SKIN
-   ---------------------------------------------------------------------- */
-body.inst .site-nav {
-  background: #0d0e11;
-  border-bottom: 1px solid #24262d;
-  color: #6f6d69;
+.site-nav [aria-current="page"] {
+  cursor: default;
+  color: var(--brand);
+  border-color: var(--brand);
+  background: var(--brand-wash);
 }
-body.inst .site-nav a,
-body.inst .site-nav button { color: #9d9a93; }
-body.inst .site-nav a:hover,
-body.inst .site-nav button:hover { color: #e6e3dc; border-color: #34373f; }
-body.inst .site-nav [aria-current="page"] { color: #c78f4a; border-color: #7a5a30; }
-
+.site-nav [aria-current="page"]:hover { background: var(--brand-wash); }
 
 /* ----------------------------------------------------------------------
-   THE PAPER SKIN
+   THE SECOND RANK
 
-   Deliberately quiet. The notebook is the thing on this page and the bar is
-   not going to compete with it.
+   Archive, About and CV are reference rather than argument. On a wide
+   screen they simply sit in the bar. Below 900 they go behind one control,
+   because seven destinations plus three tools across a 375 pixel screen is
+   four rows of bar and no page.
    ---------------------------------------------------------------------- */
-body:not(.inst) .site-nav {
-  background: #faf6ef;
-  border-bottom: 1px solid #c5c7dc;
-  color: #615a6e;
+/* Specificity has to beat ".site-nav button" above, which is why the parent
+   is named rather than the button alone. */
+.site-nav .site-nav-more-btn { display: none; }
+
+@media (max-width: 899px) {
+  .site-nav .site-nav-more-btn { display: inline-flex; }
+  .site-nav-more {
+    display: none;
+    order: 4;
+    flex-basis: 100%;
+    padding: 0.15rem 0 0.35rem;
+    border-top: 1px solid var(--rule-soft);
+  }
+  .site-nav[data-more="open"] .site-nav-more { display: flex; }
+  .site-nav-more-btn[aria-expanded="true"] {
+    color: var(--brand);
+    border-color: var(--rule);
+  }
 }
-body:not(.inst) .site-nav a,
-body:not(.inst) .site-nav button { color: #332e5c; }
-body:not(.inst) .site-nav a:hover,
-body:not(.inst) .site-nav button:hover { border-color: #33543b; }
-body:not(.inst) .site-nav [aria-current="page"] { color: #33543b; border-color: #c5c7dc; }
-
 
 /* ----------------------------------------------------------------------
-   THE CONTROLS THAT MOVED IN
+   THE TOOLS
 
-   sound.js and audio.js each pin a control to a corner, which was right
-   when there was no bar. There is a bar now, so they live in it, and the
-   pinning is undone here rather than in either of those files, because
-   neither of them should have to know what page it is on.
+   Search, theme and sound. Each is a mark and a word; below 560 the words
+   go and the marks stay, because four words plus seven destinations is a
+   bar taller than the thing it sits above.
+
+   sound.js and audio.js each pin a control to a corner of the viewport,
+   which was right when there was no bar. There is a bar now, so they live
+   in it, and the pinning is undone here rather than in either of those
+   files, because neither of them should have to know what page it is on.
    ---------------------------------------------------------------------- */
+.nav-tool-mark {
+  font-size: 12px;
+  line-height: 1;
+}
+
 .site-nav .sound-toggle,
 .site-nav .aud-levels {
   position: static;
   left: auto; right: auto; bottom: auto;
   background: none;
+  color: var(--ink-soft);
   border: 1px solid transparent;
+  border-radius: var(--radius);
   box-shadow: none;
   font: inherit;
   letter-spacing: inherit;
   text-transform: uppercase;
   min-width: 0;
-  padding: 0.4rem 0.6rem;
+  padding: 0.4rem 0.55rem;
 }
-body.inst .site-nav .sound-toggle,
-body.inst .site-nav .aud-levels { color: #9d9a93; }
-body.inst .site-nav .sound-toggle[aria-pressed="true"] { color: #c78f4a; border-color: #7a5a30; }
-body:not(.inst) .site-nav .sound-toggle,
-body:not(.inst) .site-nav .aud-levels { color: #332e5c; }
-body:not(.inst) .site-nav .sound-toggle[aria-pressed="true"] { color: #33543b; border-color: #c5c7dc; }
-
+.site-nav .sound-toggle:hover,
+.site-nav .aud-levels:hover {
+  color: var(--brand);
+  border-color: var(--rule);
+  background: var(--brand-wash);
+}
+.site-nav .sound-toggle[aria-pressed="true"],
+.site-nav .aud-levels[aria-expanded="true"] {
+  color: var(--brand);
+  border-color: var(--brand);
+}
 .site-nav .sound-mark { flex: 0 0 auto; }
 
+/* sound.js also builds a short invitation explaining what the sound is.
+   That is worth having once, on the notebook, where the sound is part of
+   what the page is doing. On the other ten pages it is a paragraph about a
+   feature nobody asked about, so it is opt in rather than opt out. */
+.sound-invite { display: none; }
+body[data-sound-invite] .sound-invite { display: block; }
+
+@media (max-width: 700px) {
+  .site-nav-tools .nav-tool-word { display: none; }
+  /* the sound control says its state in words, and that word is the state,
+     so it is the one label that cannot be dropped */
+  .site-nav .sound-toggle [data-sound-label] { display: none; }
+  .site-nav .aud-levels { font-size: 0; }
+  .site-nav .aud-levels::before { content: "≡"; font-size: 13px; }
+}
 
 /* ----------------------------------------------------------------------
    WHAT THE BAR DISPLACES
 
-   The notebook has a bar of its own that appears once you are past the
-   cover. It is pinned to the top, so it is moved down by the height of this
-   one rather than fighting it. styles.css is not touched.
+   The notebook and the planner each have a bar of their own that appears
+   once you are past the cover. Both are pinned to the top, so both are
+   moved down by the height of this one rather than fighting it. Neither
+   stylesheet is touched.
    ---------------------------------------------------------------------- */
 body.has-sitenav .topbar { top: var(--nav-h); }
 
-@media (max-width: 620px) {
-  body.has-sitenav .topbar { top: calc(var(--nav-h) * 2); }
+@media (max-width: 899px) {
+  body.has-sitenav .topbar { top: calc(var(--nav-h) * 1.9); }
 }
 
 /* At a phone width the four destinations only stay on one line if the type
    comes down with the screen. That is the trade: slightly smaller labels,
-   and Simulations and Mission planner still both visible, which is the rule
-   this file exists to keep. The 44 px target is untouched. */
+   and Research, Lab, Notebook and Mission all still visible, which is the
+   rule this file exists to keep. The 44 px target is untouched. */
 @media (max-width: 520px) {
-  .site-nav { font-size: 10px; letter-spacing: 0.06em; padding-left: 0.5rem; padding-right: 0.5rem; }
-  .site-nav a, .site-nav button { padding: 0.35rem 0.4rem; }
+  .site-nav {
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    gap: 0.1rem 0.4rem;
+  }
+  .site-nav-home { font-size: 0.8rem; }
+  .site-nav-home span { display: none; }
+  .site-nav a, .site-nav button { padding: 0.35rem 0.38rem; }
   .site-nav-where, .site-nav-tools { gap: 0 0.05rem; }
-}
-
-/* Printing a page does not want a navigation bar on it. */
-@media print {
-  .site-nav { display: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .site-nav * { transition: none !important; }
+}
+
+/* ----------------------------------------------------------------------
+   BREADCRUMBS
+
+   Only on pages deeper than the top level, and never a duplicate of the
+   bar above them. They say which branch you came down, not which page you
+   are on, because the page says that itself.
+   ---------------------------------------------------------------------- */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.1rem 0.45rem;
+  margin: 0;
+  padding: 0.55rem clamp(0.9rem, 4vw, 2rem) 0;
+  list-style: none;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  color: var(--ink-far);
+}
+.crumbs li { display: inline-flex; align-items: center; gap: 0.45rem; }
+.crumbs li + li::before {
+  content: "›";
+  color: var(--rule);
+}
+.crumbs a { color: var(--ink-soft); text-decoration: none; }
+.crumbs a:hover { color: var(--brand); text-decoration: underline; }
+.crumbs [aria-current="page"] { color: var(--ink); }
+
+/* ----------------------------------------------------------------------
+   KEEP EXPLORING
+
+   The block that goes at the foot of every major page. Not a related-posts
+   widget: each card names what kind of thing it is, so a reader can tell a
+   simulation from a notebook entry before they press it.
+   ---------------------------------------------------------------------- */
+.onward {
+  margin: calc(var(--baseline) * 2.5) 0 0;
+  padding: clamp(1.4rem, 4vw, 2.4rem) clamp(0.9rem, 4vw, 2rem);
+  border-top: 1px solid var(--rule);
+  background: var(--brand-wash);
+}
+.onward-in { max-width: 78rem; margin: 0 auto; }
+
+.onward h2 {
+  margin: 0 0 1rem;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+
+.onward-list {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+}
+
+.onward-list a {
+  display: block;
+  height: 100%;
+  padding: 0.8rem 0.95rem;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-left: 3px solid var(--brand);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+}
+.onward-list a:hover {
+  border-color: var(--brand);
+  border-left-color: var(--brand);
+}
+
+.onward-kind {
+  display: block;
+  font-family: var(--f-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+.onward-name {
+  display: block;
+  margin: 0.3rem 0 0;
+  font-family: var(--f-body);
+  font-size: 1rem;
+  line-height: 1.3;
+  color: var(--ink);
+}
+.onward-say {
+  display: block;
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+/* The kinds, coloured by the hierarchy rather than at random. */
+.onward-list a[data-kind="lab"]       { border-left-color: var(--lavender-ink); }
+.onward-list a[data-kind="notebook"]  { border-left-color: var(--orchid-ink); }
+.onward-list a[data-kind="mission"]   { border-left-color: var(--gold-ink); }
+.onward-list a[data-kind="research"]  { border-left-color: var(--brand); }
+.onward-list a[data-kind="archive"]   { border-left-color: var(--ink-far); }
+
+/* Printed, none of this is navigable, so none of it prints. */
+@media print {
+  .site-nav, .crumbs, .onward { display: none !important; }
 }

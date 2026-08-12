@@ -475,9 +475,28 @@
      CANVAS HELPERS
      ===================================================================== */
 
-  var INK = "#332E5C", CORR = "#8C2F45", SAGE = "#33543B",
-      PAPER = "#FAF6EF", DEEP = "#F1EBE0", RULE = "#C5C7DC",
-      ASIDE = "#8A5A2B", BUTTER = "#E9C978";
+  /* The colours the notebook's own two simulations draw with. They come
+     from the page rather than from here, through the same reader the eight
+     lab files use, so the phase diagram and the stalactite follow the theme
+     without either of them being touched. See palette.js. */
+  var INK, CORR, SAGE, PAPER, DEEP, RULE, ASIDE, BUTTER, SOFT, RGBA;
+  (function () {
+    function take(p) {
+      INK = p.ink; CORR = p.corr; SAGE = p.sage; PAPER = p.paper;
+      DEEP = p.rgba("rule", 0.22); RULE = p.rule; SOFT = p.soft;
+      ASIDE = p.aside; BUTTER = p.gold; RGBA = p.rgba;
+    }
+    take(Lab.read(document.documentElement));
+    document.addEventListener("theme:change", function () {
+      requestAnimationFrame(function () {
+        take(Lab.read(document.documentElement));
+        /* The stalactite is animated and redraws itself on the next frame.
+           The phase diagram redraws on input only, so it would sit in the
+           old palette until somebody dragged it. It listens for this. */
+        document.dispatchEvent(new CustomEvent("lab:repaint"));
+      });
+    });
+  })();
 
   function fit(canvas) {
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -599,7 +618,7 @@
       ctx.fillStyle = DEEP; ctx.fillRect(0, 0, W, H);
 
       // Ceiling.
-      ctx.fillStyle = "rgba(51,46,92,0.16)";
+      ctx.fillStyle = RGBA("ink", 0.16);
       ctx.fillRect(0, 0, W, CEIL);
 
       var cycle = 150;
@@ -613,12 +632,12 @@
       ctx.quadraticCurveTo(W / 2 - 5, CEIL + spike * 0.75, W / 2, CEIL + spike);
       ctx.quadraticCurveTo(W / 2 + 5, CEIL + spike * 0.75, W / 2 + 16, CEIL);
       ctx.closePath();
-      ctx.fillStyle = "rgba(140,47,69,0.20)";
+      ctx.fillStyle = RGBA("corr", 0.20);
       ctx.fill();
       ctx.strokeStyle = CORR; ctx.lineWidth = 1.2; ctx.stroke();
 
       // Layer lines, because it is built bit by bit.
-      ctx.strokeStyle = "rgba(140,47,69,0.30)";
+      ctx.strokeStyle = RGBA("corr", 0.30);
       ctx.lineWidth = 0.8;
       for (var i = 1; i < Math.min(n, 18); i++) {
         var y = CEIL + (spike * i / Math.min(n, 18));
@@ -633,25 +652,25 @@
         var r = 3 + grow * 6;
         ctx.beginPath();
         ctx.ellipse(W / 2, tipY + r * 0.7, r * 0.85, r * (1 + grow * 0.35), 0, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(51,84,59,0.55)"; ctx.fill();
+        ctx.fillStyle = RGBA("sage", 0.55); ctx.fill();
       } else {
         var fall = (p - 0.62) / 0.38;
         var fy = tipY + 8 + fall * fall * (H - tipY - 30);
         ctx.beginPath();
         ctx.ellipse(W / 2, fy, 5, 7.5, 0, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(51,84,59,0.55)"; ctx.fill();
+        ctx.fillStyle = RGBA("sage", 0.55); ctx.fill();
       }
 
       // Floor and the stalagmite answering it.
-      ctx.fillStyle = "rgba(51,46,92,0.16)";
+      ctx.fillStyle = RGBA("ink", 0.16);
       ctx.fillRect(0, H - 20, W, 20);
       var up = Math.min(40, n * 2.0);
       ctx.beginPath();
       ctx.moveTo(W / 2 - 14, H - 20);
       ctx.quadraticCurveTo(W / 2, H - 20 - up * 1.2, W / 2 + 14, H - 20);
       ctx.closePath();
-      ctx.fillStyle = "rgba(140,47,69,0.16)"; ctx.fill();
-      ctx.strokeStyle = "rgba(140,47,69,0.55)"; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = RGBA("corr", 0.16); ctx.fill();
+      ctx.strokeStyle = RGBA("corr", 0.55); ctx.lineWidth = 1; ctx.stroke();
     }
 
     function drawZ(ctx, t) {
@@ -659,7 +678,7 @@
       ctx.clearRect(0, 0, W, H);
       ctx.fillStyle = DEEP; ctx.fillRect(0, 0, W, H);
 
-      ctx.fillStyle = "rgba(51,46,92,0.16)";
+      ctx.fillStyle = RGBA("ink", 0.16);
       ctx.fillRect(0, 0, W, CEIL);
 
       var grow = Math.min(1, t / LOOP);
@@ -671,23 +690,23 @@
         var rr = shell * (k / 6);
         ctx.beginPath();
         ctx.arc(cx, cy, rr, 0, Math.PI * 2);
-        ctx.strokeStyle = "rgba(51,84,59," + (0.18 + 0.10 * (6 - k) / 6) + ")";
+        ctx.strokeStyle = RGBA("sage", (0.18 + 0.10 * (6 - k) / 6));
         ctx.lineWidth = 1;
         ctx.stroke();
       }
       ctx.beginPath();
       ctx.arc(cx, cy, shell, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(51,84,59,0.14)"; ctx.fill();
+      ctx.fillStyle = RGBA("sage", 0.14); ctx.fill();
       ctx.strokeStyle = SAGE; ctx.lineWidth = 1.4; ctx.stroke();
 
       // The bead itself, held by surface tension, breathing very slightly.
       var wob = Math.sin(t * 0.03) * 0.8;
       ctx.beginPath();
       ctx.arc(cx, cy, 13 + wob, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(51,84,59,0.50)"; ctx.fill();
+      ctx.fillStyle = RGBA("sage", 0.50); ctx.fill();
 
       // Nothing falls, so the floor stays bare.
-      ctx.fillStyle = "rgba(51,46,92,0.16)";
+      ctx.fillStyle = RGBA("ink", 0.16);
       ctx.fillRect(0, H - 20, W, 20);
     }
 
@@ -962,7 +981,7 @@
       ctx.moveTo(PAD.l, PAD.t); ctx.lineTo(PAD.l, H - PAD.b); ctx.lineTo(W - PAD.r, H - PAD.b);
       ctx.stroke();
 
-      ctx.fillStyle = "#615A6E";
+      ctx.fillStyle = SOFT;
       ctx.font = "11px ui-monospace, monospace";
       ctx.textAlign = "right";
       for (var t2 = 200; t2 <= 1000; t2 += 200) {
@@ -987,7 +1006,7 @@
         curvePath(function (x) { return sys.solidus(x); }, 0, 1);
         ctx.strokeStyle = SAGE; ctx.lineWidth = 2; ctx.stroke();
 
-        ctx.fillStyle = "rgba(97,90,110,0.85)";
+        ctx.fillStyle = RGBA("soft", 0.85);
         ctx.font = "11px ui-monospace, monospace";
         ctx.textAlign = "left";
         ctx.fillText("liquidus", px(0.13), py(sys.liquidus(0.13)) - 8);
@@ -1033,7 +1052,7 @@
       ctx.arc(px(sys.xE), py(sys.tE), 3.5, 0, Math.PI * 2);
       ctx.fillStyle = CORR; ctx.fill();
 
-      ctx.fillStyle = "rgba(97,90,110,0.85)";
+      ctx.fillStyle = RGBA("soft", 0.85);
       ctx.font = "11px ui-monospace, monospace";
       ctx.textAlign = "left";
       ctx.fillText("liquidus", px(0.10), py(sys.liquidus(0.10)) - 8);
@@ -1100,13 +1119,13 @@
           var isA = (g / 90) < fA;
           bctx.beginPath();
           bctx.arc(gx, gy, 7, 0, Math.PI * 2);
-          bctx.fillStyle = isA ? "rgba(51,84,59,0.42)" : "rgba(140,47,69,0.34)";
+          bctx.fillStyle = isA ? RGBA("sage", 0.42) : RGBA("corr", 0.34);
           bctx.fill();
         }
       } else {
         // Liquid pools at the bottom, solid grains sit in it.
         var liqH = bh * liquidFrac;
-        bctx.fillStyle = "rgba(51,46,92,0.16)";
+        bctx.fillStyle = RGBA("ink", 0.16);
         bctx.fillRect(x0, y0 + bh - liqH, bw, liqH);
 
         var count = Math.round(solidFrac * 34);
@@ -1120,14 +1139,14 @@
             if (v === 0) bctx.moveTo(vx, vy); else bctx.lineTo(vx, vy);
           }
           bctx.closePath();
-          bctx.fillStyle = "rgba(51,84,59,0.40)";
+          bctx.fillStyle = RGBA("sage", 0.40);
           bctx.fill();
           bctx.strokeStyle = SAGE; bctx.lineWidth = 1; bctx.stroke();
         }
       }
       bctx.restore();
 
-      bctx.fillStyle = "#615A6E";
+      bctx.fillStyle = SOFT;
       bctx.font = "11px ui-monospace, monospace";
       bctx.textAlign = "center";
       bctx.fillText("what you would be holding", w / 2, y0 + bh + 24);
@@ -1373,6 +1392,10 @@
     })();
 
     render();
+
+    /* This one draws on input rather than every frame, so it is the only
+       thing on the page that a theme change would leave in the old colours. */
+    document.addEventListener("lab:repaint", render);
 
     if (reduced.matches) {
       fallback(wrap.parentNode,

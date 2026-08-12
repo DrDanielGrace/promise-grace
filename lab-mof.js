@@ -85,7 +85,13 @@
   };
   function fmt(x, n) { return (Math.round(x * Math.pow(10, n)) / Math.pow(10, n)).toFixed(n); }
 
-  var INK = "#332E5C", SAGE = "#33543B", CORR = "#8C2F45", RULE = "#C5C7DC", SOFT = "#615A6E";
+  /* The six come from the host rather than from here. See palette.js. */
+  var INK, SAGE, CORR, RULE, SOFT, RGBA;
+  Lab.bind(host, function (p, redraw) {
+    INK = p.ink; SAGE = p.sage; CORR = p.corr;
+    RULE = p.rule; SOFT = p.soft; RGBA = p.rgba;
+    if (redraw && typeof draw === "function") draw();
+  });
 
   function readout() {
     var ap = aperture();
@@ -150,7 +156,7 @@
     /* the pore */
     var ap = aperture() * s;
     ctx.beginPath(); ctx.arc(cx, cy, Math.max(1, ap / 2), 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(51,84,59,0.16)"; ctx.fill();
+    ctx.fillStyle = RGBA("sage", 0.16); ctx.fill();
     ctx.setLineDash([3, 3]); ctx.strokeStyle = SAGE; ctx.lineWidth = 1.2; ctx.stroke();
     ctx.setLineDash([]);
 
@@ -179,7 +185,7 @@
       var y = 22 + i * rowH;
       var x = 30 + (g.d / maxD) * (w - 60);
       var through = g.d <= ap;
-      ctx.fillStyle = through ? "rgba(51,84,59,0.75)" : "rgba(140,47,69,0.7)";
+      ctx.fillStyle = through ? RGBA("sage", 0.75) : RGBA("corr", 0.7);
       ctx.beginPath(); ctx.arc(x, y, Math.max(3, (g.d / maxD) * 14), 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = SOFT;
       ctx.fillText(g.n, 4, y + 4);

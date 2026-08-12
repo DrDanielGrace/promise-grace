@@ -77,8 +77,8 @@ html[data-pages="off"] .page-edges { display: none; }
 .page-edge.is-read .page-edge-line { width: 0.75rem; background: var(--ink-soft); }
 /* the current page is longer AND darker AND carries the ribbon, so it is
    never colour on its own doing the work */
-.page-edge.is-here .page-edge-line { width: 1.05rem; height: 2px; background: var(--sage); }
-.page-edge:hover .page-edge-line { width: 1.05rem; background: var(--sage); }
+.page-edge.is-here .page-edge-line { width: 1.05rem; height: 2px; background: var(--brand); }
+.page-edge:hover .page-edge-line { width: 1.05rem; background: var(--brand); }
 
 .page-edge-name {
   position: absolute; left: 1.5rem; top: 50%; transform: translateY(-50%);
@@ -97,7 +97,7 @@ html[data-pages="off"] .page-edges { display: none; }
 /* the ribbon, marking where the reader got to */
 .page-ribbon {
   position: absolute; left: 0; width: 3px;
-  background: var(--sage);
+  background: var(--brand);
   transition: top 200ms ease;
   border-radius: 0 2px 2px 0;
 }
@@ -108,12 +108,12 @@ html[data-pages="off"] .page-edges { display: none; }
   display: inline-flex; align-items: center; gap: 0.5rem;
   min-height: 2.75rem; padding: 0.5rem 0.9rem;
   font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.05em;
-  background: var(--paper); color: var(--sage);
+  background: var(--paper); color: var(--brand);
   border: 1px solid var(--rule); border-radius: 4px;
   cursor: pointer;
   box-shadow: 0 1px 6px rgba(51,46,92,0.10);
 }
-.pages-toggle:hover { border-color: var(--sage); }
+.pages-toggle:hover { border-color: var(--brand); }
 .pages-mark { width: 0.7rem; height: 0.7rem; border: 1px solid currentColor; }
 .pages-toggle[aria-pressed="true"] .pages-mark { background: currentColor; }
 

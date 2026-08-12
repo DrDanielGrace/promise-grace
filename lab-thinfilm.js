@@ -100,8 +100,17 @@
 
   /* This one lives in a dark housing, because its subject is colour and a
      colour argued with by a cream background is not the colour. The trace
-     and the labels go luminous against near black to match. */
-  var INK = "#F1EFF5", RULE = "#4A4757", SOFT = "#B9B4C4";
+     and the labels go luminous against near black to match.
+
+     The three used to be hard coded here for that reason, which meant this
+     file decided what its own housing looked like. Now the housing declares
+     its own --lab-* properties and this reads them, so the same drawing code
+     works whether the panel around it is dark or not. See palette.js. */
+  var INK, RULE, SOFT;
+  Lab.bind(host, function (p, redraw) {
+    INK = p.ink; RULE = p.rule; SOFT = p.soft;
+    if (redraw && typeof draw === "function") draw();
+  });
 
   function readout() {
     if (out.d) out.d.textContent = String(Math.round(d));

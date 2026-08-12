@@ -1,0 +1,427 @@
+/* =========================================================================
+   lab.css · the instrument gallery
+
+   WHAT THIS REPLACES
+
+   An ordered list of seventeen paragraphs. Everything on it was worth
+   reading and none of it was worth looking at, so choosing between them
+   meant reading all seventeen.
+
+   WHAT IT IS NOW
+
+   Cards, and the thing that makes them worth having is the thumbnail: each
+   one is the actual scientific object computed from the same equations the
+   instrument runs. A reader can see that powder diffraction is a set of
+   spikes at particular angles and that thermoelectrics is two curves
+   fighting, before reading a word.
+
+   The prose is unchanged. It sits under the object rather than instead of
+   it.
+
+   This loads after instrument.css and overrides the parts of the .ix-*
+   rules that assumed a single narrow column of text.
+   ========================================================================= */
+
+/* ----------------------------------------------------------------------
+   THE HEAD
+   ---------------------------------------------------------------------- */
+.lab-head {
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: clamp(1.2rem, 4vh, 2.4rem) clamp(0.9rem, 4vw, 2rem) 0;
+  border-bottom: 0;
+}
+
+.lab-eyebrow {
+  margin: 0 0 0.6rem;
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  color: var(--ink-far);
+}
+
+.lab-h1 {
+  margin: 0;
+  max-width: 20ch;
+  font-family: var(--f-display);
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-weight: 600;
+  font-size: clamp(1.8rem, 4.4vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.lab-head .inst-run {
+  margin: 0.9rem 0 0;
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  color: var(--ink-far);
+}
+
+.lab-head .inst-head-acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.1rem 0 0;
+}
+
+.ix-lede-quiet {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+/* The group heading, and the count beside it, which lab.js writes from the
+   same declaration everything else counts from. */
+.ix-group > h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: clamp(1.8rem, 5vh, 2.8rem) 0 0.8rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule-soft);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+.ix-group > h2 span {
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  color: var(--ink-far);
+}
+.ix-lede-quiet .tag { margin: 0 0.1rem; }
+
+
+/* ----------------------------------------------------------------------
+   THE GROUPS
+
+   The index used to be 52rem wide because it was a column of prose. It is
+   a gallery now and wants the width the rest of the site uses.
+   ---------------------------------------------------------------------- */
+.inst-index .inst-stage {
+  max-width: 78rem;
+  padding: 0 clamp(0.9rem, 4vw, 2rem);
+}
+
+.ix-list {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.ix-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--radius-lg);
+}
+.ix-item:hover { border-color: var(--brand); }
+.ix-item::before { content: none; }
+
+/* ---- the preview ---- */
+.ix-pv {
+  height: 96px;
+  background: var(--brand-wash);
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.pv {
+  display: block;
+  width: 100%;
+  height: 96px;
+}
+
+/* One vocabulary for every preview, so a line means the same thing on all
+   seventeen. Ink is the quantity being shown, alt is the second one where
+   the physics has two, faint is context, and the mark is the value the
+   instrument is actually about: the critical radius, the band gap, the
+   peak. */
+.pv-line   { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.pv-ink    { stroke: var(--brand); }
+.pv-alt    { stroke: var(--lavender-ink); }
+.pv-faint  { stroke: var(--rule); stroke-width: 1.5; }
+.pv-axis   { stroke: var(--rule); stroke-width: 1; }
+.pv-mark   { stroke: var(--gold); stroke-width: 1.5; stroke-dasharray: 3 3; }
+.pv-peak   { stroke: var(--brand); stroke-width: 2.2; }
+.pv-dot    { fill: var(--brand); }
+.pv-fill   { fill: var(--brand); }
+.pv-fill-alt  { fill: var(--lavender); }
+.pv-fill-soft { fill: var(--brand); opacity: 0.16; }
+.pv-fill-open { fill: none; stroke: var(--brand); stroke-width: 1.5; }
+.pv-dash   { stroke-dasharray: 4 3; }
+
+/* Speculative previews are drawn in the correction colour, because the
+   whole point of that label is that the picture is a guess. */
+.ix-item[data-sim="stalactite"] .pv-ink,
+.ix-item[data-sim="stalactite"] .pv-fill-open { stroke: var(--correction); }
+.ix-item[data-sim="stalactite"] .pv-fill { fill: var(--correction); }
+.ix-item[data-sim="stalactite"] .ix-pv { background: var(--paper-deep); }
+
+/* ---- the card body ---- */
+.ix-item > :not(.ix-pv) {
+  padding-left: 0.95rem;
+  padding-right: 0.95rem;
+}
+
+.ix-name {
+  margin: 0.85rem 0 0;
+  font-family: var(--f-body);
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+.ix-name a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.ix-name a:hover { color: var(--brand); text-decoration: underline; }
+
+.ix-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.5rem 0 0;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.ix-where { color: var(--ink-far); }
+.ix-topic {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
+}
+.ix-topic:hover { color: var(--brand); border-color: var(--brand); }
+
+.ix-find {
+  margin: 0.65rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: none;
+}
+
+.ix-quant {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0.7rem 0 0;
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+}
+.ix-quant span {
+  padding: 0.12rem 0.35rem;
+  background: var(--paper-deep);
+  border-radius: 2px;
+  color: var(--ink-far);
+}
+
+.ix-meta {
+  margin: 0.6rem 0 0;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--ink-far);
+  line-height: 1.6;
+}
+.ix-in, .ix-out { font-weight: 500; }
+.ix-in  { color: var(--lavender-ink); }
+.ix-out { color: var(--brand); }
+
+.ix-read {
+  margin: 0.6rem 0 0.95rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 9px;
+  letter-spacing: 0.11em;
+  color: var(--ink-far);
+}
+.ix-read a { color: var(--orchid-ink); }
+
+/* the last thing in the card, whatever it turned out to be, keeps the
+   bottom padding */
+.ix-item > :last-child { margin-bottom: 0.95rem; }
+.ix-item > .ix-read:last-child { margin-bottom: 0.95rem; }
+
+
+/* ----------------------------------------------------------------------
+   THE CHAINS
+
+   The signature interaction on this page. Horizontal from 760 up, with the
+   carried quantity written along each arrow; stacked below that, with the
+   arrow turning to point down and the quantity beside it.
+   ---------------------------------------------------------------------- */
+.ix-chains { margin-top: clamp(2rem, 6vh, 3.4rem); }
+
+.chain {
+  margin: 1.2rem 0 0;
+  padding: clamp(1rem, 3vw, 1.6rem);
+  background: var(--soft-blue);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--radius-lg);
+}
+
+.chain-head {
+  margin: 0 0 1rem;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+.chain-row {
+  display: grid;
+  gap: 0.6rem;
+  align-items: stretch;
+}
+
+@media (min-width: 760px) {
+  .chain[data-chain="crystal"] .chain-row {
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: center;
+  }
+  .chain[data-chain="solar"] .chain-row {
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+}
+
+.chain-node {
+  display: block;
+  padding: 0.75rem 0.85rem 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+}
+.chain-node:hover { border-color: var(--brand); background: var(--brand-wash); }
+
+.chain-pv {
+  display: block;
+  margin: -0.75rem -0.85rem 0.6rem;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.chain-pv .pv { height: 62px; }
+
+.chain-name {
+  display: block;
+  font-family: var(--f-body);
+  font-size: 1rem;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.chain-q {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+/* ---- the arrow, and the quantity riding on it ---- */
+.chain-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-width: 0;
+  padding: 0.2rem 0;
+}
+
+.chain-carry {
+  font-size: 9px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--gold-ink);
+  max-width: 11ch;
+  line-height: 1.4;
+}
+
+/* the arrow itself, which points down when the row is stacked and right
+   when it is not */
+.chain-tip {
+  display: block;
+  width: 1px;
+  height: 1.5rem;
+  background: var(--gold);
+  position: relative;
+}
+.chain-tip::after {
+  content: "";
+  position: absolute;
+  left: 50%; bottom: -1px;
+  width: 6px; height: 6px;
+  border-right: 1px solid var(--gold);
+  border-bottom: 1px solid var(--gold);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+@media (min-width: 760px) {
+  .chain-arrow { padding: 0 0.35rem; }
+  .chain-tip { width: 2.4rem; height: 1px; }
+  .chain-tip::after {
+    left: auto; right: -1px; bottom: 50%;
+    transform: translateY(50%) rotate(-45deg);
+  }
+}
+
+.chain-say {
+  margin: 1rem 0 0;
+  max-width: 64ch;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.chain-note {
+  margin: 0.5rem 0 0;
+  max-width: 64ch;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+
+/* ----------------------------------------------------------------------
+   IF YOU TEACH
+   ---------------------------------------------------------------------- */
+.ix-using {
+  margin-top: clamp(2rem, 6vh, 3.4rem);
+  padding: clamp(1rem, 3vw, 1.6rem);
+  background: var(--paper-deep);
+  border-radius: var(--radius-lg);
+}
+.ix-using .ix-find { max-width: 64ch; color: var(--ink-soft); }
+
+.ix-foot {
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 1.4rem clamp(0.9rem, 4vw, 2rem) 2rem;
+  color: var(--ink-far);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+
+/* ----------------------------------------------------------------------
+   PRINT
+
+   A class needs the list, not the pictures, and a thumbnail printed at
+   96 pixels tall is a grey smear.
+   ---------------------------------------------------------------------- */
+@media print {
+  .ix-pv, .chain-pv { display: none; }
+  .ix-list { display: block; }
+  .ix-item { border: 0; border-bottom: 1px solid #999; border-radius: 0; }
+}

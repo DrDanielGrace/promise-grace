@@ -1,34 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-where="lab"
+      data-onward="research|The research behind them|research.html|Five areas, and which instrument belongs to which., notebook:question, mission|Mission Control|mission-planner-website/index.html|Seven of the seventeen live inside the learning plan., guide|How to use them|guide.html|Three depths, the code control, and what each one assumes.">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Seventeen simulations · Promise Oluwatosin Grace</title>
+<title>The Lab · Promise Oluwatosin Grace</title>
 <meta name="description" content="An index of seventeen interactive chemistry and materials science simulations: what each one lets you find out, what it computes, and which ones hand their results to each other.">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Seventeen simulations">
+<meta property="og:title" content="The Lab · Seventeen instruments">
 <meta property="og:description" content="What each one lets you find out, what it computes, and which ones hand their results to each other.">
 <meta property="og:image" content="assets/scans/og-card.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="instrument.css">
 <link rel="stylesheet" href="nav.css">
+<link rel="stylesheet" href="research.css">
+<link rel="stylesheet" href="lab.css">
+<script src="theme.js"></script>
 </head>
 <body class="inst inst-index">
 
 <a class="skip" href="#index">Skip to the index</a>
 
-<header class="inst-head">
-  <div class="inst-ident">
-    <h1>Seventeen simulations</h1>
-    <p class="mono inst-run"><span data-run-id>INDEX</span></p>
-  </div>
+<header class="lab-head">
+  <p class="mono lab-eyebrow">THE LAB</p>
+  <h1 class="lab-h1"><span data-count="sims">Seventeen</span> instruments, and every one of
+  them runs.</h1>
+  <p class="mono inst-run"><span data-run-id>INDEX</span></p>
   <div class="inst-head-acts">
     <a class="inst-btn" href="guide.html">How to use them</a>
-    <a class="inst-btn inst-btn-quiet" href="notebook.html">The notebook</a>
+    <a class="inst-btn inst-btn-quiet" href="research.html">The research behind them</a>
   </div>
 </header>
 
@@ -38,12 +44,21 @@
   and carries its settings in the address bar. Take any of them for a class. You do not need to
   ask.</p>
 
+  <p class="ix-lede ix-lede-quiet">Every thumbnail below is the actual object, computed from the
+  same equations the instrument runs, at one fixed setting. None of them is an illustration of a
+  plot. Each card also says what it claims: <span class="tag tag-computed">COMPUTED</span> means
+  every number comes out of the equations, <span class="tag tag-measured">MEASURED</span> means at
+  least one is integrated off a real reference table, and
+  <span class="tag tag-spec">SPECULATIVE</span> means a dated prediction with nothing behind it
+  yet. There is one of those.</p>
+
   <nav class="ix-jump" aria-label="Groups">
     <a href="#crystal-formation">Crystal formation</a>
     <a href="#light">Light and materials</a>
     <a href="#structure">Structure and measurement</a>
     <a href="#bench">Chemistry at the bench</a>
     <a href="#chains">What hands to what</a>
+    <a href="research.html">The research</a>
   </nav>
 
   <!-- ── crystal formation ────────────────────────────────────────────── -->
@@ -51,7 +66,7 @@
     <h2 class="mono" id="g1">CRYSTAL FORMATION <span>five</span></h2>
     <ol class="ix-list">
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="nucleation">
         <p class="ix-name"><a href="instrument.html?sim=nucleation">Nucleation, and why most crystals never happen</a></p>
         <p class="ix-find">Find out how rare a crystal actually is. Clusters flicker into existence
         and dissolve at random until one happens to cross the critical radius and runs away. Push
@@ -60,7 +75,7 @@
         <p class="mono ix-meta"><b class="ix-out">SENDS</b> the survivor count onward</p>
       </li>
 
-      <li class="ix-item is-framed">
+      <li class="ix-item is-framed" data-sim="crystal">
         <p class="ix-name"><a href="instrument.html?sim=crystal">Crystal growth, with a gravity you can turn down</a>
           <span class="mono ix-flag">FULL SCREEN</span></p>
         <p class="ix-find">Find out why taking gravity away makes a crystal grow slower rather than
@@ -71,7 +86,7 @@
         <p class="mono ix-meta"><b class="ix-in">TAKES</b> a seed count from nucleation<span class="ix-sep">·</span><b class="ix-out">SENDS</b> a radius and a declared strain proxy onward</p>
       </li>
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="phase">
         <p class="ix-name"><a href="notebook.html#fig-phase">The phase diagram, as a set of instructions</a>
           <span class="mono ix-flag is-open">IN THE NOTEBOOK</span></p>
         <p class="ix-find">Find out what is actually in the beaker. Drag a point around a binary
@@ -80,7 +95,7 @@
         <p class="mono ix-quant"><span>REGION</span><span>TIE LINE ENDS</span><span>LEVER RULE</span></p>
       </li>
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="solidify">
         <p class="ix-name"><a href="instrument.html?sim=solidify">Solidification, and what a phase diagram is for</a></p>
         <p class="ix-find">Find out what a composition does to a microstructure. Choose one, press
         cool, and watch it form beside the diagram: dendrites at one composition, eutectic lamellae
@@ -88,7 +103,7 @@
         <p class="mono ix-quant"><span>TEMPERATURE</span><span>FREEZING STARTS</span><span>PRIMARY PHASE</span><span>EUTECTIC FRACTION</span><span>LAMELLAR SPACING</span></p>
       </li>
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="stalactite">
         <p class="ix-name"><a href="notebook.html#fig-stal">The stalactite, with and without gravity</a>
           <span class="mono ix-flag is-open">SPECULATIVE</span>
           <span class="mono ix-flag is-open">IN THE NOTEBOOK</span></p>
@@ -107,7 +122,7 @@
     <h2 class="mono" id="g2">LIGHT AND MATERIALS <span>five</span></h2>
     <ol class="ix-list">
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="thinfilm">
         <p class="ix-name"><a href="instrument.html?sim=thinfilm">Thin film interference, and why a bubble has colours</a></p>
         <p class="ix-find">Find out where a colour comes from when there is no pigment. Drag the
         thickness and watch the reflected colour sweep the spectrum. Put glass behind the film and
@@ -115,7 +130,7 @@
         <p class="mono ix-quant"><span>STRONGEST AT</span><span>REFLECTED AT 550 nm</span><span>IDEAL FILM INDEX</span><span>QUARTER WAVE AT 550</span></p>
       </li>
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="bandgap">
         <p class="ix-name"><a href="mission-planner-website/index.html#viz-bandgap">Band gaps, and which light gets through</a>
           <span class="mono ix-flag is-open">ON THE MISSION PLANNER</span></p>
         <p class="ix-find">Find out why a material is transparent to some light and not to other
@@ -124,7 +139,7 @@
         <p class="mono ix-quant"><span>WAVELENGTH</span><span>PHOTON ENERGY</span><span>REGION</span><span>LONGEST WAVELENGTH SILICON CAN USE</span></p>
       </li>
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="spectrum">
         <p class="ix-name"><a href="mission-planner-website/index.html#viz-spectrum">Where the sunlight actually goes</a>
           <span class="mono ix-flag is-open">ON THE MISSION PLANNER</span></p>
         <p class="ix-find">Find out how much of the sun a solar cell throws away before anything
@@ -134,7 +149,7 @@
         <p class="mono ix-meta"><b class="ix-out">SENDS</b> the band gap onward<span class="ix-sep">·</span>integrated from the NREL table, not sketched</p>
       </li>
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="limit">
         <p class="ix-name"><a href="mission-planner-website/index.html#viz-limit">The Shockley-Queisser limit, and a second junction</a>
           <span class="mono ix-flag is-open">ON THE MISSION PLANNER</span></p>
         <p class="ix-find">Find out why one solar cell cannot beat about a third, and what a second
@@ -144,7 +159,7 @@
         <p class="mono ix-meta"><b class="ix-in">TAKES</b> a band gap from the spectrum above it</p>
       </li>
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="thermo">
         <p class="ix-name"><a href="instrument.html?sim=thermo">Thermoelectrics, and the argument the field is having</a></p>
         <p class="ix-find">Find out why the field is hard. You want electrical conductivity high and
         thermal conductivity low, and in most materials the same carriers do both, so improving one
@@ -160,7 +175,7 @@
     <h2 class="mono" id="g3">STRUCTURE AND MEASUREMENT <span>four</span></h2>
     <ol class="ix-list">
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="diffraction">
         <p class="ix-name"><a href="instrument.html?sim=diffraction">Powder diffraction, and reading a pattern</a></p>
         <p class="ix-find">Find out how a structure is actually identified. The full pattern for a
         chosen lattice, peaks at their correct angles with the responsible planes named, and the
@@ -170,7 +185,7 @@
         <p class="mono ix-meta"><b class="ix-in">TAKES</b> a crystal from the growth simulation<span class="ix-sep">·</span>Williamson-Hall separates size from strain</p>
       </li>
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="bragg">
         <p class="ix-name"><a href="mission-planner-website/index.html#viz-bragg">Bragg's law, one reflection at a time</a>
           <span class="mono ix-flag is-open">ON THE MISSION PLANNER</span></p>
         <p class="ix-find">Find out what a diffraction peak is, before there is a pattern of them.
@@ -179,7 +194,7 @@
         <p class="mono ix-quant"><span>ANGLE</span><span>d SPACING</span><span>PATH DIFF</span><span>PATH DIFF IN WAVELENGTHS</span><span>NEAREST EXACT PEAK</span></p>
       </li>
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="cells">
         <p class="ix-name"><a href="mission-planner-website/index.html#viz-cells">Unit cells you can turn over</a>
           <span class="mono ix-flag is-open">ON THE MISSION PLANNER</span></p>
         <p class="ix-find">Find out what the packing of a lattice actually means. Turn a cell over
@@ -187,7 +202,7 @@
         <p class="mono ix-quant"><span>TYPE</span><span>ATOMS PER CELL</span><span>PACKING</span></p>
       </li>
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="mof">
         <p class="ix-name"><a href="instrument.html?sim=mof">A metal organic framework you can turn over</a></p>
         <p class="ix-find">Find out why a wider pore is a worse sieve. Metal nodes, organic linkers
         and the hole between them, which is the point of the material. Swap in a longer linker and
@@ -203,7 +218,7 @@
     <h2 class="mono" id="g4">CHEMISTRY AT THE BENCH <span>three</span></h2>
     <ol class="ix-list">
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="titration">
         <p class="ix-name"><a href="instrument.html?sim=titration">Titration, drop by drop</a></p>
         <p class="ix-find">Find out what picking the wrong indicator costs you. The curve draws
         itself as the drops fall. Switch to a weak acid and the buffer region appears. Put methyl
@@ -212,7 +227,7 @@
         <p class="mono ix-quant"><span>ADDED</span><span>pH</span><span>EQUIVALENCE AT</span><span>INDICATOR TURNS AT</span><span>TITRATION ERROR</span></p>
       </li>
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="ph">
         <p class="ix-name"><a href="mission-planner-website/index.html#viz-ph">Why the pH scale is logarithmic</a>
           <span class="mono ix-flag is-open">ON THE MISSION PLANNER</span></p>
         <p class="ix-find">Find out why the scale exists at all. The same number on a linear axis
@@ -220,7 +235,7 @@
         <p class="mono ix-quant"><span>[H+]</span><span>pH = -log</span><span>FOURTEEN POWERS OF TEN</span></p>
       </li>
 
-      <li class="ix-item">
+      <li class="ix-item" data-sim="arrhenius">
         <p class="ix-name"><a href="mission-planner-website/index.html#viz-arrhenius">Arrhenius, plotted twice</a>
           <span class="mono ix-flag is-open">ON THE MISSION PLANNER</span></p>
         <p class="ix-find">Find out what linearising a curve buys you. Rate against temperature is
@@ -232,7 +247,13 @@
     </ol>
   </section>
 
-  <!-- ── the chains ───────────────────────────────────────────────────── -->
+  <!-- ── the chains ───────────────────────────────────────────────────
+       Five of the seventeen are not separate, and that is the strongest
+       single claim this set makes. It used to be four lines of prose near
+       the bottom of this page. lab.js draws it instead, from the same
+       declaration the research page reads, with the carried quantity
+       named on every arrow.
+       ─────────────────────────────────────────────────────────────────── -->
   <section class="ix-group ix-chains" id="chains" aria-labelledby="g5">
     <h2 class="mono" id="g5">WHAT HANDS TO WHAT</h2>
     <p class="ix-find ix-chain-note">Five of these are not separate. A result computed in one is
@@ -240,35 +261,30 @@
     are one piece of chemistry seen from four positions rather than four demonstrations. Run the
     first and the last one changes.</p>
 
-    <ol class="ix-chain">
-      <li>
-        <p class="mono ix-chain-head">CRYSTAL FORMATION, END TO END</p>
-        <p class="ix-chain-row">
-          <a href="instrument.html?sim=nucleation">Nucleation</a>
-          <span class="ix-arrow" aria-hidden="true"></span>
-          <span class="mono ix-carry">how many survived</span>
-          <a href="instrument.html?sim=crystal">Crystal growth</a>
-          <span class="ix-arrow" aria-hidden="true"></span>
-          <span class="mono ix-carry">radius, and a declared strain proxy</span>
-          <a href="instrument.html?sim=diffraction">Powder diffraction</a>
-        </p>
-        <p class="ix-chain-say">More survivors share the same solute, so each crystal finishes
-        smaller, and a smaller crystal gives broader peaks. The size that comes out of the
-        diffraction is computed. The strain that goes into it is a declared proxy, and both ends
-        say so.</p>
-      </li>
-      <li>
-        <p class="mono ix-chain-head">A SOLAR CELL, END TO END</p>
-        <p class="ix-chain-row">
-          <a href="mission-planner-website/index.html#viz-spectrum">Where the sunlight goes</a>
-          <span class="ix-arrow" aria-hidden="true"></span>
-          <span class="mono ix-carry">a band gap</span>
-          <a href="mission-planner-website/index.html#viz-limit">The Shockley-Queisser limit</a>
-        </p>
-        <p class="ix-chain-say">Pick a gap on the measured spectrum, send it, and the two losses
-        you were just looking at reappear as the outer bands of the efficiency budget.</p>
-      </li>
-    </ol>
+    <div data-chains>
+      <noscript>
+        <ol class="ix-chain">
+          <li>
+            <p class="mono ix-chain-head">CRYSTAL FORMATION, END TO END</p>
+            <p class="ix-chain-row">
+              <a href="instrument.html?sim=nucleation">Nucleation</a>
+              <span class="mono ix-carry">how many survived</span>
+              <a href="instrument.html?sim=crystal">Crystal growth</a>
+              <span class="mono ix-carry">radius, and a declared strain proxy</span>
+              <a href="instrument.html?sim=diffraction">Powder diffraction</a>
+            </p>
+          </li>
+          <li>
+            <p class="mono ix-chain-head">A SOLAR CELL, END TO END</p>
+            <p class="ix-chain-row">
+              <a href="mission-planner-website/index.html#viz-spectrum">Where the sunlight goes</a>
+              <span class="mono ix-carry">a band gap</span>
+              <a href="mission-planner-website/index.html#viz-limit">The Shockley-Queisser limit</a>
+            </p>
+          </li>
+        </ol>
+      </noscript>
+    </div>
   </section>
 
   <!-- ── using them ──────────────────────────────────────────────────── -->
@@ -300,6 +316,11 @@
 <script src="audio.js" defer></script>
 <script src="sound.js" defer></script>
 <script src="index-sims.js" defer></script>
+<script src="map.js" defer></script>
+<script src="previews.js" defer></script>
+<script src="lab.js" defer></script>
+<script src="onward.js" defer></script>
+<script src="palette.js" defer></script>
 <script src="search.js" defer></script>
 <script src="nav.js" defer></script>
 <script src="crossing.js" defer></script>

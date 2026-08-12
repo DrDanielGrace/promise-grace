@@ -5,6 +5,36 @@
 (function(){
 'use strict';
 
+
+/* ---------------------------------------------------------------------
+   The colours the paper-drawn plots use. Read from the page through the
+   same reader the laboratory uses, so this file no longer carries its own
+   copy of the notebook's pens and both themes work. See ../palette.js.
+
+   The spectral panel below is NOT drawn through these. It has a dark
+   housing in both themes because what it is showing is colour, and its
+   series colours are a data palette rather than a brand one.
+   --------------------------------------------------------------------- */
+var PEN = { ink:'#30243A', brand:'#3557B7', corr:'#8C2F45',
+            rule:'#C9CBDE', soft:'#726980', aside:'#8A5A2B',
+            paper:'#FCFAF7' };
+(function(){
+  function take(){
+    if(!window.Lab) return;
+    var p = Lab.read(document.documentElement);
+    PEN.ink = p.ink; PEN.brand = p.sage; PEN.corr = p.corr;
+    PEN.rule = p.rule; PEN.soft = p.soft; PEN.aside = p.aside;
+    PEN.paper = p.paper;
+  }
+  take();
+  document.addEventListener('theme:change', function(){
+    requestAnimationFrame(function(){
+      take();
+      document.dispatchEvent(new CustomEvent('planner:repaint'));
+    });
+  });
+})();
+
 var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 var NUCLEATED = new Date('2026-08-01T00:00:00');
 
@@ -351,6 +381,14 @@ function drive(host, render){
    revealed in place. */
 window.addEventListener('scroll', driveSoon, {passive:true});
 window.addEventListener('resize', driveSoon);
+
+/* A theme change moves every colour under every canvas at once, and a
+   canvas keeps the pixels it was given. Every registered visualisation is
+   asked for one still frame in the new palette, whether or not it is the
+   one being driven. */
+document.addEventListener('planner:repaint', function(){
+  DRIVERS.forEach(function(d){ if(!d.dead) try{ d.render(); }catch(e){} });
+});
 document.addEventListener('visibilitychange', function(){
   if(document.hidden){ if(RAFID!==null){ cancelAnimationFrame(RAFID); RAFID=null; } }
   else driveSoon();
@@ -912,21 +950,21 @@ function drawArr(){
   if($('#arr-inv-val')) $('#arr-inv-val').textContent=(1000/T).toFixed(3)+'e-3';
 
   var g1=c1.getContext('2d'), g2=c2.getContext('2d');
-  [g1,g2].forEach(function(g){ g.clearRect(0,0,300,200); g.strokeStyle='#C5C7DC'; g.lineWidth=1;
+  [g1,g2].forEach(function(g){ g.clearRect(0,0,300,200); g.strokeStyle=PEN.rule; g.lineWidth=1;
     g.beginPath(); g.moveTo(34,10); g.lineTo(34,175); g.lineTo(290,175); g.stroke(); });
 
   /* left, the curve: k against T, linear in T */
-  g1.strokeStyle='#332E5C'; g1.lineWidth=2; g1.beginPath();
+  g1.strokeStyle=PEN.ink; g1.lineWidth=2; g1.beginPath();
   for(var i=0;i<=256;i++){
     var t=280+(i/256)*140, k=arrK(t);
     var x=34+i, y=175-Math.min(k/arrK(420),1)*160;
     i?g1.lineTo(x,y):g1.moveTo(x,y);
   }
   g1.stroke();
-  g1.fillStyle='#8C2F45';
+  g1.fillStyle=PEN.corr;
   var kx=34+((T-280)/140)*256, ky=175-Math.min(arrK(T)/arrK(420),1)*160;
   g1.beginPath(); g1.arc(kx,ky,4,0,7); g1.fill();
-  g1.fillStyle='#615A6E'; g1.font='10px "IBM Plex Mono",monospace';
+  g1.fillStyle=PEN.soft; g1.font='10px "IBM Plex Mono",monospace';
   g1.fillText('280 K',34,190); g1.fillText('420 K',258,190);
 
   /* right, the line: ln k against 1/T, linear in 1/T. Hot on the left,
@@ -937,16 +975,16 @@ function drawArr(){
   var yLo=Math.log(arrK(280)), yHi=Math.log(arrK(420));   // lowest, highest ln k
   function Y(lk){ return 175 - ((lk-yLo)/(yHi-yLo))*160; }
 
-  g2.strokeStyle='#332E5C'; g2.lineWidth=2; g2.beginPath();
+  g2.strokeStyle=PEN.ink; g2.lineWidth=2; g2.beginPath();
   for(var j=0;j<=256;j++){
     var inv=iLo+(j/256)*(iHi-iLo);
     var lk=Math.log(arrK(1/inv));
     j?g2.lineTo(X(inv),Y(lk)):g2.moveTo(X(inv),Y(lk));
   }
   g2.stroke();
-  g2.fillStyle='#8C2F45';
+  g2.fillStyle=PEN.corr;
   g2.beginPath(); g2.arc(X(1/T),Y(Math.log(arrK(T))),4,0,7); g2.fill();
-  g2.fillStyle='#615A6E'; g2.font='10px "IBM Plex Mono",monospace';
+  g2.fillStyle=PEN.soft; g2.font='10px "IBM Plex Mono",monospace';
   g2.fillText('hot',34,190); g2.fillText('cold',268,190);
 
   /* The slope is read off the plotted line, not printed from the constant
@@ -1047,9 +1085,9 @@ function drawBudget(){
   g.fillText('W m-2 eV-1',0,0); g.restore();
 
   /* the gap line */
-  g.strokeStyle='#8C2F45'; g.lineWidth=1.5;
+  g.strokeStyle=PEN.corr; g.lineWidth=1.5;
   g.beginPath(); g.moveTo(X(eg),T); g.lineTo(X(eg),B); g.stroke();
-  g.fillStyle='#8C2F45'; g.font='500 11px "IBM Plex Mono",monospace';
+  g.fillStyle=PEN.corr; g.font='500 11px "IBM Plex Mono",monospace';
   g.fillText('the gap', X(eg)+5, T+11);
 
   /* every region named as well as coloured, because colour alone is not
@@ -1204,9 +1242,9 @@ function drawSQ(){
   var cur=sqTandem?sqTandemSplit(sel,bot):null;
   var eta=sqTandem?cur.eta:Solar.single(sel).eta;
   var sx=X(sel), sy=Y(eta);
-  g.strokeStyle='#8C2F45'; g.lineWidth=1.5;
+  g.strokeStyle=PEN.corr; g.lineWidth=1.5;
   g.beginPath(); g.moveTo(sx,T); g.lineTo(sx,B); g.stroke();
-  g.fillStyle='#8C2F45'; g.beginPath(); g.arc(sx,sy,5,0,7); g.fill();
+  g.fillStyle=PEN.corr; g.beginPath(); g.arc(sx,sy,5,0,7); g.fill();
 
   if(!sqTandem){
     /* Four of these sit within 0.15 eV of each other and the labels piled up
@@ -1323,14 +1361,14 @@ function drawBragg(){
   var g=c.getContext('2d'), W=520,H=300;
   var th=+$('#bragg-theta').value, d=+$('#bragg-d').value/10;
   g.clearRect(0,0,W,H);
-  g.fillStyle='#F1EBE0'; g.fillRect(0,0,W,H);
+  g.fillStyle=PEN.paper; g.fillRect(0,0,W,H);
 
   var rows=3, y0=140, gapPx=d*22;
-  g.fillStyle='#33543B';
+  g.fillStyle=PEN.brand;
   for(var r=0;r<rows;r++){
     var yy=y0+r*gapPx;
     for(var x=40;x<W-20;x+=30){ g.beginPath(); g.arc(x,yy,5,0,7); g.fill(); }
-    g.strokeStyle='#C5C7DC'; g.beginPath(); g.moveTo(30,yy); g.lineTo(W-15,yy); g.stroke();
+    g.strokeStyle=PEN.rule; g.beginPath(); g.moveTo(30,yy); g.lineTo(W-15,yy); g.stroke();
   }
 
   var rad=th*Math.PI/180;
@@ -1339,8 +1377,8 @@ function drawBragg(){
     g.strokeStyle=col; g.lineWidth=1.8;
     g.beginPath(); g.moveTo(60-dx,yy-110); g.lineTo(260,yy); g.lineTo(260+dx,yy-110); g.stroke();
   }
-  beam(y0,'#332E5C');
-  beam(y0+gapPx,'#8A5A2B');
+  beam(y0,PEN.ink);
+  beam(y0+gapPx,PEN.aside);
 
   var path=2*d*Math.sin(rad);
   var lam=1.54, n=path/lam;
@@ -1381,21 +1419,21 @@ function drawBragg(){
   }
   braggWas = state;
 
-  g.fillStyle = state==='in' ? '#33543B' : (state==='near' ? '#8A5A2B' : '#615A6E');
+  g.fillStyle = state==='in' ? PEN.brand : (state==='near' ? PEN.aside : PEN.soft);
   g.font='500 13px "IBM Plex Mono",monospace';
   g.fillText(
     state==='in'   ? 'IN STEP \u00B7 BRIGHT PEAK' :
     state==='near' ? 'ALMOST \u00B7 NOT QUITE A PEAK' :
                      'OUT OF STEP \u00B7 NOTHING', 40, 34);
   g.font='11px "IBM Plex Mono",monospace';
-  g.fillStyle='#615A6E';
+  g.fillStyle=PEN.soft;
   g.fillText('n\u03BB = 2d sin\u03B8', 40, 54);
 
   /* The detector mark. Full height and solid on a real peak, short and
      faint when you are only close, so the picture grades the same way the
      words do rather than being on or off. */
   if(state!=='off'){
-    g.strokeStyle = state==='in' ? '#33543B' : '#8A5A2B';
+    g.strokeStyle = state==='in' ? PEN.brand : PEN.aside;
     g.lineWidth = state==='in' ? 3 : 1.5;
     g.beginPath();
     g.moveTo(W-60,40);

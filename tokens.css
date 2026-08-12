@@ -1,0 +1,303 @@
+/* =========================================================================
+   tokens.css · the one place a colour is decided
+
+   WHY THIS FILE EXISTS
+
+   The site grew as three separate worlds. The notebook was paper and sage,
+   the simulations were a dark bench with an amber accent, and the mission
+   planner had its own copy of the notebook's palette with nine extra values
+   bolted on. Three worlds meant three answers to "what colour is a link",
+   and a reader crossing between them was crossing between products.
+
+   Everything below is loaded first, by every page, and every other
+   stylesheet consumes it. A component that wants a colour asks for a token.
+   No component invents one.
+
+   THE HIERARCHY, AND IT IS NOT A FLAT PALETTE
+
+     soft white          the page, and most of what you see
+        ↓
+     royal blue          navigation, links, active states, research nodes
+        ↓
+     soft blue           research surfaces and secondary panels
+        ↓
+     orchid / lavender   the notebook, and interactive science
+        ↓
+     gold / butter       discoveries, results, learning
+
+   Royal blue and soft white have to stay recognisable as the brand, so
+   everything below them appears in smaller quantities by construction: the
+   accents are given as fills and rules, and their -ink variants exist only
+   so that text on them can clear AA.
+
+   CONTRAST, MEASURED ON #FCFAF7
+
+     ink          #30243A   14.15:1
+     ink-soft     #5E5468    6.85:1
+     ink-far      #726980    5.04:1
+     brand        #3557B7    6.30:1
+     orchid-ink   #9E4A8C    5.32:1
+     lavender-ink #6A55B5    5.65:1
+     gold-ink     #8A6414    5.22:1
+     correction   #8C2F45    7.51:1
+     aside        #8A5A2B    5.48:1
+
+   The bare orchid, lavender, gold and butter are fills and never carry text.
+
+   SEMANTICS THAT SURVIVED THE MERGE
+
+   Two of the old pen colours are kept because they mean something rather
+   than because they were there. --correction only ever marks a thing
+   students get wrong; --aside only ever marks a margin afterthought. Search
+   either token and you will still find only those uses. Everything that was
+   --sage is now --brand, because sage never meant anything: it was simply
+   the colour interface elements happened to be.
+
+   DARK
+
+   The same world at night, not an inversion and not a second product. The
+   backgrounds go to deep plum rather than to black, the blue lifts to
+   #6B8DE8 so it still reads as the same blue, and the accents lighten by
+   the same amount so their relationships to each other are unchanged.
+   ========================================================================= */
+
+:root {
+  color-scheme: light;
+
+  /* ---- surfaces ------------------------------------------------------ */
+  --paper:       #FCFAF7;   /* the page */
+  --paper-deep:  #F4EFE8;   /* something recessed into it */
+  --surface:     #FFFFFF;   /* something raised off it */
+  --soft-blue:   #E8EDF9;   /* a research surface */
+  --soft-blue-2: #DCE4F5;   /* the same, one step in */
+  --rule:        #C9CBDE;   /* a hairline, and the notebook's ruling */
+  --rule-soft:   #E2E0EA;
+
+  /* ---- text ---------------------------------------------------------- */
+  --ink:         #30243A;   /* the argument */
+  --ink-soft:    #5E5468;   /* captions, dates, secondary prose */
+  --ink-far:     #726980;   /* labels, units, things beside a number */
+
+  /* ---- brand --------------------------------------------------------- */
+  --brand:       #3557B7;
+  --brand-deep:  #2A458F;   /* hover, and a heavier state */
+  --brand-lift:  #5273CE;   /* on a dark surface */
+  --brand-wash:  #EDF1FB;   /* the faintest possible blue fill */
+
+  /* ---- accents, in the order they are allowed to appear -------------- */
+  --orchid:      #D98BCB;   /* the notebook, and the personal */
+  --orchid-ink:  #9E4A8C;
+  --orchid-wash: #F8EDF6;
+
+  --lavender:    #A995E8;   /* interactive science */
+  --lavender-ink:#6A55B5;
+  --lavender-wash:#F1EDFB;
+
+  --gold:        #D9A94A;   /* a result, a discovery */
+  --gold-ink:    #8A6414;
+  --butter:      #F3D98B;   /* learning, and the highlighter */
+  --butter-wash: #FCF4E0;
+
+  /* ---- the two that kept their jobs ---------------------------------- */
+  --correction:  #8C2F45;   /* corrections only */
+  --aside:       #8A5A2B;   /* margin notes only */
+
+  /* ---- state --------------------------------------------------------- */
+  --focus:       var(--brand);
+  --selection:   var(--butter);
+  --shadow:      48, 36, 58;   /* deep plum, so shadows are not grey */
+
+  /* ---- the six handed to the drawing code ----------------------------
+     Every simulation draws through these rather than through a constant in
+     its own file, which is what lets one piece of drawing code render on
+     paper and on a dark surface without a second copy of itself. Given as
+     bare channels because the canvas builds rgba() out of them. */
+  --lab-paper: 252, 250, 247;
+  --lab-ink:    53,  87, 183;   /* the trace, which is the brand */
+  --lab-sage:   42,  69, 143;   /* the second trace */
+  --lab-corr:  140,  47,  69;   /* the one that means something went wrong */
+  --lab-rule:  201, 203, 222;
+  --lab-soft:  114, 105, 128;
+
+  /* The same two surfaces again as bare channels, because a canvas cannot
+     read a hex out of a custom property and build an rgba() from it. */
+  --paper-rgb:   252, 250, 247;
+  --surface-rgb: 255, 255, 255;
+
+  /* ---- type ---------------------------------------------------------- */
+  --f-display: "Fraunces", Georgia, serif;
+  --f-body:    "Source Serif 4", Georgia, serif;
+  --f-hand:    "Caveat", cursive;
+  --f-mono:    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ---- rhythm --------------------------------------------------------
+     One ruled line. Everything vertical on the notebook is a multiple of
+     it, and it draws the ruling as well, so text sits on the lines by
+     construction rather than by eye. */
+  --baseline: calc(1.0625rem * 1.7);
+  --measure:  66ch;
+  --gap:      calc(var(--baseline) * 2);
+
+  --radius:      3px;
+  --radius-lg:   6px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* =========================================================================
+   DARK
+
+   Applied by an explicit choice, and by the system preference when no
+   choice has been made. Both routes set the same variables, so nothing
+   downstream has to know which one is in force.
+   ========================================================================= */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --paper:       #171A24;
+  --paper-deep:  #12141C;
+  --surface:     #222637;
+  --soft-blue:   #1E2536;
+  --soft-blue-2: #262F45;
+  --rule:        #333A4D;
+  --rule-soft:   #262B39;
+
+  --ink:         #F6F3EE;
+  --ink-soft:    #C0BAC6;
+  --ink-far:     #948DA0;
+
+  --brand:       #6B8DE8;
+  --brand-deep:  #8AA5EE;
+  --brand-lift:  #A8BDF3;
+  --brand-wash:  #1D2740;
+
+  --orchid:      #D99BD0;
+  --orchid-ink:  #E4B4DC;
+  --orchid-wash: #2A1F29;
+
+  --lavender:    #B4A5F0;
+  --lavender-ink:#C7BCF5;
+  --lavender-wash:#231F35;
+
+  --gold:        #E0B85C;
+  --gold-ink:    #E8C97F;
+  --butter:      #E8CF86;
+  --butter-wash: #2A2418;
+
+  --correction:  #E39AA9;
+  --aside:       #D9AE7C;
+
+  --selection:   #3D4A6B;
+  --shadow:      0, 0, 0;
+
+  --lab-paper:  23,  26,  36;
+  --lab-ink:   107, 141, 232;
+  --lab-sage:  138, 165, 238;
+  --lab-corr:  227, 154, 169;
+  --lab-rule:   51,  58,  77;
+  --lab-soft:  148, 141, 160;
+
+  --paper-rgb:   23,  26,  36;
+  --surface-rgb: 34,  38,  55;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --paper:       #171A24;
+    --paper-deep:  #12141C;
+    --surface:     #222637;
+    --soft-blue:   #1E2536;
+    --soft-blue-2: #262F45;
+    --rule:        #333A4D;
+    --rule-soft:   #262B39;
+
+    --ink:         #F6F3EE;
+    --ink-soft:    #C0BAC6;
+    --ink-far:     #948DA0;
+
+    --brand:       #6B8DE8;
+    --brand-deep:  #8AA5EE;
+    --brand-lift:  #A8BDF3;
+    --brand-wash:  #1D2740;
+
+    --orchid:      #D99BD0;
+    --orchid-ink:  #E4B4DC;
+    --orchid-wash: #2A1F29;
+
+    --lavender:    #B4A5F0;
+    --lavender-ink:#C7BCF5;
+    --lavender-wash:#231F35;
+
+    --gold:        #E0B85C;
+    --gold-ink:    #E8C97F;
+    --butter:      #E8CF86;
+    --butter-wash: #2A2418;
+
+    --correction:  #E39AA9;
+    --aside:       #D9AE7C;
+
+    --selection:   #3D4A6B;
+    --shadow:      0, 0, 0;
+
+    --lab-paper:  23,  26,  36;
+    --lab-ink:   107, 141, 232;
+    --lab-sage:  138, 165, 238;
+    --lab-corr:  227, 154, 169;
+    --lab-rule:   51,  58,  77;
+    --lab-soft:  148, 141, 160;
+
+    --paper-rgb:   23,  26,  36;
+    --surface-rgb: 34,  38,  55;
+  }
+}
+
+/* =========================================================================
+   THE FLOOR EVERY PAGE STANDS ON
+
+   Small enough to be worth having in one place: the box model, the focus
+   ring, the selection colour, the skip link, and the fact that an image
+   never overflows its column. Everything past this belongs to a page.
+   ========================================================================= */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+img { max-width: 100%; height: auto; }
+
+::selection { background: var(--selection); color: var(--ink); }
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+.skip {
+  position: absolute; left: -9999px; top: 0;
+  z-index: 100;
+  background: var(--brand); color: #fff;
+  padding: 0.6em 1em;
+  font-family: var(--f-mono); font-size: 0.8125rem;
+  text-decoration: none;
+}
+.skip:focus { left: 0.5rem; top: 0.5rem; }
+
+/* A theme change should not animate, because a page fading from one palette
+   to the other reads as a fault rather than as a choice. */
+:root[data-theme-changing] *,
+:root[data-theme-changing] *::before,
+:root[data-theme-changing] *::after {
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

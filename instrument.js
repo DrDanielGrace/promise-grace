@@ -103,6 +103,78 @@
   if (leave) leave.setAttribute("href", "simulations.html");
 
 
+  /* ---- connected research ----------------------------------------------
+     An instrument at full screen used to end. The reader had run it, read
+     what it assumed, and then had nowhere to go but back to the index they
+     came from, which is how a site full of connected work manages to feel
+     like a list of demonstrations.
+
+     What follows is read out of map.js rather than written into eight
+     templates: the research area this instrument belongs to, the notebook
+     entry that is the same question in prose, the instrument it hands its
+     result to, and where the rest of them are.
+     ---------------------------------------------------------------------- */
+  (function connected() {
+    var M = window.Map17;
+    var host = $("[data-connected-list]");
+    var sec = $("[data-connected]");
+    if (!M || !host || !sec) return;
+
+    var me = M.sim(name);
+    if (!me) return;
+
+    var out = [];
+
+    var topic = M.topic(me.topic);
+    if (topic) {
+      out.push({ kind: "RESEARCH", name: topic.name,
+                 href: "research.html#" + topic.id, say: topic.question });
+    }
+
+    if (me.entry) {
+      var e = M.entry(me.entry);
+      if (e) {
+        out.push({ kind: "NOTEBOOK", name: "Entry " + e.n + ", " + e.name,
+                   href: "notebook.html#" + e.id, say: e.say });
+      }
+    }
+
+    /* whichever chain this one is in, the instrument after it */
+    M.CHAINS.forEach(function (c) {
+      c.steps.forEach(function (step, i) {
+        if (step.sim !== name || !step.carry) return;
+        var next = M.sim(c.steps[i + 1] && c.steps[i + 1].sim);
+        if (!next) return;
+        out.push({ kind: "NEXT IN THE CHAIN", name: next.name, href: next.href,
+                   say: "This one sends " + step.carry + " to it." });
+      });
+    });
+
+    out.push({ kind: "THE LAB", name: "All " + M.COUNTS.sims + " instruments",
+               href: "simulations.html",
+               say: "Grouped, with what each one computes and what it assumes." });
+
+    out.forEach(function (it) {
+      var a = document.createElement("a");
+      a.className = "inst-conn";
+      a.href = it.href;
+      var k = document.createElement("span");
+      k.className = "mono inst-conn-kind";
+      k.textContent = it.kind;
+      var n = document.createElement("span");
+      n.className = "inst-conn-name";
+      n.textContent = it.name;
+      var s = document.createElement("span");
+      s.className = "inst-conn-say";
+      s.textContent = it.say;
+      a.appendChild(k); a.appendChild(n); a.appendChild(s);
+      host.appendChild(a);
+    });
+
+    sec.hidden = false;
+  })();
+
+
   /* ---- shape the panel -------------------------------------------------
      Views first, controls and readout into a side column, and the marks and
      handoff panels built rather than written into eight templates.
@@ -329,6 +401,16 @@
 
   var everything = $("[data-everything]");
   if (everything) everything.addEventListener("click", function () {
+    say("button");
+    setStage(3);
+  });
+
+  /* The second door out of the prediction screen. Same destination as the
+     Everything control in the header, and it is here as well because a
+     reader on the opening screen should not have to find a control at the
+     other end of the page to get past it. */
+  var openAll = $("[data-everything-open]");
+  if (openAll) openAll.addEventListener("click", function () {
     say("button");
     setStage(3);
   });

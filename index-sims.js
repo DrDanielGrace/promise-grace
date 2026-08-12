@@ -23,19 +23,14 @@
   /* ----------------------------------------------------------------------
      THE IDENTIFIER
 
-     Counted off the page rather than typed, so it cannot drift away from
-     the list underneath it the way the old "seventeen of these" did.
-     ---------------------------------------------------------------------- */
-  var run = document.querySelector("[data-run-id]");
-  if (run) {
-    var items = document.querySelectorAll(".ix-item").length;
-    var chains = document.querySelectorAll(".ix-chain > li").length;
-    var sends = document.querySelectorAll(".ix-out").length;
-    run.textContent = items + " SIMULATIONS · " + chains + " CHAINS · " +
-                      sends + " RESULTS HANDED ON";
-  }
+     This used to be counted off the page, which was better than typing it
+     but still meant this page counted one way and the search index counted
+     another and the two disagreed. lab.js writes it now, from map.js, which
+     is the one place the seventeen are declared. Left here as a note rather
+     than deleted silently, because "why does this file not do the obvious
+     thing" is a question worth answering in the file itself.
 
-  /* ----------------------------------------------------------------------
+     ----------------------------------------------------------------------
      SOUND
 
      A jump between groups is navigation and gets the button. Opening a
@@ -53,7 +48,8 @@
     if (href.indexOf("mailto:") === 0) return;
 
     /* Anything that opens a simulation, wherever it lives. */
-    var opens = a.closest(".ix-name") || a.closest(".ix-chain-row");
+    var opens = a.closest(".ix-name") || a.closest(".ix-chain-row") ||
+                a.classList.contains("chain-node");
     if (!opens) { say("button"); return; }
 
     if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || a.target) return;

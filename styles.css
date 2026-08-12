@@ -1,5 +1,9 @@
 /* =========================================================================
-   Promise Oluwatosin Grace, portfolio
+   Promise Oluwatosin Grace · the notebook
+
+   Every colour, face and rhythm value used here is declared in tokens.css,
+   which this file expects to have been loaded first. Nothing below invents
+   a colour.
 
    The notebook is carried structurally, not as decoration. Three rules do
    most of that work:
@@ -13,41 +17,22 @@
    3. Emphasis inside body copy is a coloured underline, never bold, because
       she never bolds. She underlines in a second pen.
 
-   Palette sampled from the scans. Measured hues: blue 245, red 342,
-   orange 35. Every text token clears WCAG AA on both paper tones.
+   WHAT CHANGED IN THE REDESIGN, AND WHAT DID NOT
+
+   The paper, the ruling, the margin channel and the two functional pens are
+   exactly as they were. What went is --sage, which was described in this
+   file as "every interface element" and which is the honest admission that
+   it never meant anything: it was simply the colour interface elements
+   happened to be. Every one of those fifty uses is now --brand, the royal
+   blue the whole site shares, so a link in the notebook and a link in the
+   laboratory are the same link.
    ========================================================================= */
 
 :root {
-  /* Paper */
-  --paper:       #FAF6EF;
-  --paper-deep:  #F1EBE0;
-  --rule:        #C5C7DC;
-
-  /* Pens */
-  --ink:         #332E5C;   /* 11.56:1  the argument */
-  --ink-soft:    #615A6E;   /*  6.10:1  captions, dates */
-  --correction:  #8C2F45;   /*  7.48:1  corrections only */
-  --aside:       #8A5A2B;   /*  5.45:1  margin notes only */
-  --sage:        #33543B;   /*  7.89:1  every interface element */
-  --butter:      #E9C978;   /*          highlighter */
-
-  /* One ruled line. Everything vertical is a multiple of this. */
-  --baseline: calc(1.0625rem * 1.7);
-
-  --measure: 66ch;
-  --gap: calc(var(--baseline) * 2);
-
-  --f-display: "Fraunces", Georgia, serif;
-  --f-body:    "Source Serif 4", Georgia, serif;
-  --f-hand:    "Caveat", cursive;
-  --f-mono:    "IBM Plex Mono", ui-monospace, monospace;
-
-  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  /* Kept as an alias so the two files that read it by name still work.
+     Nothing in this stylesheet uses it. */
+  --sage: var(--brand);
 }
-
-*, *::before, *::after { box-sizing: border-box; }
-
-html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
@@ -59,25 +44,11 @@ body {
   font-variant-numeric: oldstyle-nums;
 }
 
-img { max-width: 100%; height: auto; display: block; }
+img { display: block; }
 
-::selection { background: var(--butter); color: var(--ink); }
-
-/* Focus, sage, 2px, offset, per spec. */
-:focus-visible {
-  outline: 2px solid var(--sage);
-  outline-offset: 3px;
-  border-radius: 2px;
-}
-:focus:not(:focus-visible) { outline: none; }
-
-.skip {
-  position: absolute; left: -9999px; top: 0;
-  background: var(--paper); color: var(--sage);
-  padding: 0.6em 1em; z-index: 100;
-  font-family: var(--f-mono); font-size: 0.8125rem;
-}
-.skip:focus { left: 0; }
+/* The box model, the focus ring, the selection colour and the skip link all
+   live in tokens.css now, because five pages needed the same four rules and
+   four of them were carrying their own copy. */
 
 
 /* -------------------------------------------------------------------------
@@ -183,14 +154,14 @@ p { margin: 0 0 var(--baseline); max-width: var(--measure); }
 
 .quiet { color: var(--ink-soft); }
 
-a { color: var(--sage); text-underline-offset: 0.18em; }
+a { color: var(--brand); text-underline-offset: 0.18em; }
 a:hover { text-decoration-thickness: 2px; }
 
 .ulink {
   font-family: var(--f-display);
   font-size: 1.0625rem;
   text-decoration: underline;
-  text-decoration-color: var(--sage);
+  text-decoration-color: var(--brand);
   text-decoration-thickness: 1.5px;
 }
 
@@ -261,10 +232,10 @@ em { font-style: italic; }
   letter-spacing: 0.04em;
 }
 .topbar-nav a { text-decoration: none; border-bottom: 1px solid transparent; }
-.topbar-nav a:hover { border-bottom-color: var(--sage); }
+.topbar-nav a:hover { border-bottom-color: var(--brand); }
 
 .hurry-open {
-  font: inherit; color: var(--paper); background: var(--sage);
+  font: inherit; color: var(--paper); background: var(--brand);
   border: 0; padding: 0.4em 0.9em; border-radius: 2px 6px 3px 7px;
   cursor: pointer; letter-spacing: 0.04em;
 }
@@ -386,12 +357,12 @@ em { font-style: italic; }
   gap: var(--baseline) var(--gap);
   margin: var(--baseline) 0;
 }
-.project { border-top: 2px solid var(--sage); padding-top: 0.6rem; }
+.project { border-top: 2px solid var(--brand); padding-top: 0.6rem; }
 .project h3 { margin-top: 0; }
 .project p { max-width: none; font-size: 1rem; }
 
 .criteria {
-  color: var(--sage);
+  color: var(--brand);
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
   padding: 0.7rem 0;
@@ -421,7 +392,7 @@ em { font-style: italic; }
 .panel-tag { margin: 0 0 0.5rem; }
 /* The constrained case, marked the way she marks a thing that goes wrong. */
 .tag-correction { color: var(--correction); }
-.tag-sage { color: var(--sage); }
+.tag-sage { color: var(--brand); }
 
 .stage { width: 100%; height: auto; display: block; border-radius: 2px; }
 
@@ -431,14 +402,14 @@ em { font-style: italic; }
 }
 .controls button {
   font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.04em;
-  color: var(--sage); background: transparent;
-  border: 1px solid var(--sage); border-radius: 2px 7px 3px 6px;
+  color: var(--brand); background: transparent;
+  border: 1px solid var(--brand); border-radius: 2px 7px 3px 6px;
   padding: 0.45em 0.9em; cursor: pointer;
   transition: background 160ms var(--ease), color 160ms var(--ease);
 }
 .controls button:hover,
 .controls button[aria-pressed="true"],
-.controls button.on { background: var(--sage); color: var(--paper); }
+.controls button.on { background: var(--brand); color: var(--paper); }
 
 /* Shown only when JavaScript has not taken over. */
 .nojs-note { color: var(--ink-soft); font-size: 1rem; }
@@ -483,7 +454,7 @@ em { font-style: italic; }
 }
 .lever-bar span:last-child { text-align: right; color: var(--ink); }
 .lever-track { height: 0.55rem; background: var(--paper); border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; }
-.lever-fill { height: 100%; background: var(--sage); }
+.lever-fill { height: 100%; background: var(--brand); }
 .lever-none { color: var(--ink-soft); margin: 0; }
 
 .crossing {
@@ -520,21 +491,21 @@ em { font-style: italic; }
   content: counter(step, decimal-leading-zero);
   position: absolute; left: -1.4rem; top: calc(var(--baseline) * 1.25);
   font-family: var(--f-mono); font-size: 0.75rem;
-  color: var(--paper); background: var(--sage);
+  color: var(--paper); background: var(--brand);
   width: 2.6rem; text-align: center; border-radius: 2px;
 }
-.walk > li:last-child { border-left-color: var(--sage); }
+.walk > li:last-child { border-left-color: var(--brand); }
 .walk h3 { margin-top: calc(var(--baseline) * 0.5); }
 
 .choices { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: var(--baseline); }
 .choices button {
   font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.04em;
-  color: var(--sage); background: transparent;
-  border: 1px solid var(--sage); border-radius: 2px 7px 3px 6px;
+  color: var(--brand); background: transparent;
+  border: 1px solid var(--brand); border-radius: 2px 7px 3px 6px;
   padding: 0.5em 1em; cursor: pointer;
   transition: background 160ms var(--ease), color 160ms var(--ease);
 }
-.choices button:hover, .choices button[aria-pressed="true"] { background: var(--sage); color: var(--paper); }
+.choices button:hover, .choices button[aria-pressed="true"] { background: var(--brand); color: var(--paper); }
 .choice-reply:not(:empty) {
   background: var(--paper-deep);
   border-radius: 4px 10px 5px 9px;
@@ -598,7 +569,7 @@ em { font-style: italic; }
   font-family: var(--f-mono);
   font-size: 0.75rem;
   letter-spacing: 0.06em;
-  color: var(--sage);
+  color: var(--brand);
   cursor: pointer;
   padding: 0.35rem 0;
 }
@@ -692,11 +663,11 @@ em { font-style: italic; }
   border: 1px solid var(--rule); border-radius: 2px 7px 3px 6px;
   padding: 0.6em 0.8em;
 }
-.signup input:focus-visible { border-color: var(--sage); }
+.signup input:focus-visible { border-color: var(--brand); }
 .signup button {
   font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.04em;
-  color: var(--paper); background: var(--sage);
-  border: 1px solid var(--sage); border-radius: 2px 7px 3px 6px;
+  color: var(--paper); background: var(--brand);
+  border: 1px solid var(--brand); border-radius: 2px 7px 3px 6px;
   padding: 0.6em 1.2em; cursor: pointer;
 }
 .signup button:hover { background: var(--ink); border-color: var(--ink); }
@@ -722,15 +693,15 @@ em { font-style: italic; }
   font-weight: 500;
   font-size: clamp(1.25rem, 4vw, 2rem);
   color: var(--ink); background: transparent;
-  border: 0; border-bottom: 2px solid var(--sage);
+  border: 0; border-bottom: 2px solid var(--brand);
   padding: 0 0 0.1em; cursor: copy;
   word-break: break-all; text-align: left;
 }
-.email:hover { color: var(--sage); }
+.email:hover { color: var(--brand); }
 .copy-msg { font-family: var(--f-hand); font-size: 1.05rem; color: var(--aside); }
 
 .outlinks { max-width: none; }
-.outlinks a { color: var(--sage); }
+.outlinks a { color: var(--brand); }
 
 .cv-note {
   font-family: var(--f-hand); font-size: 1.1rem; color: var(--aside);
@@ -788,7 +759,7 @@ em { font-style: italic; }
   color: var(--ink-soft); background: transparent; border: 0;
   cursor: pointer; padding: 0.25rem 0.5rem;
 }
-.overlay-close:hover { color: var(--sage); }
+.overlay-close:hover { color: var(--brand); }
 
 .short { margin: var(--baseline) 0 0; }
 .short dt { color: var(--ink-soft); margin-top: var(--baseline); }
@@ -943,7 +914,7 @@ em { font-style: italic; }
 .slider-row { display: inline-flex; align-items: center; gap: 0.4rem; }
 .slider-row input[type="range"] {
   width: min(15rem, 52vw);
-  accent-color: var(--sage);
+  accent-color: var(--brand);
   height: 2.75rem;                  /* 44px, a thumb sized target */
 }
 
@@ -962,7 +933,7 @@ em { font-style: italic; }
   color: var(--ink);
   cursor: pointer;
 }
-.stepper button:hover { border-color: var(--sage); }
+.stepper button:hover { border-color: var(--brand); }
 
 .lab-readout { margin-top: var(--baseline); }
 .verdict {
@@ -972,7 +943,7 @@ em { font-style: italic; }
   margin: calc(var(--baseline) * 0.6) 0 0;
   max-width: 46ch;
 }
-.verdict.is-diffusive { color: var(--sage); border-left-color: var(--sage); }
+.verdict.is-diffusive { color: var(--brand); border-left-color: var(--brand); }
 
 /* ---- depth ------------------------------------------------------------- */
 
@@ -983,8 +954,30 @@ em { font-style: italic; }
   align-items: center;
   gap: 0.6rem 1rem;
 }
-.depth { display: inline-flex; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+/* The three depths. On paper this stays a segmented control rather than the
+   panel the instrument frame gives it, because on the notebook it sits
+   inside a figure caption and a panel there would be a box inside a box.
+   What it gains is the label saying what it is asking and the line saying
+   what the current setting means, both of which it never had. */
+.depth { display: block; margin-bottom: 0.4rem; }
+.depth-q {
+  margin: 0 0 0.35rem;
+  font-family: var(--f-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.depth-set {
+  display: inline-flex;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+}
 .depth-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-family: var(--f-mono);
   font-size: 0.6875rem;
   letter-spacing: 0.07em;
@@ -996,8 +989,20 @@ em { font-style: italic; }
   color: var(--ink-soft);
   cursor: pointer;
 }
+.depth-mark {
+  width: 8px; height: 8px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
 .depth-btn:last-child { border-right: 0; }
-.depth-btn[aria-pressed="true"] { background: var(--sage); color: var(--paper); }
+.depth-btn[aria-pressed="true"] { background: var(--brand); color: var(--paper); }
+.depth-btn[aria-pressed="true"] .depth-mark { background: currentColor; }
+.depth-say {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
 
 /* Picture hides the quantities. Maths adds the ones only it needs. */
 html[data-depth="picture"] .depth-not-picture { display: none; }
@@ -1009,7 +1014,7 @@ html:not([data-depth="maths"]) .depth-only-maths { display: none; }
   font-family: var(--f-mono);
   font-size: 0.6875rem;
   letter-spacing: 0.07em;
-  color: var(--sage);
+  color: var(--brand);
   cursor: pointer;
   padding: 0.5rem 0;
 }
@@ -1051,7 +1056,7 @@ html:not([data-depth="maths"]) .depth-only-maths { display: none; }
   color: var(--ink);
   cursor: pointer;
 }
-.lab-controls button:hover, .lab [data-act]:hover { border-color: var(--sage); }
+.lab-controls button:hover, .lab [data-act]:hover { border-color: var(--brand); }
 
 /* The diffraction row carries a label, a slider and a stepper, which does not
    fit on one line at 320. Let the row wrap and let the slider give way first,
@@ -1075,12 +1080,12 @@ html:not([data-depth="maths"]) .depth-only-maths { display: none; }
   display: inline-flex; align-items: center; gap: 0.5rem;
   min-height: 2.75rem; padding: 0.5rem 0.9rem;
   font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.05em;
-  background: var(--paper); color: var(--sage);
+  background: var(--paper); color: var(--brand);
   border: 1px solid var(--rule); border-radius: 4px;
   cursor: pointer;
   box-shadow: 0 1px 6px rgba(51,46,92,0.10);
 }
-.sound-toggle:hover { border-color: var(--sage); }
+.sound-toggle:hover { border-color: var(--brand); }
 /* The state is carried by the word and by the mark being filled or not,
    never by colour alone. */
 .sound-mark {
@@ -1104,9 +1109,9 @@ html:not([data-depth="maths"]) .depth-only-maths { display: none; }
   min-height: 2.75rem; padding: 0.5rem 0.9rem;
   font-family: var(--f-mono); font-size: 0.72rem;
   background: none; border: 1px solid var(--rule); border-radius: 4px;
-  color: var(--sage); cursor: pointer;
+  color: var(--brand); cursor: pointer;
 }
-.sound-invite .btn-quiet:hover { border-color: var(--sage); }
+.sound-invite .btn-quiet:hover { border-color: var(--brand); }
 
 
 /* the per simulation listening controls */
@@ -1116,8 +1121,8 @@ html:not([data-depth="maths"]) .depth-only-maths { display: none; }
   background: var(--paper-deep); border: 1px solid var(--rule); border-radius: 4px;
   color: var(--ink); cursor: pointer;
 }
-.listen-btn:hover { border-color: var(--sage); }
-.listen-btn[aria-pressed="true"] { border-color: var(--sage); color: var(--sage); }
+.listen-btn:hover { border-color: var(--brand); }
+.listen-btn[aria-pressed="true"] { border-color: var(--brand); color: var(--brand); }
 .listen-what {
   flex-basis: 100%; margin: 0.5rem 0 0;
   font-size: 0.9rem; line-height: 1.55; color: var(--ink-soft);
@@ -1180,12 +1185,24 @@ details.assumptions > summary {
    mission planner does, and for the same stated reason: you cannot show
    a wavelength on white paper.
    ===================================================================== */
+/* The one panel on the site that is dark in both themes. Its subject is
+   colour, and a spectrum argued with by a cream background is not the
+   spectrum. It declares the six the drawing code reads rather than that
+   file hard coding light values for its own housing. See palette.js. */
 .lab.is-instrument {
   --panel: #1B1A24;
   --panel-soft: #B9B4C4;
+
+  --lab-paper:  27,  26,  36;
+  --lab-ink:   241, 239, 245;
+  --lab-sage:  169, 149, 232;
+  --lab-corr:  217, 139, 203;
+  --lab-rule:   74,  71,  87;
+  --lab-soft:  185, 180, 196;
+
   background: var(--panel);
   border: 1px solid #2E2C3A;
-  border-radius: 4px;
+  border-radius: var(--radius-lg);
   padding: 1.1rem;
   color: var(--panel-soft);
 }
@@ -1264,7 +1281,7 @@ details.assumptions > summary {
   display: inline-flex; align-items: center;
   min-height: 2.75rem; padding: 0.5rem 1rem;
   font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.04em;
-  background: var(--sage); color: var(--paper);
+  background: var(--brand); color: var(--paper);
   border-radius: 4px; text-decoration: none;
 }
 .btn-answer:hover { text-decoration: underline; }
@@ -1282,11 +1299,11 @@ details.assumptions > summary {
 .entry-link-btn {
   font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.05em;
   background: none; border: 1px solid var(--rule); border-radius: 3px;
-  color: var(--sage); cursor: pointer; text-decoration: none;
+  color: var(--brand); cursor: pointer; text-decoration: none;
   min-height: 2.75rem; padding: 0 0.7rem;
   display: inline-flex; align-items: center;
 }
-.entry-link-btn:hover { border-color: var(--sage); }
+.entry-link-btn:hover { border-color: var(--brand); }
 .entry-link-msg { color: var(--aside); font-size: 1rem; }
 
 @media print {
@@ -1311,7 +1328,7 @@ details.assumptions > summary {
 }
 .toc-no { grid-row: 1 / span 3; color: var(--ink-soft); margin: 0; }
 .toc-title { margin: 0; font-family: var(--f-display); font-size: 1.15rem; }
-.toc-title a { text-decoration: none; border-bottom: 1.5px solid var(--sage); }
+.toc-title a { text-decoration: none; border-bottom: 1.5px solid var(--brand); }
 .toc-note { margin: 0; color: var(--aside); font-size: 1.05rem; }
 .toc-what { margin: 0.2rem 0 0; font-size: 0.98rem; max-width: none; }
 
@@ -1322,7 +1339,7 @@ details.assumptions > summary {
   max-width: var(--measure);
 }
 .sim-name { margin: 0 0 0.25rem; font-family: var(--f-display); font-size: 1.12rem; }
-.sim-name a { text-decoration: none; border-bottom: 1.5px solid var(--sage); }
+.sim-name a { text-decoration: none; border-bottom: 1.5px solid var(--brand); }
 .sim-line { margin: 0 0 0.4rem; max-width: none; }
 .sim-tag { color: var(--ink-soft); font-size: 0.6875rem; letter-spacing: 0.08em; margin: 0; }
 
@@ -1500,7 +1517,7 @@ details.assumptions > summary {
   border: 1px solid var(--rule); border-radius: 3px;
   cursor: pointer;
 }
-.predict-opts button:hover { border-color: var(--sage); }
+.predict-opts button:hover { border-color: var(--brand); }
 /* The chosen one is marked by a rule down its edge and by aria-pressed,
    not by colour on its own. */
 .predict-opts button.is-chosen { border-left: 4px solid var(--ink); font-weight: 600; }
@@ -1512,7 +1529,7 @@ details.assumptions > summary {
 }
 /* Right and wrong differ by which pen marks them, and by the word the
    sentence opens with, never by colour alone. */
-.predict-result.is-right { border-left: 2px solid var(--sage); color: var(--ink); }
+.predict-result.is-right { border-left: 2px solid var(--brand); color: var(--ink); }
 .predict-result.is-wrong { border-left: 2px solid var(--correction); color: var(--correction); }
 
 @media print {

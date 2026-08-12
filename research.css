@@ -1,0 +1,343 @@
+/* =========================================================================
+   research.css · the research page, and the status tags the whole site uses
+
+   The five panels are deliberately the same shape as each other. A reader
+   who has read one should be able to skim the next four without working out
+   where anything is, so the order of the blocks inside a panel never
+   changes and a block that has nothing in it is absent rather than empty.
+
+   The accent on each panel is the topic's own, taken from the site's
+   hierarchy rather than five colours chosen to be distinguishable. Royal
+   blue for the two areas closest to the central question, lavender for
+   crystal formation because that is where the interactive science is,
+   orchid for functional materials because that is the one the notebook
+   carries, and gold for solar because gold on this site means a result and
+   solar is the one producing them.
+   ========================================================================= */
+
+body.research-body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.rsh {
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: clamp(1.2rem, 4vh, 2.6rem) clamp(0.9rem, 4vw, 2.4rem) 0;
+}
+
+.rsh-head { max-width: 52rem; }
+
+.rsh-eyebrow {
+  margin: 0 0 0.7rem;
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  color: var(--ink-far);
+}
+
+.rsh-h1 {
+  margin: 0;
+  max-width: 20ch;
+  font-family: var(--f-display);
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-weight: 600;
+  font-size: clamp(1.9rem, 4.6vw, 3.1rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.rsh-lede {
+  margin: 1.1rem 0 0;
+  max-width: 62ch;
+  color: var(--ink-soft);
+}
+
+.rsh-sec-h {
+  margin: 0 0 0.9rem;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+
+.rsh-map { margin: clamp(2rem, 6vh, 3.4rem) 0 0; }
+.rsh-map-box {
+  padding: clamp(1rem, 3vw, 1.8rem);
+  background: var(--soft-blue);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--radius-lg);
+}
+@media (min-width: 900px) {
+  .rsh-map-box { padding: 1.8rem clamp(2rem, 8vw, 6rem); }
+}
+
+.rsh-topics { margin: clamp(2rem, 6vh, 3.4rem) 0 0; }
+
+
+/* ----------------------------------------------------------------------
+   THE JUMP LIST
+   ---------------------------------------------------------------------- */
+.rsh-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 1.4rem;
+}
+.rsh-jump a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.4rem 0.8rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 100px;
+  font-family: var(--f-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.rsh-jump a:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-wash); }
+
+
+/* ----------------------------------------------------------------------
+   A PANEL
+   ---------------------------------------------------------------------- */
+.rsh-topic-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.rsh-topic {
+  --accent: var(--brand);
+  --accent-wash: var(--brand-wash);
+  scroll-margin-top: 5rem;
+  padding: clamp(1.1rem, 3vw, 1.7rem);
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-lg);
+}
+.rsh-topic[data-accent="lavender"] { --accent: var(--lavender-ink); --accent-wash: var(--lavender-wash); }
+.rsh-topic[data-accent="orchid"]   { --accent: var(--orchid-ink);   --accent-wash: var(--orchid-wash); }
+.rsh-topic[data-accent="gold"]     { --accent: var(--gold-ink);     --accent-wash: var(--butter-wash); }
+
+/* Arriving here from a link that named this area. */
+.rsh-topic.is-here {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-wash);
+}
+
+.rsh-topic-name {
+  margin: 0;
+  font-family: var(--f-display);
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-weight: 600;
+  font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.rsh-topic-q {
+  margin: 0.45rem 0 0;
+  max-width: 54ch;
+  font-size: 1.08rem;
+  line-height: 1.4;
+  color: var(--accent);
+}
+
+.rsh-topic-say {
+  margin: 0.6rem 0 0;
+  max-width: 62ch;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.rsh-concepts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.rsh-concepts li {
+  padding: 0.18rem 0.5rem;
+  background: var(--accent-wash);
+  border-radius: 3px;
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+}
+
+.rsh-topic-body {
+  display: grid;
+  gap: 1.2rem;
+  margin: 1.4rem 0 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule-soft);
+}
+@media (min-width: 820px) {
+  .rsh-topic-body { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* the two long ones take the full width when they are the only pair */
+  .rsh-block:only-child { grid-column: 1 / -1; }
+}
+
+.rsh-block-h {
+  margin: 0 0 0.6rem;
+  font-family: var(--f-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+
+.rsh-sims, .rsh-entries {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rsh-sims a, .rsh-entries a {
+  display: block;
+  padding: 0.55rem 0.7rem;
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+}
+.rsh-sims a:hover, .rsh-entries a:hover {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+}
+
+.rsh-sim-name, .rsh-entry-name {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.25;
+  color: var(--ink);
+}
+.rsh-sim-q, .rsh-entry-say {
+  display: block;
+  margin: 0.2rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+.rsh-sim-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.4rem 0 0;
+  font-size: 9.5px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+.rsh-entry-no {
+  display: block;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  color: var(--orchid-ink);
+}
+
+.rsh-mission-say { margin: 0; font-size: 0.92rem; color: var(--ink-soft); }
+.rsh-related { margin: 0; font-size: 0.92rem; }
+
+
+/* =========================================================================
+   THE STATUS TAGS
+
+   Used here, on the Lab index and on every instrument. One vocabulary, one
+   set of colours, and the label is a word rather than a colour so that
+   somebody who cannot tell gold from blue still gets the distinction.
+   ========================================================================= */
+.tag {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+.tag-computed { color: var(--brand); }
+.tag-measured { color: var(--gold-ink); }
+.tag-spec     { color: var(--correction); }
+
+
+/* =========================================================================
+   WHAT IS CLAIMED
+   ========================================================================= */
+.rsh-honest {
+  margin: clamp(2rem, 6vh, 3.4rem) 0 0;
+}
+
+.rsh-claims {
+  display: grid;
+  gap: 0.15rem 1.2rem;
+  margin: 0;
+  max-width: 62rem;
+}
+@media (min-width: 700px) {
+  .rsh-claims { grid-template-columns: 9rem minmax(0, 1fr); }
+  .rsh-claims dt { text-align: right; padding-top: 0.15rem; }
+}
+.rsh-claims dt {
+  margin: 0.9rem 0 0;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-far);
+}
+.rsh-claims dt:first-child { margin-top: 0; }
+.rsh-claims dd {
+  margin: 0.9rem 0 0;
+  max-width: 58ch;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+@media (min-width: 700px) {
+  .rsh-claims dd { margin-top: 0.9rem; }
+  .rsh-claims dd:nth-of-type(1) { margin-top: 0; }
+}
+
+.rsh-note {
+  margin: 1.6rem 0 0;
+  padding-left: 1rem;
+  max-width: 60ch;
+  border-left: 2px solid var(--rule);
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.rsh-fallback { max-width: 60ch; }
+.rsh-fallback li { margin-bottom: 0.7rem; }
+
+
+/* =========================================================================
+   THE FOOT
+   ========================================================================= */
+.rsh-foot {
+  margin: clamp(2rem, 5vh, 3rem) 0 0;
+  padding: 1.4rem clamp(0.9rem, 4vw, 2.4rem);
+  border-top: 1px solid var(--rule-soft);
+  color: var(--ink-far);
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.rsh-foot p { margin: 0; }

@@ -1,7 +1,7 @@
 /* =========================================================================
    arrive.js · the landing, and the links that used to point at it
 
-   TWO JOBS.
+   THREE JOBS.
 
    THE OLD LINKS. This address was the notebook for as long as the site has
    existed, and there are links to it in emails that have already been sent,
@@ -10,17 +10,27 @@
    arriving here with a hash that the notebook recognises is sent straight
    on to it. A visitor who typed the address plainly gets the landing.
 
-   THE COUNTS. The number of simulations and the number of entries are read
-   off the pages they describe rather than typed here, for the same reason
-   the index counts its own list: a number in prose is a number that goes
-   stale the first time anything is added.
+   THE COUNTS. Seventeen and fourteen are stated three times each across
+   this site, and they used to be counted three different ways: this page
+   fetched two other pages and counted elements in them, the index counted
+   its own list, and the search index was built by a regular expression that
+   missed one entry and reported thirteen. So all of them now read map.js,
+   which declares the relationships and derives the counts from them. One
+   place, and a number that goes stale is a number that goes stale
+   everywhere at once, which is the failure you can actually see.
+
+   RIGHT NOW. The dated status belongs to Mission Control, which is where
+   she keeps it up to date. Copying it here would mean two places to change
+   and one of them eventually forgotten, so it is read from that page at
+   load and the sentence in the markup stands until it arrives, and stands
+   for good if the fetch fails.
    ========================================================================= */
 
 (function () {
   "use strict";
 
   var body = document.body;
-  if (!body || !body.classList.contains("inst-arrival")) return;
+  if (!body || !body.classList.contains("arrival-body")) return;
 
   /* ----------------------------------------------------------------------
      THE OLD LINKS
@@ -47,26 +57,45 @@
   /* ----------------------------------------------------------------------
      THE COUNTS
      ---------------------------------------------------------------------- */
-  function words(n) {
-    var w = ["ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN",
-             "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN",
-             "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN",
-             "NINETEEN", "TWENTY"];
-    return w[n] || String(n);
+  function counts() {
+    var M = window.Map17;
+    if (!M) return;
+    Array.prototype.forEach.call(document.querySelectorAll("[data-count]"), function (el) {
+      var what = el.getAttribute("data-count");
+      var n = M.COUNTS[what];
+      if (typeof n === "number") el.textContent = M.word(n);
+    });
   }
 
-  function count(url, selector, into, suffix) {
-    var el = document.querySelector(into);
-    if (!el || !window.fetch) return;
-    fetch(url).then(function (r) { return r.text(); }).then(function (html) {
-      var doc = new DOMParser().parseFromString(html, "text/html");
-      var n = doc.querySelectorAll(selector).length;
-      if (n > 0) el.textContent = words(n) + (suffix || "");
-    }).catch(function () {});
-  }
+  /* map.js is deferred and so are we, and defer keeps source order, so it
+     has run. The guard is for the case where it did not load at all, where
+     the words already in the markup are correct and stay. */
+  counts();
 
-  count("simulations.html", ".ix-item", "[data-count-sims]", "");
-  count("notebook.html", "main .entry", "[data-count-entries]", " ENTRIES");
+  /* ----------------------------------------------------------------------
+     RIGHT NOW
+
+     Mission Control writes the current line into `.status-now`, with the
+     superseded ones struck through above it. Only the current one is worth
+     bringing over.
+     ---------------------------------------------------------------------- */
+  var now = document.querySelector("[data-now]");
+  if (now && window.fetch) {
+    fetch("mission-planner-website/index.html")
+      .then(function (r) { return r.ok ? r.text() : Promise.reject(); })
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, "text/html");
+        var line = doc.querySelector(".status-now");
+        if (!line) return;
+        /* the label is a separate span and reads "RIGHT NOW", which this
+           section already says above the sentence */
+        var lab = line.querySelector(".status-label");
+        if (lab) lab.remove();
+        var text = line.textContent.replace(/\s+/g, " ").trim();
+        if (text) now.textContent = text;
+      })
+      .catch(function () {});
+  }
 
   /* ----------------------------------------------------------------------
      COMING UP, AND LEAVING
@@ -86,7 +115,8 @@
   }
 
   document.addEventListener("click", function (e) {
-    var a = e.target && e.target.closest ? e.target.closest(".arrival-ways a") : null;
+    var a = e.target && e.target.closest
+      ? e.target.closest(".arrival-ways a, .arrival-do a") : null;
     if (!a || !window.Snd || !Snd.enabled()) return;
     if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey) return;
     e.preventDefault();

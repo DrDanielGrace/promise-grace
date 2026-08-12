@@ -13,61 +13,62 @@
    changing does not move the one next to it. Units in a lighter weight than
    the value they belong to. Hairlines rather than borders. Bracket corners
    at the edge of a viewport, which is a real convention and costs four
-   pseudo elements. One accent, amber, doing every job that needs an accent.
-   A second colour only where the physics genuinely has two states.
+   pseudo elements. One accent doing every job that needs an accent, and a
+   second colour only where the physics genuinely has two states.
 
-   THE PALETTE
+   WHY IT IS NO LONGER DARK
 
-   Surfaces are three near blacks a few percent apart, which is what gives a
-   dark interface depth without a single gradient. The data is luminous
-   against them because the data is the only luminous thing.
+   It was three near blacks, on the argument that a dark bench beside a
+   paper notebook made the contrast between the two the point of the site.
+   Two things were wrong with that.
 
-   The six --lab-* values at the bottom of :root are handed to the crystal
-   simulation, which draws with them instead of the notebook's paper and
-   ink. Same drawing code, two frames. The notebook sets none of these and
-   is untouched.
+   The first is that it made the site two products. A visitor crossing from
+   the notebook to a simulation was not moving between rooms, they were
+   arriving somewhere else.
+
+   The second is worse and is measurable. Only one of the eight simulations
+   ever read the six --lab-* values below. The other seven carried the
+   notebook's ink, #332E5C, as a constant in their own files and drew it
+   onto a #0d0e11 bench through a transparent canvas. That is about 1.7:1.
+   The free energy curve in the nucleation simulation, which is the whole
+   argument of the nucleation simulation, was a dark blue line on a near
+   black rectangle, and it had been for as long as the frame existed.
+
+   So the bench is light, the tokens are the site's, and the drawing code
+   reads them through palette.js rather than guessing. Dark is still here,
+   as a theme rather than as a place, and every one of the eight follows it.
+
+   WHAT THE NAMES MEAN NOW
+
+   The five surface and text variables below are kept as names because two
+   thousand lines of this stylesheet use them. Each is a mapping onto a
+   token, so there is still exactly one place a colour is decided.
    ========================================================================= */
 
 :root {
-  --bg:        #0d0e11;   /* the bench */
-  --surface:   #131419;   /* a panel on it */
-  --raised:    #191a20;   /* a control on the panel */
-  --hair:      #24262d;   /* hairline */
-  --hair-lit:  #34373f;
+  /* --surface is deliberately absent: tokens.css already means by it
+     exactly what this file means by it, and a custom property that names
+     itself on the right hand side is invalid rather than clever. */
+  --bg:        var(--paper);        /* the bench */
+  --raised:    var(--paper-deep);   /* a control on the panel */
+  --hair:      var(--rule-soft);    /* hairline */
+  --hair-lit:  var(--rule);
 
-  --text:      #e6e3dc;
-  --text-dim:  #9d9a93;
-  --text-far:  #6f6d69;
+  --text:      var(--ink);
+  --text-dim:  var(--ink-soft);
+  --text-far:  var(--ink-far);
 
-  --accent:    #c78f4a;   /* the one accent */
-  --accent-dim:#7a5a30;
-  --cool:      #7ab296;   /* the other state, and only that */
-
-  --focus:     #d8a765;
-
-  /* Handed to lab-crystal.js. The concentration field is drawn as
-     twenty six rings stacked at low alpha, which on paper darkens towards
-     the ink and on a dark surface lightens towards it. Stacked the other
-     way round it saturates, so the ink here is a good deal dimmer than it
-     looks like it should be. */
-  --lab-paper: 13, 14, 17;
-  --lab-ink:   74, 86, 105;
-  --lab-sage:  122, 178, 150;
-  --lab-corr:  199, 143, 74;
-  --lab-rule:  48, 51, 58;
-  --lab-soft:  124, 127, 135;
+  --accent:    var(--brand);        /* the one accent */
+  --accent-dim:var(--brand-wash);
+  --cool:      var(--lavender-ink); /* the other state, and only that */
 }
-
-* { box-sizing: border-box; }
-
-html { -webkit-text-size-adjust: 100%; }
 
 body.inst {
   margin: 0;
   min-height: 100vh;
-  background: var(--bg);
-  color: var(--text);
-  font: 400 15px/1.55 "Source Serif 4", Georgia, serif;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 15px/1.55 var(--f-body);
   padding-bottom: 5.5rem;   /* clear of the sound toggle and the levels panel */
 }
 
@@ -297,6 +298,11 @@ body.inst[data-stage="2"] .lab-views { grid-template-columns: minmax(0, 1fr); }
   color: var(--text-far);
 }
 
+/* The canvas is transparent and the panel behind it is the plot surface, so
+   the drawing code has to be told which surface it is drawing onto. Without
+   this it would knock text out against --paper and the panel is --surface. */
+.lab-view { --lab-paper: var(--surface-rgb); }
+
 .lab-view canvas {
   display: block;
   width: 100%;
@@ -305,6 +311,33 @@ body.inst[data-stage="2"] .lab-views { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 400px) { .lab-view canvas { height: 200px; } }
+
+
+/* ----------------------------------------------------------------------
+   THE ONE PANEL THAT IS STILL DARK
+
+   The thin film simulation draws a real spectrum, and a spectrum argued
+   with by a cream background is not the spectrum. So its housing keeps a
+   dark plot surface in both themes, and declares its own six rather than
+   the drawing code deciding for itself what its housing looks like. This is
+   the "scientifically meaningful colour inside a visualisation" case, and
+   it is the only one on the site.
+   ---------------------------------------------------------------------- */
+.lab.is-instrument,
+.inst .lab[data-lab="thinfilm"] {
+  --lab-paper:  22,  21,  28;
+  --lab-ink:   241, 239, 245;
+  --lab-sage:  169, 149, 232;
+  --lab-corr:  217, 139, 203;
+  --lab-rule:   74,  71,  87;
+  --lab-soft:  185, 180, 196;
+}
+.inst .lab[data-lab="thinfilm"] .lab-view {
+  --lab-paper: 22, 21, 28;
+  background: #16151C;
+  border-color: #33303F;
+}
+.inst .lab[data-lab="thinfilm"] .lab-view .view-tag { color: #B9B4C4; }
 
 
 /* ----------------------------------------------------------------------
@@ -509,25 +542,133 @@ body.inst[data-stage="2"] .lab-views { grid-template-columns: minmax(0, 1fr); }
   margin-top: 0.85rem;
 }
 
+/* The three depths. This is the strongest educational idea here, so it is
+   given the space to look like a decision rather than three buttons.
+   The mark is filled or open, so which is in force never rests on colour. */
 .depth {
+  padding: 0.8rem 0.9rem;
+  background: var(--brand-wash);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--radius);
+}
+.depth-q {
+  margin: 0 0 0.55rem;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+.depth-set {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 .depth-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   min-height: 44px;
-  padding: 0.5rem 0.9rem;
+  padding: 0.5rem 0.8rem;
   background: var(--surface);
-  color: var(--text-far);
-  border: 1px solid var(--hair);
-  border-radius: 2px;
-  font: 400 11px/1 "IBM Plex Mono", ui-monospace, monospace;
+  color: var(--ink-soft);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  font: 400 11px/1 var(--f-mono);
   letter-spacing: 0.09em;
   text-transform: uppercase;
   cursor: pointer;
 }
-.depth-btn:hover { color: var(--text-dim); }
-.depth-btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent-dim); }
+.depth-mark {
+  width: 9px; height: 9px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
+.depth-btn:hover { color: var(--brand); border-color: var(--brand); }
+.depth-btn[aria-pressed="true"] {
+  color: #fff;
+  background: var(--brand);
+  border-color: var(--brand);
+}
+.depth-btn[aria-pressed="true"] .depth-mark { background: currentColor; }
+.depth-say {
+  margin: 0.55rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+/* ----------------------------------------------------------------------
+   CONNECTED RESEARCH
+
+   An instrument at full screen used to end. Now it says what it belongs to
+   and where the same question is written down in prose, which is the whole
+   difference between a demonstration and a piece of research.
+   ---------------------------------------------------------------------- */
+.inst-connected {
+  margin: clamp(1.6rem, 5vh, 2.8rem) 0 0;
+  padding-top: 1.3rem;
+  border-top: 1px solid var(--rule);
+}
+.inst-connected > h2 {
+  margin: 0 0 0.9rem;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+.inst-connected-list {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+}
+.inst-conn {
+  display: block;
+  padding: 0.75rem 0.9rem;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-left: 3px solid var(--brand);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+}
+.inst-conn:hover { border-color: var(--brand); background: var(--brand-wash); }
+.inst-conn-kind {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+.inst-conn-name {
+  display: block;
+  margin: 0.3rem 0 0;
+  font-size: 1rem;
+  line-height: 1.25;
+  color: var(--ink);
+}
+.inst-conn-say {
+  display: block;
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+/* the opening screen's own label */
+.inst-open-h {
+  margin: 0 0 0.7rem;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+.inst-open-do {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
 
 .showcode {
   background: var(--surface);

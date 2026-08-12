@@ -3,73 +3,151 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Promise Oluwatosin Grace · Materials Science</title>
-<meta name="description" content="How does reduced gravity change the way materials form? Seventeen simulations that run real physics, a plan being learned in public, and the notebook of the person who built them.">
+<title>Promise Oluwatosin Grace · Chemistry and materials science</title>
+<meta name="description" content="How does reduced gravity change the way materials form? Seventeen interactive instruments that run real physics, a research notebook, and a solar materials plan being learned in public.">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Promise Oluwatosin Grace · Materials Science">
-<meta property="og:description" content="How does reduced gravity change the way materials form? Seventeen simulations, a plan being learned in public, and the notebook behind them.">
+<meta property="og:title" content="Promise Oluwatosin Grace · Chemistry and materials science">
+<meta property="og:description" content="How does reduced gravity change the way materials form? Seventeen instruments, a notebook, and a plan being learned in public.">
 <meta property="og:image" content="assets/scans/og-card.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="instrument.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Caveat:wght@500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="nav.css">
 <link rel="stylesheet" href="arrive.css">
+<script src="theme.js"></script>
 </head>
-<body class="inst inst-arrival">
+<body class="arrival-body">
 
-<a class="skip" href="#ways">Skip to the three ways in</a>
+<a class="skip" href="#ways">Skip to where you can go</a>
 
-<main class="arrival" id="ways">
+<main class="arrival" id="top">
 
-  <p class="mono arrival-eyebrow">MATERIALS SCIENCE · CHEMISTRY · LAGOS</p>
+  <!-- ─────────────────────────────────────────────────────────────────
+       THE ARRIVAL
 
-  <h1 class="arrival-q">How does reduced gravity change the way materials form?</h1>
+       Still one screen, which was the right decision and is kept. What is
+       added is the map: the question is no longer a sentence on its own,
+       it has the ideas it leads to arranged around it, and each of them is
+       a way in.
+       ───────────────────────────────────────────────────────────────── -->
+  <section class="arrival-top" aria-labelledby="q">
 
-  <p class="arrival-say">Simulations that run the actual physics, a plan being learned in public,
-  and the notebook behind both.</p>
+    <div class="arrival-said">
+      <p class="mono arrival-eyebrow">CHEMISTRY · MATERIALS SCIENCE · LAGOS</p>
 
-  <ul class="arrival-ways">
-    <li>
-      <a href="simulations.html">
-        <span class="mono arrival-count" data-count-sims>SEVENTEEN</span>
-        <span class="arrival-name">Simulations</span>
-        <span class="arrival-line">Instruments, not illustrations. Open one.</span>
-      </a>
-    </li>
-    <li>
-      <a href="mission-planner-website/index.html">
-        <span class="mono arrival-count">IN PROGRESS</span>
-        <span class="arrival-name">Mission planner</span>
-        <span class="arrival-line">What she is teaching herself, in public.</span>
-      </a>
-    </li>
-    <li>
-      <a href="notebook.html">
-        <span class="mono arrival-count" data-count-entries>FOURTEEN ENTRIES</span>
-        <span class="arrival-name">The notebook</span>
-        <span class="arrival-line">Who built this, and why. On paper.</span>
-      </a>
-    </li>
-  </ul>
+      <h1 class="arrival-q" id="q">How does reduced gravity change the way materials form?</h1>
+
+      <p class="arrival-lede">Promise Grace is a chemistry graduate teaching herself materials
+      science. This is the question she keeps coming back to, and everything here is downstream of
+      it: <b data-count="sims">seventeen</b> instruments that run the actual physics, a notebook of
+      <b data-count="entries">fourteen</b> entries with the working shown, and a solar materials
+      plan she is learning in public.</p>
+
+      <p class="arrival-do">
+        <a class="btn btn-go" href="research.html">Explore the research</a>
+        <a class="btn" href="simulations.html">Enter the lab</a>
+        <a class="btn" href="notebook.html">Open the notebook</a>
+      </p>
+    </div>
+
+    <!-- The map. The nodes and the paths between them are drawn from the
+         relationships declared in map.js rather than posed, so it cannot
+         come to disagree with the pages it points at. -->
+    <div class="arrival-map">
+      <p class="mono arrival-map-h">The research map</p>
+      <div data-research-orbit></div>
+      <p class="mono arrival-map-note">Every node opens the work behind it.</p>
+    </div>
+
+  </section>
+
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       RIGHT NOW
+
+       The dated status already existed on Mission Control. It is read from
+       that page rather than copied, so there is still exactly one place it
+       is written down and it cannot go stale here while staying current
+       there.
+       ───────────────────────────────────────────────────────────────── -->
+  <section class="arrival-now" aria-labelledby="nowh">
+    <p class="mono arrival-now-h" id="nowh">Right now</p>
+    <p class="arrival-now-line" data-now>Teaching herself solar materials science, and reading
+    about why perovskites fall apart in sunlight.</p>
+    <p class="arrival-now-go"><a href="mission-planner-website/index.html">See what she is
+    learning</a></p>
+  </section>
+
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       WHAT DO YOU WANT TO SEE
+
+       Five routes rather than five buttons. Each says what is at the end of
+       it, because "Explore" is not a destination.
+       ───────────────────────────────────────────────────────────────── -->
+  <section class="arrival-routes" id="ways" aria-labelledby="routesh">
+    <p class="mono arrival-routes-h" id="routesh">What do you want to see?</p>
+    <ul class="arrival-ways">
+      <li>
+        <a href="research.html">
+          <span class="mono arrival-count"><b data-count="topics">five</b> topics</span>
+          <span class="arrival-name">Her research</span>
+          <span class="arrival-line">The question, and the five areas underneath it.</span>
+        </a>
+      </li>
+      <li>
+        <a href="simulations.html">
+          <span class="mono arrival-count"><b data-count="sims">seventeen</b> instruments</span>
+          <span class="arrival-name">A simulation</span>
+          <span class="arrival-line">Instruments, not illustrations. Open one and turn gravity down.</span>
+        </a>
+      </li>
+      <li>
+        <a href="notebook.html">
+          <span class="mono arrival-count"><b data-count="entries">fourteen</b> entries</span>
+          <span class="arrival-name">Her notebook</span>
+          <span class="arrival-line">The thinking behind them, on paper, mistakes included.</span>
+        </a>
+      </li>
+      <li>
+        <a href="mission-planner-website/index.html">
+          <span class="mono arrival-count">in progress</span>
+          <span class="arrival-name">What she is learning</span>
+          <span class="arrival-line">Solar materials science, taught to herself, in public.</span>
+        </a>
+      </li>
+      <li>
+        <a href="cv.html">
+          <span class="mono arrival-count">two pages</span>
+          <span class="arrival-name">Her CV</span>
+          <span class="arrival-line">Education, training, publication, and what she is applying for.</span>
+        </a>
+      </li>
+    </ul>
+  </section>
 
   <p class="mono arrival-foot">
-    <a href="guide.html">How to use it</a>
-    <a href="contents.html">Contents</a>
+    <a href="about.html">About Promise</a>
+    <a href="guide.html">How to use this site</a>
+    <a href="contents.html">The research atlas</a>
     <a href="mailto:promisetosingrace@gmail.com">promisetosingrace@gmail.com</a>
   </p>
 
 </main>
 
+<script src="map.js" defer></script>
 <script src="audio.js" defer></script>
 <script src="sound.js" defer></script>
 <script src="nav.js" defer></script>
 <script src="crossing.js" defer></script>
+<script src="orbit.js" defer></script>
 <script src="arrive.js" defer></script>
 <script src="search.js" defer></script>
 </body>

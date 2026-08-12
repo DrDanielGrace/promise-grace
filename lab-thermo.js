@@ -97,7 +97,13 @@
   };
   function fmt(x, n) { return (Math.round(x * Math.pow(10, n)) / Math.pow(10, n)).toFixed(n); }
 
-  var INK = "#332E5C", SAGE = "#33543B", CORR = "#8C2F45", RULE = "#C5C7DC", SOFT = "#615A6E";
+  /* The six come from the host rather than from here. See palette.js. */
+  var INK, SAGE, CORR, RULE, SOFT, RGBA;
+  Lab.bind(host, function (p, redraw) {
+    INK = p.ink; SAGE = p.sage; CORR = p.corr;
+    RULE = p.rule; SOFT = p.soft; RGBA = p.rgba;
+    if (redraw && typeof draw === "function") draw();
+  });
 
   function readout() {
     var bl = bestLogN();
@@ -161,9 +167,9 @@
     var f = Sim.fitCanvas(cvBar, tier.res), ctx = f.ctx, w = f.w, h = f.h;
     ctx.clearRect(0, 0, w, h);
     var items = [
-      { k: "Seebeck S", v: seebeck(logN) / seebeck(16), c: "rgba(51,46,92,0.75)" },
-      { k: "conductivity", v: sigma(logN) / sigma(22), c: "rgba(51,84,59,0.75)" },
-      { k: "heat carried by carriers", v: kappaE(logN) / (kappaE(22)), c: "rgba(140,47,69,0.75)" }
+      { k: "Seebeck S", v: seebeck(logN) / seebeck(16), c: RGBA("ink", 0.75) },
+      { k: "conductivity", v: sigma(logN) / sigma(22), c: RGBA("sage", 0.75) },
+      { k: "heat carried by carriers", v: kappaE(logN) / (kappaE(22)), c: RGBA("corr", 0.75) }
     ];
     var bh = (h - 30) / items.length;
     ctx.font = "11px ui-monospace, monospace";

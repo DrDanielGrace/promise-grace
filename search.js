@@ -44,37 +44,53 @@
     return /mission-planner-website/.test(location.pathname) ? "../" : "";
   }
 
+  /* Every colour here is a token. This panel used to be a hard coded dark
+     box that appeared on top of a paper page, which made search the one
+     part of the site that belonged to no theme and to no page. */
   function css() {
     if (document.getElementById("search-css")) return;
     var s = document.createElement("style");
     s.id = "search-css";
     s.textContent = [
       ".sf{position:fixed;inset:0;z-index:80;display:none;",
-      "background:rgba(8,9,11,0.72);padding:clamp(0.6rem,6vh,4rem) 0.7rem 0.7rem}",
+      "background:rgba(var(--shadow),0.55);padding:clamp(0.6rem,6vh,4rem) 0.7rem 0.7rem}",
       ".sf[data-open=\"1\"]{display:block}",
-      ".sf-box{max-width:44rem;margin:0 auto;background:#131419;border:1px solid #34373f;",
-      "border-radius:2px;box-shadow:0 18px 60px rgba(0,0,0,0.45);overflow:hidden}",
-      ".sf-top{display:flex;align-items:stretch;border-bottom:1px solid #24262d}",
+      ".sf-box{max-width:44rem;margin:0 auto;background:var(--surface);",
+      "border:1px solid var(--rule);border-radius:var(--radius-lg);",
+      "box-shadow:0 18px 60px rgba(var(--shadow),0.22);overflow:hidden}",
+      ".sf-top{display:flex;align-items:stretch;border-bottom:1px solid var(--rule-soft)}",
       ".sf-top input{flex:1 1 auto;min-width:0;min-height:52px;padding:0.7rem 0.9rem;",
-      "background:transparent;border:0;color:#e6e3dc;font:400 16px/1.3 \"Source Serif 4\",Georgia,serif}",
+      "background:transparent;border:0;color:var(--ink);font:400 16px/1.3 var(--f-body)}",
       ".sf-top input:focus{outline:none}",
       ".sf-top button{min-height:52px;min-width:52px;background:transparent;border:0;",
-      "color:#9d9a93;font:400 11px/1 \"IBM Plex Mono\",ui-monospace,monospace;",
+      "color:var(--ink-far);font:400 11px/1 var(--f-mono);",
       "letter-spacing:0.09em;cursor:pointer}",
-      ".sf-top button:hover{color:#e6e3dc}",
-      ".sf-count{padding:0.45rem 0.9rem;border-bottom:1px solid #24262d;",
-      "font:400 10px/1.4 \"IBM Plex Mono\",ui-monospace,monospace;letter-spacing:0.12em;color:#6f6d69}",
+      ".sf-top button:hover{color:var(--brand)}",
+      ".sf-count{padding:0.45rem 0.9rem;border-bottom:1px solid var(--rule-soft);",
+      "background:var(--brand-wash);",
+      "font:400 10px/1.4 var(--f-mono);letter-spacing:0.12em;color:var(--ink-far)}",
       ".sf-list{margin:0;padding:0;list-style:none;max-height:min(60vh,32rem);overflow-y:auto}",
-      ".sf-list li{border-bottom:1px solid #24262d}",
+      ".sf-list li{border-bottom:1px solid var(--rule-soft)}",
       ".sf-list li:last-child{border-bottom:0}",
-      ".sf-list a{display:block;padding:0.7rem 0.9rem;text-decoration:none;min-height:44px}",
-      ".sf-list a:hover,.sf-list a:focus{background:#191a20;outline:none}",
-      ".sf-k{font:400 9px/1 \"IBM Plex Mono\",ui-monospace,monospace;letter-spacing:0.14em;color:#7a5a30}",
-      ".sf-t{display:block;margin:0.26rem 0 0;color:#e6e3dc;font:400 15px/1.35 \"Source Serif 4\",Georgia,serif}",
-      ".sf-s{display:block;margin:0.2rem 0 0;color:#9d9a93;font:400 12px/1.45 \"Source Serif 4\",Georgia,serif}",
-      ".sf-q{display:block;margin:0.28rem 0 0;color:#6f6d69;",
-      "font:400 9px/1.5 \"IBM Plex Mono\",ui-monospace,monospace;letter-spacing:0.1em}",
-      ".sf-none{padding:1rem 0.9rem;color:#9d9a93;font:400 14px/1.5 \"Source Serif 4\",Georgia,serif}",
+      ".sf-list a{display:block;padding:0.7rem 0.9rem 0.7rem 0.75rem;text-decoration:none;",
+      "min-height:44px;border-left:3px solid transparent}",
+      ".sf-list a:hover,.sf-list a:focus{background:var(--brand-wash);",
+      "border-left-color:var(--brand);outline:none}",
+      /* the kind is what tells a simulation from a notebook entry before you
+         press it, so it is coloured by the same hierarchy the rest of the
+         site uses rather than being one accent for all four */
+      ".sf-k{font:400 9px/1 var(--f-mono);letter-spacing:0.14em;color:var(--ink-far)}",
+      ".sf-list a[data-k=\"simulation\"] .sf-k{color:var(--lavender-ink)}",
+      ".sf-list a[data-k=\"entry\"] .sf-k,",
+      ".sf-list a[data-k=\"transcription\"] .sf-k{color:var(--orchid-ink)}",
+      ".sf-list a[data-k=\"mission\"] .sf-k{color:var(--gold-ink)}",
+      ".sf-list a[data-k=\"research\"] .sf-k,",
+      ".sf-list a[data-k=\"page\"] .sf-k{color:var(--brand)}",
+      ".sf-t{display:block;margin:0.26rem 0 0;color:var(--ink);font:400 15px/1.35 var(--f-body)}",
+      ".sf-s{display:block;margin:0.2rem 0 0;color:var(--ink-soft);font:400 12px/1.45 var(--f-body)}",
+      ".sf-q{display:block;margin:0.28rem 0 0;color:var(--ink-far);",
+      "font:400 9px/1.5 var(--f-mono);letter-spacing:0.1em}",
+      ".sf-none{padding:1rem 0.9rem;color:var(--ink-soft);font:400 14px/1.5 var(--f-body)}",
       "@media (prefers-reduced-motion: reduce){.sf *{transition:none!important}}"
     ].join("");
     document.head.appendChild(s);
@@ -85,9 +101,12 @@
 
     var btn = document.createElement("button");
     btn.type = "button";
+    btn.className = "nav-tool";
     btn.setAttribute("data-search-open", "");
     btn.setAttribute("aria-expanded", "false");
-    btn.textContent = "Search";
+    btn.setAttribute("aria-label", "Search the site");
+    btn.innerHTML = '<span class="nav-tool-mark" aria-hidden="true">⌕</span>' +
+                    '<span class="nav-tool-word">Search</span>';
 
     panel = document.createElement("div");
     panel.className = "sf";
@@ -208,6 +227,7 @@
       var li = document.createElement("li");
       var a = document.createElement("a");
       a.href = base() + r.u;
+      a.setAttribute("data-k", r.k);
 
       var k = document.createElement("span");
       k.className = "sf-k";

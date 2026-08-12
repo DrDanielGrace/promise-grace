@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-where="simulations">
+<html lang="en" data-where="lab" data-crumbs="lab > Instrument">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,8 +13,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="instrument.css">
 <link rel="stylesheet" href="nav.css">
+<link rel="stylesheet" href="research.css">
+<script src="theme.js"></script>
 </head>
 <body class="inst" data-stage="0">
 
@@ -33,13 +37,26 @@
 
 <main id="stage" class="inst-stage">
 
-  <!-- the question, which comes before any control -->
+  <!-- The question, which comes before any control.
+
+       It used to say "commit to an answer and the instrument comes up",
+       and the instrument genuinely did not exist in the page until you had
+       pressed something. That is a gate, whatever the sentence next to it
+       claims, and a gate in front of a simulation somebody arrived at from
+       a link is a reason to leave.
+
+       Answering is now one of two doors and neither is the main one. The
+       prediction is still worth making, and the evidence that it is worth
+       making is that it changes what you notice, not that it is compulsory. -->
   <section class="inst-open" data-part="open">
+    <p class="mono inst-open-h">Make a prediction</p>
     <div data-slot="question"></div>
-    <p class="inst-open-note">Commit to an answer and the instrument comes up. Nothing is locked
-    behind it, and <b>Everything</b> above opens the full panel now if you already know this
-    material.</p>
-    <p class="inst-open-do"><button type="button" class="inst-btn inst-btn-go" data-begin>Bring it up</button></p>
+    <p class="inst-open-note">Worth guessing before you look. It changes what you notice. But
+    nothing here is locked, and if you already know this material there is no reason to.</p>
+    <p class="inst-open-do">
+      <button type="button" class="inst-btn inst-btn-go" data-begin>Skip the prediction, open the instrument</button>
+      <button type="button" class="inst-btn inst-btn-quiet" data-everything-open>Open it with everything showing</button>
+    </p>
   </section>
 
   <!-- the instrument -->
@@ -54,6 +71,14 @@
 
   <p class="inst-missing" data-missing hidden>That simulation is not one of the eight that runs in
   this frame. <a href="simulations.html">The index says where every one of them lives.</a></p>
+
+  <!-- Connected research. Built by instrument.js from map.js, so an
+       instrument cannot point at a notebook entry that does not exist and
+       an entry cannot lose the instrument that belongs to it. -->
+  <section class="inst-connected" data-connected hidden aria-labelledby="connh">
+    <h2 class="mono" id="connh">Connected research</h2>
+    <div class="inst-connected-list" data-connected-list></div>
+  </section>
 </main>
 
 <noscript>
@@ -537,6 +562,8 @@
       sits near that peak.</p>
 <p class="mono inst-fig">FIG. 6 · Thermoelectric figure of merit. Every quantity here is computed.</p>
 </template>
+<script src="map.js" defer></script>
+<script src="palette.js" defer></script>
 <script src="sim.js" defer></script>
 <script src="audio.js" defer></script>
 <script src="sound.js" defer></script>

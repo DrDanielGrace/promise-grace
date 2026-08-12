@@ -112,8 +112,13 @@
 
   function fmt(x, d) { return (Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d); }
 
-  var INK = "#332E5C", SAGE = "#33543B", CORR = "#8C2F45",
-      RULE = "#C5C7DC", SOFT = "#615A6E", ASIDE = "#8A5A2B";
+  /* The six come from the host rather than from here. See palette.js. */
+  var INK, SAGE, CORR, RULE, SOFT, ASIDE;
+  Lab.bind(host, function (p, redraw) {
+    INK = p.ink; SAGE = p.sage; CORR = p.corr;
+    RULE = p.rule; SOFT = p.soft; ASIDE = p.aside;
+    if (redraw && typeof draw === "function") draw();
+  });
 
   function readout() {
     var ps = peaks();

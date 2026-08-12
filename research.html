@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-where="research"
+      data-onward="lab:crystal, notebook:question, mission|Mission Control|mission-planner-website/index.html|What she is teaching herself now, and how far in she is., about|About Promise|about.html|Where the question came from, in about two hundred words.">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research · Promise Oluwatosin Grace</title>
+<meta name="description" content="Five research areas, the question under each one, and the simulation, notebook entry and learning module behind it. Reduced gravity, crystal formation, structure and measurement, functional materials, solar materials.">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Research · Promise Oluwatosin Grace">
+<meta property="og:description" content="Five research areas and the work behind each one.">
+<meta property="og:image" content="assets/scans/og-card.jpg">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Caveat:wght@500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="nav.css">
+<link rel="stylesheet" href="arrive.css">
+<link rel="stylesheet" href="research.css">
+<script src="theme.js"></script>
+</head>
+<body class="research-body">
+
+<a class="skip" href="#topics">Skip to the five areas</a>
+
+<main class="rsh" id="top">
+
+  <header class="rsh-head">
+    <p class="mono rsh-eyebrow">RESEARCH</p>
+    <h1 class="rsh-h1">One question, and the five areas underneath it.</h1>
+    <p class="rsh-lede">Everything on this site comes out of one question, and the honest version
+    of that question is that it is not one question. It is a chain: take gravity away and you take
+    away buoyancy, take away buoyancy and you take away convection, and once transport is happening
+    by diffusion alone, nucleation, growth, solidification and the structure that comes out of them
+    are all different. Each link in that chain is somewhere she has built something.</p>
+  </header>
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       THE MAP
+
+       The same component the homepage carries, at full size here, where
+       there is room for it to be the thing on the page rather than the
+       thing beside the thing on the page.
+       ───────────────────────────────────────────────────────────────── -->
+  <section class="rsh-map" aria-labelledby="maph">
+    <h2 class="mono rsh-sec-h" id="maph">The chain</h2>
+    <div class="rsh-map-box">
+      <div data-research-orbit></div>
+    </div>
+  </section>
+
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       THE FIVE AREAS
+
+       Rendered from map.js so that the instruments and entries listed
+       under each area cannot drift away from the instruments and entries
+       that exist. The markup below is the fallback: it is what a reader
+       without JavaScript gets, and it says the same things.
+       ───────────────────────────────────────────────────────────────── -->
+  <section class="rsh-topics" id="topics" aria-labelledby="topicsh">
+    <h2 class="mono rsh-sec-h" id="topicsh">The five areas</h2>
+
+    <div data-topics>
+      <noscript>
+        <ul class="rsh-fallback">
+          <li><b>Reduced gravity.</b> Convection, transport, and what changes when neither is
+            available. <a href="instrument.html?sim=crystal">Crystal growth</a> ·
+            <a href="notebook.html#question">Entry 01</a></li>
+          <li><b>Crystal formation.</b> Nucleation, growth, solidification, phase diagrams.
+            <a href="instrument.html?sim=nucleation">Nucleation</a> ·
+            <a href="instrument.html?sim=solidify">Solidification</a> ·
+            <a href="notebook.html#phase-diagrams">Entry 02</a></li>
+          <li><b>Structure and measurement.</b> Diffraction, Bragg's law, unit cells.
+            <a href="instrument.html?sim=diffraction">Powder diffraction</a> ·
+            <a href="mission-planner-website/index.html#viz-bragg">Bragg's law</a></li>
+          <li><b>Functional materials.</b> Porous frameworks, thin films, thermoelectrics.
+            <a href="instrument.html?sim=mof">A metal organic framework</a> ·
+            <a href="instrument.html?sim=thinfilm">Thin film interference</a> ·
+            <a href="instrument.html?sim=thermo">Thermoelectrics</a> ·
+            <a href="notebook.html#interests">Entry 11</a></li>
+          <li><b>Solar materials.</b> Band gaps, the spectrum, the Shockley-Queisser limit.
+            <a href="mission-planner-website/index.html#viz-spectrum">Where the sunlight goes</a> ·
+            <a href="mission-planner-website/index.html#viz-limit">The limit</a></li>
+        </ul>
+      </noscript>
+    </div>
+  </section>
+
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       WHAT IS ACTUALLY KNOWN HERE
+
+       The brief for this site says the strongest thing about it is that it
+       admits what it does not know. That belongs on the research page more
+       than anywhere else, so it is stated rather than left implied.
+       ───────────────────────────────────────────────────────────────── -->
+  <section class="rsh-honest" aria-labelledby="honesth">
+    <h2 class="mono rsh-sec-h" id="honesth">What is claimed, and what is not</h2>
+
+    <dl class="rsh-claims">
+      <dt class="mono"><span class="tag tag-computed">COMPUTED</span></dt>
+      <dd>Every number on the readout comes out of the governing equations, evaluated live. The
+        equation is shown at the maths depth and the function running it is one control away.
+        Fourteen of the seventeen are this.</dd>
+
+      <dt class="mono"><span class="tag tag-measured">MEASURED</span></dt>
+      <dd>At least one quantity is integrated off a real table rather than a curve drawn to look
+        right. The solar spectrum work uses the ASTM G173 reference spectrum, and the efficiency
+        limit is detailed balance computed on that same table.</dd>
+
+      <dt class="mono"><span class="tag tag-spec">SPECULATIVE</span></dt>
+      <dd>A prediction with nothing behind it yet. There is one: what a stalactite does without
+        gravity. It is dated, the box beside it is empty, and it will stay empty until she finds
+        the paper or somebody sends it to her.</dd>
+
+      <dt class="mono">PROXY</dt>
+      <dd>Where a simulation hands a quantity to another simulation and that quantity is not
+        derived, it is declared a proxy at both ends. The strain the crystal growth simulation
+        sends to the diffraction simulation is the only one.</dd>
+    </dl>
+
+    <p class="rsh-note">None of this is laboratory work and none of it is presented as laboratory
+    work. It is a chemistry graduate building the instruments she would want to have, checking them
+    against the literature where the literature exists, and saying so where it does not.</p>
+  </section>
+
+</main>
+
+<footer class="rsh-foot">
+  <p class="mono">Promise Oluwatosin Grace · Lagos · 2026</p>
+</footer>
+
+<script src="map.js" defer></script>
+<script src="audio.js" defer></script>
+<script src="sound.js" defer></script>
+<script src="orbit.js" defer></script>
+<script src="research.js" defer></script>
+<script src="onward.js" defer></script>
+<script src="search.js" defer></script>
+<script src="nav.js" defer></script>
+<script src="crossing.js" defer></script>
+</body>
+</html>

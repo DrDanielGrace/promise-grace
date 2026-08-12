@@ -110,8 +110,15 @@
     if (out.died) out.died.textContent = String(died);
   }
 
-  var INK = "#332E5C", SAGE = "#33543B", CORR = "#8C2F45",
-      RULE = "#C5C7DC", SOFT = "#615A6E", ASIDE = "#8A5A2B";
+  /* The six come from the host rather than from here, so this drawing code
+     renders on paper, on the instrument frame and in dark without a second
+     copy of itself. See palette.js. */
+  var INK, SAGE, CORR, RULE, SOFT, ASIDE, RGBA;
+  Lab.bind(host, function (p, redraw) {
+    INK = p.ink; SAGE = p.sage; CORR = p.corr;
+    RULE = p.rule; SOFT = p.soft; ASIDE = p.aside; RGBA = p.rgba;
+    if (redraw && typeof draw === "function") draw();
+  });
 
   /* ---- the energy curve ------------------------------------------------ */
   function drawEnergy() {
@@ -133,13 +140,13 @@
     if (tier.extras) {
       /* The two terms that are fighting, drawn separately because the fight
          is the explanation. */
-      ctx.strokeStyle = "rgba(140,47,69,0.55)"; ctx.lineWidth = 1.2;
+      ctx.strokeStyle = RGBA("corr", 0.55); ctx.lineWidth = 1.2;
       ctx.beginPath();
       for (i = 0; i <= N; i++) { r = (i / N) * rMax; var s2 = 4 * Math.PI * r * r * GAMMA;
         i ? ctx.lineTo(X(r), Y(s2)) : ctx.moveTo(X(r), Y(s2)); }
       ctx.stroke();
 
-      ctx.strokeStyle = "rgba(51,84,59,0.55)";
+      ctx.strokeStyle = RGBA("sage", 0.55);
       ctx.beginPath();
       for (i = 0; i <= N; i++) { r = (i / N) * rMax; var b3 = -(4 / 3) * Math.PI * r * r * r * dGv();
         i ? ctx.lineTo(X(r), Y(b3)) : ctx.moveTo(X(r), Y(b3)); }
@@ -235,9 +242,9 @@
       var rad = Math.max(1.2, Math.min(frac * 7, 20));
       ctx.beginPath();
       ctx.arc(c.x * w, c.y * h, rad, 0, Math.PI * 2);
-      if (c.escaped) { ctx.fillStyle = "rgba(51,84,59,0.75)"; }
-      else if (frac > 1) { ctx.fillStyle = "rgba(51,84,59,0.35)"; }
-      else { ctx.fillStyle = "rgba(140,47,69,0.28)"; }
+      if (c.escaped) { ctx.fillStyle = RGBA("sage", 0.75); }
+      else if (frac > 1) { ctx.fillStyle = RGBA("sage", 0.35); }
+      else { ctx.fillStyle = RGBA("corr", 0.28); }
       ctx.fill();
       /* A survivor is also drawn with a ring around it, so the two outcomes
          are told apart by shape and not only by colour. */
