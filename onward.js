@@ -13,12 +13,17 @@
 
    HOW A PAGE DECLARES IT
 
-     <html data-onward="lab:crystal, notebook:question, research:reduced-gravity">
+     <html data-onward="lab:crystal; notebook:question; research:reduced-gravity">
 
    Anything of the form kind:id is looked up in map.js and described from
    there, so the descriptions cannot drift from the things they describe.
    Anything of the form kind|label|href|say is written out by the page,
    which is how a destination that is not in the map gets in.
+
+   The separator is a semicolon rather than a comma, and it is a semicolon
+   because it was a comma first: a written-out description with a comma in
+   it, which is most of them, split into two halves and the second half was
+   silently dropped.
    ========================================================================= */
 
 (function () {
@@ -87,7 +92,7 @@
     if (!trail) return;
     if (document.querySelector(".onward")) return;
 
-    var items = trail.split(",").map(resolve).filter(Boolean);
+    var items = trail.split(";").map(resolve).filter(Boolean);
     if (!items.length) return;
 
     var b = base();

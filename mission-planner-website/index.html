@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-where="mission" data-crumbs="home > Mission Control"
+      data-onward="lab|The Lab|../simulations.html|Seventeen instruments, seven of which are on this page.; research|The research|../research.html|Where solar materials sits among the other four areas.; notebook|The notebook|../notebook.html|Fourteen entries, and the question all of this is downstream of.; cv|Research CV|../cv.html|Education, training, publication, and what she is applying for.">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>What I am learning · Promise Oluwatosin Grace</title>
+<title>Mission Control · Promise Oluwatosin Grace</title>
 <meta name="description" content="Teaching myself solar materials science from scratch, in public. The plan, the progress, and the parts that went badly.">
-<meta property="og:title" content="What I am learning · Promise Oluwatosin Grace">
+<meta property="og:title" content="Mission Control · Promise Oluwatosin Grace">
 <meta property="og:description" content="Teaching myself solar materials science from scratch, in public. The plan, the progress, and the parts that went badly.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,17 +17,23 @@
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="../pages.css">
 <link rel="stylesheet" href="../nav.css">
+<link rel="stylesheet" href="../research.css">
+<link rel="stylesheet" href="mission.css">
 <script src="../theme.js"></script>
 </head>
 <body>
 
 <a class="skip" href="#main">Skip to the plan</a>
 
+<!-- This used to carry her name and a link to the notebook, which is what
+     the site bar above it does now. What is left is what only this page can
+     say: which of its six environments you are in and how to reach the
+     others. -->
 <header class="topbar" id="topbar">
   <div class="topbar-in">
-    <span class="topbar-name">Promise Oluwatosin Grace</span>
-    <nav class="topbar-nav" aria-label="Sections">
-      <a href="../notebook.html">The notebook</a>
+    <span class="topbar-name">ON THIS PAGE</span>
+    <nav class="topbar-nav" aria-label="Sections of Mission Control">
+      <a href="#crystal">The crystal</a>
       <a href="#plan">The plan</a>
       <a href="#maths">Maths</a>
       <a href="#physics">Physics</a>
@@ -42,9 +49,34 @@
 <section class="cover" aria-labelledby="cover-h">
   <p class="margin-note cover-note">started August 2026 · still going</p>
 
-  <p class="eyebrow">SOLAR MATERIALS · LEARNING IN PUBLIC</p>
+  <p class="eyebrow">MISSION CONTROL · LEARNING IN PUBLIC</p>
 
   <h1 id="cover-h">I am teaching myself solar materials science.</h1>
+
+  <!-- The first screen has to be understandable before it is interesting.
+       Three facts, in the order somebody arriving needs them: what she is
+       learning, how far in she is, and what she is stuck on this week. The
+       phase and the question are read out of the status block below rather
+       than typed twice. -->
+  <dl class="mission-now" data-mission-now>
+    <div>
+      <dt class="mono">WHAT I AM LEARNING</dt>
+      <dd>Solar materials science, from the beginning</dd>
+    </div>
+    <div>
+      <dt class="mono">HOW FAR IN</dt>
+      <dd data-mission-phase>Phase 2</dd>
+    </div>
+    <div>
+      <dt class="mono">WHAT I AM ON THIS WEEK</dt>
+      <dd data-mission-q>Why do perovskites fall apart in sunlight?</dd>
+    </div>
+  </dl>
+
+  <p class="mission-do">
+    <a class="btn btn-go" href="#plan">See the plan</a>
+    <a class="btn" href="#physics">Go straight to the physics</a>
+  </p>
 
   <div class="cover-body">
     <p>I did not study this. I studied chemistry education, and I taught secondary school chemistry in Lagos for two years. Now I am working through photovoltaics from the beginning, on my own, in the evenings, while I apply for Master's programmes.</p>
@@ -70,7 +102,7 @@
 </section>
 
 <!-- ============ THE CRYSTAL ============ -->
-<section class="env-lab crystal-sec" aria-labelledby="crystal-h">
+<section class="env-lab crystal-sec" id="crystal" aria-labelledby="crystal-h">
   <p class="section-num">01</p>
   <h2 id="crystal-h">The crystal</h2>
 
@@ -718,6 +750,9 @@ atomsPerCell = 8 * (1/8)                    // simple cubic  = 1
 <script src="app.js"></script>
 <script src="../audio.js" defer></script>
 <script src="../sound.js" defer></script>
+<script src="../map.js" defer></script>
+<script src="mission.js" defer></script>
+<script src="../onward.js" defer></script>
 <script src="planner-sound.js" defer></script>
 <script src="../search.js" defer></script>
 <script src="../nav.js" defer></script>

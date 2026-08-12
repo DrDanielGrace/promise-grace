@@ -484,11 +484,15 @@ body.inst[data-stage="2"] .lab-views { grid-template-columns: minmax(0, 1fr); }
 /* ----------------------------------------------------------------------
    MARKS
    ---------------------------------------------------------------------- */
-.inst-marks h2, .inst-handoff h2 {
+/* The Takes panel was missing from this list, so on any instrument that
+   receives a result from another one its heading fell back to a browser
+   default h2 and sat three times the size of the two beside it. */
+.inst-marks h2, .inst-handoff h2, .inst-takes h2 {
   margin: 0 0 0.7rem;
-  font: 400 10px/1 "IBM Plex Mono", ui-monospace, monospace;
+  font: 400 10px/1 var(--f-mono);
   letter-spacing: 0.14em;
-  color: var(--text-far);
+  text-transform: uppercase;
+  color: var(--ink-far);
 }
 
 .inst-marks ol { margin: 0; padding: 0; list-style: none; }

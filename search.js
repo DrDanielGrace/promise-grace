@@ -3,11 +3,19 @@
 
    WHAT IT LOOKS THROUGH
 
-   The seventeen simulations and the quantities each one computes, the seven
-   explainer cards, the thirteen notebook entries, and the five scan
-   transcriptions. Those transcriptions were the reason this exists: they
-   are real handwriting, transcribed by hand, and nothing on the site
-   surfaced them at all.
+   The seventeen instruments and the quantities each one computes, the
+   fourteen notebook entries, the seven explainer cards, the five scan
+   transcriptions, the five research areas, and every destination on the
+   site. Those transcriptions were the reason this exists: they are real
+   handwriting, transcribed by hand, and nothing on the site surfaced them
+   at all.
+
+   This comment used to say thirteen notebook entries, and it said thirteen
+   because the index genuinely held thirteen: the script that built it
+   matched `<article class="entry" id=` and entry 12 is `class="entry
+   entry-dated"`. The pattern is widened and build-search.py now checks its
+   own counts against map.js and exits non-zero if they disagree, so a
+   comment and an index cannot quietly drift apart again.
 
    The index is built from the pages by build-search.py rather than
    maintained alongside them, because an index maintained alongside a page
@@ -15,9 +23,9 @@
 
    WEIGHT
 
-   Twelve kilobytes, and not one byte of it is fetched until somebody opens
-   the search. The same rule the sound follows, for the same reason: most
-   readers will never use it and none of them should pay for it.
+   Under twenty kilobytes, and not one byte of it is fetched until somebody
+   opens the search. The same rule the sound follows, for the same reason:
+   most readers will never use it and none of them should pay for it.
 
    MATCHING
 
@@ -30,11 +38,17 @@
 (function () {
   "use strict";
 
+  /* A result says what kind of thing it is before it says its name, so a
+     reader can tell a simulation from a notebook entry without opening it.
+     That is the whole reason these are here rather than being one flat
+     list of blue links. */
   var KIND = {
     simulation:    "SIMULATION",
+    entry:         "NOTEBOOK ENTRY",
     card:          "EXPLAINER",
-    entry:         "ENTRY",
-    transcription: "SCAN"
+    transcription: "HANDWRITTEN SCAN",
+    research:      "RESEARCH",
+    page:          "DESTINATION"
   };
 
   var rows = null, loading = false;
@@ -205,6 +219,10 @@
         if (fold((r.q || []).join(" ")).indexOf(w) >= 0) score -= 2;
       });
       if (r.k === "simulation") score -= 1;
+      /* A destination is a whole page and is almost never what somebody
+         typing a word wants, so it sits below everything with content in
+         it and is there for the reader who typed "cv". */
+      if (r.k === "page") score += 2;
       hits.push({ r: r, score: score });
     });
 

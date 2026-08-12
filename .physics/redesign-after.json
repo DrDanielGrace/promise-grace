@@ -1,0 +1,39 @@
+{
+  "captured": "after the redesign, on the live code",
+  "why": [
+    "The redesign changed every colour on the site, moved the drawing palette",
+    "out of eight lab files and into one reader, converted the instrument",
+    "frame from dark to light, and rebuilt the navigation. None of that",
+    "should touch a number. This file is the evidence that it did not.",
+    "",
+    "It is the same subject and the same procedure as crystal-before.json,",
+    "captured with the same harness, so the two are directly comparable."
+  ],
+  "procedure": "prefers-reduced-motion forced, so the engine drives no frames and the readout stays at the seed radius. Set gravity, click replay, read the readout. This is the condition crystal-before.json was captured under.",
+
+  "g=1.000": {"g":"1.000","pe":"14.40","sh":"2.90","r":"12.0","rate":"1014.08","shell":"4.1",
+    "verdict":"Flow is winning. Fresh solution keeps arriving, so growth stays fast and the shell never builds."},
+  "g=0.010": {"g":"0.010","pe":"0.14","sh":"1.19","r":"12.0","rate":"416.41","shell":"10.1",
+    "verdict":"Diffusion is winning. The shell has built up, growth is slowing itself down, and the crystal comes out even."},
+  "g=0.000": {"g":"≈0","pe":"0.000","sh":"1.00","r":"12.0","rate":"350.00","shell":"12.0",
+    "verdict":"Diffusion is winning. The shell has built up, growth is slowing itself down, and the crystal comes out even."},
+
+  "assumptionCount": 5,
+  "depthCount": 3,
+  "growthCurveInk_px": 1180,
+
+  "againstBefore": "Identical at all three gravities. Every one of the six readouts and all three verdicts match crystal-before.json exactly. The assumption list is still five items and the depth control still has three settings.",
+
+  "codeChars": {
+    "value": 448,
+    "note": "crystal-before.json records 434. That difference is not from the redesign: it is from the earlier time scaling fix, which is the commit that removed the 1400 multiplier from dRdt before integration. The redesign did not edit any function in lab-crystal.js, only the six colour constants it draws with."
+  },
+
+  "growthCurveInk_note": "Non-zero, which is the thing growth-before.json was capturing when it found nought. Counted under reduced motion, where the run does not animate, so it is lower than the 822 that growth-after.json records for a full run at zero gravity and is not comparable to it. What it establishes is that the panel draws a curve rather than an empty box.",
+
+  "alsoChecked": [
+    "All eighteen routes load with no console error, no failed request and no broken internal link, at 1280x900 and at 375x812, in light, in dark, and with reduced motion forced.",
+    "Every one of the eight framed instruments renders its traces legibly. Before this change six of the eight were drawing #332E5C on #0d0e11, which is about 1.7:1.",
+    "The search index count now matches map.js. build-search.py exits non-zero if it does not."
+  ]
+}

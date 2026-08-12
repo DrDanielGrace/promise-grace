@@ -1,0 +1,178 @@
+/* =========================================================================
+   mission.css · what Mission Control needed to join the rest of the site
+
+   Loaded after styles.css, which is this page's own and stays as it is. All
+   this adds is the two things the page did not have: a first screen that is
+   understandable before it is interesting, and a door out of each of the
+   seven visualisations.
+   ========================================================================= */
+
+/* ----------------------------------------------------------------------
+   THE FIRST SCREEN
+
+   Three facts in the order somebody arriving needs them. Not a dashboard:
+   three definitions, set as one.
+   ---------------------------------------------------------------------- */
+.mission-now {
+  display: grid;
+  gap: 0.6rem;
+  margin: 1.6rem 0 0;
+  padding: 1rem 1.1rem;
+  background: var(--soft-blue);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--radius-lg);
+  max-width: 46rem;
+}
+@media (min-width: 760px) {
+  .mission-now { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; }
+}
+.mission-now > div { min-width: 0; }
+.mission-now dt {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+.mission-now dd {
+  margin: 0.3rem 0 0;
+  font-size: 1.02rem;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.mission-do {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.1rem 0 0;
+}
+
+/* the site's buttons, which this page did not have because it had no
+   reason to until now */
+.mission-do .btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.55rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  color: var(--brand);
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.mission-do .btn:hover { border-color: var(--brand); background: var(--brand-wash); }
+.mission-do .btn-go {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.mission-do .btn-go:hover { background: var(--brand-deep); border-color: var(--brand-deep); }
+
+
+/* ----------------------------------------------------------------------
+   THE SECTION BAR
+
+   It carried her name and a link to the notebook, both of which the site
+   bar above it now does. What is left is which of the six environments you
+   are in, so it is labelled as that rather than as a second site bar.
+   ---------------------------------------------------------------------- */
+.topbar-name {
+  font-size: 9px !important;
+  letter-spacing: 0.16em !important;
+  color: var(--ink-far) !important;
+}
+
+
+/* ----------------------------------------------------------------------
+   THE DOOR OUT OF EACH VISUALISATION
+
+   Four questions, the same four every time, in the same order. It is
+   deliberately quiet: it sits under the thing it is about and never
+   competes with it.
+   ---------------------------------------------------------------------- */
+.mx {
+  margin: 1.6rem 0 0;
+  padding: 0.9rem 1rem;
+  background: var(--brand-wash);
+  border: 1px solid var(--rule-soft);
+  border-left: 3px solid var(--brand);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.mx-h {
+  margin: 0;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+
+.mx-learning {
+  margin: 0.3rem 0 0.9rem;
+  max-width: 58ch;
+  font-size: 1.02rem;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.mx-list {
+  display: grid;
+  gap: 0.4rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+}
+
+.mx-row {
+  display: block;
+  height: 100%;
+  padding: 0.55rem 0.7rem;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+}
+.mx-row:hover { border-color: var(--brand); }
+
+.mx-kind {
+  display: block;
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+.mx-name {
+  display: block;
+  margin: 0.25rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.mx-say {
+  display: block;
+  margin: 0.2rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+@media print {
+  .mx, .mission-do { display: none; }
+}
+
+
+/* ----------------------------------------------------------------------
+   TWO STICKY BARS
+
+   The site bar and this page's section bar are both pinned, so the first
+   thing in a section has to clear the pair of them rather than just one.
+   The cover is the case that showed it: its eyebrow was underneath the
+   section bar on arrival.
+   ---------------------------------------------------------------------- */
+.cover { padding-top: 1.5rem; }
+section { scroll-margin-top: calc(var(--nav-h) + 3.2rem); }
+.viz { scroll-margin-top: calc(var(--nav-h) + 3.2rem); }

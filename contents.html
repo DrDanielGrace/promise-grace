@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-where="notebook" data-crumbs="notebook > Research atlas"
+      data-onward="research|The research|research.html|One question, and the five areas underneath it.; lab|The Lab|simulations.html|Seventeen instruments, grouped.; notebook:question; mission|Mission Control|mission-planner-website/index.html|What she is teaching herself now.">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contents · Promise Oluwatosin Grace</title>
-<meta name="description" content="Everything in the notebook, on one page. Fourteen entries, what each one is about, and where the simulations are.">
+<title>The research atlas · Promise Oluwatosin Grace</title>
+<meta name="description" content="Everything on this site and how it connects: fourteen notebook entries, seventeen instruments, five research areas, and where to start depending on what you came for.">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Contents · Promise Oluwatosin Grace">
-<meta property="og:description" content="Everything in the notebook, on one page.">
+<meta property="og:title" content="The research atlas · Promise Oluwatosin Grace">
+<meta property="og:description" content="Everything on this site, and how it connects.">
 <meta property="og:image" content="assets/scans/og-card.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,6 +20,8 @@
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="pages.css">
 <link rel="stylesheet" href="nav.css">
+<link rel="stylesheet" href="research.css">
+<link rel="stylesheet" href="atlas.css">
 <script src="theme.js"></script>
 </head>
 <body class="page-plain">
@@ -28,21 +31,72 @@
 <main class="sheet">
 
 <section class="cover" id="cover" aria-labelledby="ch">
-  <p class="hand margin-note cover-note">the first page of the notebook</p>
-  <p class="mono eyebrow">CONTENTS</p>
+  <p class="hand margin-note cover-note">the whole thing, laid out flat</p>
+  <p class="mono eyebrow">THE RESEARCH ATLAS</p>
 
-  <h1 class="display" id="ch">Everything in here, on one page.</h1>
+  <h1 class="display" id="ch">Everything here, and where it goes.</h1>
 
-  <p class="lede">Fourteen entries. You do not have to read them in order, and most people should
+  <p class="lede">This page answers one question, and it is not "what is on this site". It is
+  <b>where should I go</b>. You do not have to read the notebook in order, and most people should
   not. If you have four minutes, entries 01, 04 and 05 are the ones that answer whether I can do
   research. If you have longer, start at the top and touch everything on the way down.</p>
 
+  <!-- The counts, read from map.js, which is the one place they are
+       derived. They used to be typed on three pages and one of the three
+       disagreed with the other two. -->
+  <ul class="atlas-counts" data-atlas-counts>
+    <li><b>17</b> <span>instruments</span></li>
+    <li><b>14</b> <span>notebook entries</span></li>
+    <li><b>5</b> <span>research areas</span></li>
+    <li><b>5</b> <span>handwritten pages</span></li>
+  </ul>
+
   <p class="cover-links">
     <a class="ulink" href="notebook.html">Open the notebook</a>
+    <a class="ulink" href="research.html">The research</a>
+    <a class="ulink" href="simulations.html">The Lab</a>
     <a class="ulink" href="guide.html">How to use it</a>
-    <a class="ulink" href="simulations.html">Just the simulations</a>
   </p>
 </section>
+
+
+<!-- ============ WHERE SHOULD I GO ============
+     Four readers, named. This is the part a list of everything cannot do,
+     and it is the reason this page is not a list of everything. -->
+<article class="entry" id="routes">
+  <div class="entry-main">
+    <p class="entry-no mono">WHERE SHOULD I GO</p>
+    <h2>Four ways through, depending on who you are</h2>
+    <div data-atlas-routes></div>
+  </div>
+</article>
+
+
+<!-- ============ HOW IT CONNECTS ============ -->
+<article class="entry" id="connections">
+  <div class="entry-main">
+    <p class="entry-no mono">HOW IT CONNECTS</p>
+    <h2>The five areas, and what is under each one</h2>
+    <p>Every instrument belongs to a research area and most belong to a notebook entry as well.
+    Those are the same question asked twice, once as something you can run and once as something
+    you can read.</p>
+    <div data-atlas-areas></div>
+  </div>
+</article>
+
+
+<!-- ============ THE INSTRUMENTS ============ -->
+<article class="entry" id="instruments">
+  <div class="entry-main">
+    <p class="entry-no mono">THE INSTRUMENTS</p>
+    <h2>Seventeen, and where each one actually lives</h2>
+    <p>Seventeen is one number covering three different things, and it is worth saying which is
+    which rather than leaving somebody to count. Eight open at full screen in their own frame. Two
+    live inside the notebook entry they belong to and have never had one. Seven belong to Mission
+    Control and run on its own scheduler.</p>
+    <div data-atlas-sims></div>
+  </div>
+</article>
 
 <article class="entry" id="toc">
   <div class="entry-main">
@@ -157,20 +211,33 @@
 <article class="entry" id="elsewhere">
   <div class="entry-main">
     <p class="entry-no mono">ELSEWHERE</p>
-    <h2>The other two pages</h2>
+    <h2>The rest of it</h2>
 
     <ul class="plain-list">
-      <li><a class="ulink" href="mission-planner-website/index.html">What I am learning</a>
+      <li><a class="ulink" href="research.html">The research</a>
+        <span class="quiet">One question, the five areas underneath it, and the chain that connects
+        them drawn rather than described. This is the page that says how everything else here fits
+        together.</span></li>
+      <li><a class="ulink" href="mission-planner-website/index.html">Mission Control</a>
         <span class="quiet">The plan I am following to teach myself solar materials science, where
-        I am in it, and the things I got wrong. It has its own simulations: the pH scale, the
-        Arrhenius equation, band gaps, where sunlight actually goes, the Shockley-Queisser limit,
-        and Bragg's law.</span></li>
+        I am in it, and the things I got wrong. Seven of the seventeen instruments live inside it:
+        the pH scale, the Arrhenius equation, band gaps, where sunlight actually goes, the
+        Shockley-Queisser limit, Bragg's law and unit cells.</span></li>
+      <li><a class="ulink" href="simulations.html">The Lab</a>
+        <span class="quiet">All seventeen, with the actual object computed on every card, what each
+        one claims, and the two chains that carry a result from one into the next. If you teach,
+        this is the page to send a class to.</span></li>
+      <li><a class="ulink" href="cv.html">Research CV</a>
+        <span class="quiet">Education, publication, training with every certificate linked, and what
+        I am applying for.</span></li>
+      <li><a class="ulink" href="archive.html">Archive</a>
+        <span class="quiet">The publication, the certificates, the five handwritten pages with their
+        transcriptions, and the reference data the measured simulations are integrated off.</span></li>
+      <li><a class="ulink" href="about.html">About</a>
+        <span class="quiet">Two hundred words, and then out of the way.</span></li>
       <li><a class="ulink" href="guide.html">How to use this site</a>
         <span class="quiet">Three ways in depending on how long you have, and one real question
         worked through end to end.</span></li>
-      <li><a class="ulink" href="simulations.html">Every simulation on one page</a>
-        <span class="quiet">All of them, with one line each and a direct link. If you teach, this
-        is the page to send a class to.</span></li>
     </ul>
   </div>
 </article>
@@ -183,8 +250,11 @@
 
 </main>
 
+<script src="map.js" defer></script>
 <script src="pages.js" defer></script>
 <script src="palette.js" defer></script>
+<script src="atlas.js" defer></script>
+<script src="onward.js" defer></script>
 <script src="search.js" defer></script>
 <script src="nav.js" defer></script>
 <script src="crossing.js" defer></script>

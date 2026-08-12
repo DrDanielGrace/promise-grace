@@ -1,0 +1,256 @@
+/* =========================================================================
+   atlas.css · the research atlas
+
+   Loaded after styles.css, so it sits on the notebook's paper and ruling
+   rather than replacing them. The atlas is still a page of the notebook.
+   What it adds is everything that is not a list: the counts, the four
+   routes, and the five areas with what is under each.
+   ========================================================================= */
+
+/* ----------------------------------------------------------------------
+   THE COUNTS
+   ---------------------------------------------------------------------- */
+.atlas-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: var(--baseline) 0;
+  padding: 0;
+  list-style: none;
+}
+.atlas-counts li { margin: 0; }
+.atlas-counts a {
+  display: block;
+  padding: 0.55rem 0.9rem;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-bottom: 2px solid var(--brand);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+}
+.atlas-counts a:hover { border-color: var(--brand); background: var(--brand-wash); }
+.atlas-counts b {
+  display: block;
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 1.7rem;
+  line-height: 1;
+  color: var(--brand);
+  font-variant-numeric: lining-nums;
+}
+.atlas-counts span {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--f-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+
+
+/* ----------------------------------------------------------------------
+   THE FOUR ROUTES
+
+   Numbered, because a route has an order and the order is the point.
+   ---------------------------------------------------------------------- */
+.atlas-route {
+  margin: 0 0 var(--gap);
+  max-width: 54rem;
+}
+.atlas-route:last-child { margin-bottom: 0; }
+
+.atlas-route-who {
+  margin: 0 0 0.3rem;
+  font-family: var(--f-display);
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-weight: 600;
+  font-size: 1.15rem;
+  line-height: 1.25;
+  color: var(--brand);
+}
+.atlas-route-say {
+  margin: 0 0 0.8rem;
+  max-width: 58ch;
+  font-size: 0.93rem;
+  color: var(--ink-soft);
+}
+
+.atlas-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+  display: grid;
+  gap: 0.4rem;
+}
+.atlas-steps > li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 2rem;
+}
+.atlas-steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0; top: 0.55rem;
+  width: 1.35rem; height: 1.35rem;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: var(--paper);
+  font-family: var(--f-mono);
+  font-size: 9.5px;
+  color: var(--ink-far);
+}
+
+.atlas-step {
+  display: block;
+  padding: 0.55rem 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+}
+.atlas-step:hover { border-color: var(--brand); background: var(--brand-wash); }
+.atlas-step-n {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.25;
+  color: var(--brand);
+}
+.atlas-step-w {
+  display: block;
+  margin-top: 0.2rem;
+  max-width: 62ch;
+  font-size: 0.87rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+
+/* ----------------------------------------------------------------------
+   THE FIVE AREAS
+   ---------------------------------------------------------------------- */
+.atlas-areas { display: grid; gap: 0.75rem; }
+
+.atlas-area {
+  --accent: var(--brand);
+  --accent-wash: var(--brand-wash);
+  padding: 0.9rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+}
+.atlas-area[data-accent="lavender"] { --accent: var(--lavender-ink); --accent-wash: var(--lavender-wash); }
+.atlas-area[data-accent="orchid"]   { --accent: var(--orchid-ink);   --accent-wash: var(--orchid-wash); }
+.atlas-area[data-accent="gold"]     { --accent: var(--gold-ink);     --accent-wash: var(--butter-wash); }
+
+.atlas-area-name {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+.atlas-area-name a { color: var(--ink); text-decoration: none; }
+.atlas-area-name a:hover { color: var(--accent); text-decoration: underline; }
+
+.atlas-area-q {
+  margin: 0.25rem 0 0;
+  max-width: 58ch;
+  font-size: 0.92rem;
+  color: var(--accent);
+}
+
+.atlas-area-lists {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule-soft);
+}
+@media (min-width: 760px) {
+  .atlas-area-lists { grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }
+}
+
+.atlas-col-h {
+  margin: 0 0 0.4rem;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+.atlas-col-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.2rem;
+}
+.atlas-col-list li { margin: 0; }
+.atlas-col-list a { font-size: 0.9rem; }
+
+
+/* ----------------------------------------------------------------------
+   THE SEVENTEEN, BY WHERE THEY LIVE
+   ---------------------------------------------------------------------- */
+.atlas-home { margin: 0 0 var(--gap); }
+.atlas-home:last-child { margin-bottom: 0; }
+
+.atlas-home-h {
+  margin: 0 0 0.2rem;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+.atlas-home-say {
+  margin: 0 0 0.7rem;
+  max-width: 58ch;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.atlas-home-list {
+  display: grid;
+  gap: 0.35rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.atlas-home-list li { margin: 0; }
+
+.atlas-sim {
+  display: block;
+  height: 100%;
+  padding: 0.5rem 0.7rem;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-left: 3px solid var(--brand);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+}
+.atlas-sim:hover { border-color: var(--brand); background: var(--brand-wash); }
+.atlas-sim[data-status="measured"]    { border-left-color: var(--gold); }
+.atlas-sim[data-status="speculative"] { border-left-color: var(--correction); }
+
+.atlas-sim-name {
+  display: block;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.atlas-sim-q {
+  display: block;
+  margin-top: 0.18rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+@media print {
+  .atlas-counts, .atlas-route, .atlas-areas, .atlas-home { break-inside: avoid; }
+}

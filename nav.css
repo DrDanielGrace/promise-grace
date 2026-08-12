@@ -206,11 +206,24 @@ body[data-sound-invite] .sound-invite { display: block; }
 
 @media (max-width: 700px) {
   .site-nav-tools .nav-tool-word { display: none; }
-  /* the sound control says its state in words, and that word is the state,
-     so it is the one label that cannot be dropped */
   .site-nav .sound-toggle [data-sound-label] { display: none; }
   .site-nav .aud-levels { font-size: 0; }
   .site-nav .aud-levels::before { content: "≡"; font-size: 13px; }
+
+  /* A 44 pixel tall target 20 pixels wide is not a 44 pixel target. Once
+     the words are gone each of these is a single glyph, so the width has to
+     be put back deliberately. */
+  /* named through .site-nav so this beats the "min-width: 0" the adopted
+     controls are given above, which is there to undo their pinned sizing */
+  .site-nav .site-nav-tools > * {
+    min-width: 44px;
+    justify-content: center;
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+  }
+  /* the sound mark carries the state on its own at this width, so it stops
+     being a 7 pixel dot */
+  .site-nav .sound-mark { width: 11px; height: 11px; }
 }
 
 /* ----------------------------------------------------------------------

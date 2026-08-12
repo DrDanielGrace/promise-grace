@@ -1574,3 +1574,227 @@ details.assumptions > summary {
 .page-guide .cover .lede { font-size: 1.05rem; }
 .page-guide #depth .entry-no { margin-top: 0; }
 .updated-age { color: var(--correction); }
+
+
+/* =========================================================================
+   THE NOTEBOOK INDEX
+
+   Added in the redesign. The notebook used to open at the cover and go
+   straight into entry 01, so the only way to find out what was in the other
+   thirteen was to read through them. These are the fourteen laid out as
+   page cards on the cover, and they are the notebook's own front matter
+   rather than a menu bolted to the top of it: paper, ruled, and the numbers
+   in her handwriting because that is how a page number is written.
+   ========================================================================= */
+
+.nbx {
+  max-width: 78rem;
+  padding: 0 0 var(--gap);
+}
+
+.nbx-head { margin-bottom: calc(var(--baseline) * 0.9); }
+
+.nbx-h {
+  margin: 0 0 0.3rem;
+  font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+}
+
+.nbx-say {
+  margin: 0;
+  max-width: 56ch;
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+}
+
+.nbx-grid {
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+.nbx-cell { margin: 0; }
+
+.nbx-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0.75rem 0.85rem 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-top: 2px solid var(--rule);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+}
+.nbx-card:hover {
+  border-color: var(--brand);
+  border-top-color: var(--brand);
+  background: var(--brand-wash);
+}
+
+.nbx-card-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.nbx-no {
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--ink-soft);
+}
+
+.nbx-kind {
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  color: var(--ink-far);
+}
+
+/* The seven artefact labels, coloured by what kind of claim each one is.
+   A question and a hypothesis are open; an observation, a calculation and
+   a result are findings; a reflection is personal; a reference is neither. */
+.nbx-card[data-kind="question"]    { border-top-color: var(--brand); }
+.nbx-card[data-kind="question"]    .nbx-kind { color: var(--brand); }
+.nbx-card[data-kind="hypothesis"]  { border-top-color: var(--correction); }
+.nbx-card[data-kind="hypothesis"]  .nbx-kind { color: var(--correction); }
+.nbx-card[data-kind="calculation"] { border-top-color: var(--lavender); }
+.nbx-card[data-kind="calculation"] .nbx-kind { color: var(--lavender-ink); }
+.nbx-card[data-kind="observation"] { border-top-color: var(--lavender); }
+.nbx-card[data-kind="observation"] .nbx-kind { color: var(--lavender-ink); }
+.nbx-card[data-kind="result"]      { border-top-color: var(--gold); }
+.nbx-card[data-kind="result"]      .nbx-kind { color: var(--gold-ink); }
+.nbx-card[data-kind="reflection"]  { border-top-color: var(--orchid); }
+.nbx-card[data-kind="reflection"]  .nbx-kind { color: var(--orchid-ink); }
+
+.nbx-name {
+  display: block;
+  margin: 0.35rem 0 0;
+  font-family: var(--f-display);
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  font-weight: 600;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.nbx-card .nbx-say {
+  margin: 0.3rem 0 0;
+  flex: 1 1 auto;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.nbx-runs {
+  display: block;
+  margin: 0.55rem 0 0;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 8.5px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+
+/* =========================================================================
+   THE TURN AT THE END OF AN ENTRY
+
+   The page turning engine has the keyboard, the drag, the edges and the
+   ribbon. It never had the plainest control of the five: at the bottom of
+   an entry, having finished it, something that says what is next by name.
+   ========================================================================= */
+
+.nb-turn {
+  display: grid;
+  gap: 0.5rem;
+  margin: var(--gap) 0 0;
+  padding-top: calc(var(--baseline) * 0.7);
+  border-top: 1px solid var(--rule);
+  max-width: var(--measure);
+}
+@media (min-width: 640px) {
+  .nb-turn { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.nb-turn-a {
+  display: block;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+  background: var(--surface);
+}
+.nb-turn-a:hover { border-color: var(--brand); background: var(--brand-wash); }
+.nb-turn-next { text-align: right; }
+/* on its own, the next control still sits on the right */
+.nb-turn-next:only-child { grid-column: 2; }
+
+.nb-turn-dir {
+  display: block;
+  font-size: 0.625rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+.nb-turn-name {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.95rem;
+  line-height: 1.25;
+  color: var(--brand);
+}
+
+
+/* =========================================================================
+   ELSEWHERE ON THIS SITE
+
+   An entry that has a simulation in it should say where that simulation can
+   be opened on its own, and an entry belonging to a research area should
+   say which. Both were already true and neither was written down.
+   ========================================================================= */
+
+.nb-also {
+  margin: var(--gap) 0 0;
+  padding: 0.7rem 0.9rem;
+  background: var(--brand-wash);
+  border-left: 3px solid var(--brand);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  max-width: var(--measure);
+}
+.nb-also-h {
+  margin: 0 0 0.45rem;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-far);
+}
+.nb-also-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.3rem;
+}
+.nb-also-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.55rem;
+}
+.nb-also-kind {
+  flex: none;
+  min-width: 8.5rem;
+  font-size: 0.5625rem;
+  letter-spacing: 0.13em;
+  color: var(--ink-far);
+}
+.nb-also-list a { font-size: 0.95rem; }
+
+@media print {
+  .nbx, .nb-turn, .nb-also { display: none; }
+}
