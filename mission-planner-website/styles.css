@@ -59,7 +59,7 @@ main,header,footer{position:relative;z-index:1}
 
 .skip{
   position:absolute;left:-9999px;
-  background:var(--brand);color:#fff;padding:.6rem 1rem;
+  background:var(--brand);color:var(--on-brand);padding:.6rem 1rem;
   font-family:var(--f-mono);font-size:.8125rem;text-decoration:none;
 }
 .skip:focus{left:.5rem;top:.5rem;z-index:99}
@@ -668,9 +668,9 @@ p{margin:0 0 var(--baseline);max-width:66ch}
   font-family:var(--f-mono);font-size:.76rem;letter-spacing:.06em;
   padding:.5rem 1rem;cursor:pointer;border:1px solid var(--brand);
 }
-.btn{background:var(--brand);color:#fff}
+.btn{background:var(--brand);color:var(--on-brand)}
 .btn-quiet{background:none;color:var(--brand)}
-.btn:hover,.btn-quiet:hover{background:var(--brand);color:#fff}
+.btn:hover,.btn-quiet:hover{background:var(--brand);color:var(--on-brand)}
 .spectral-panel .btn-quiet{border-color:var(--brand-lift);color:var(--brand-lift)}
 
 :focus-visible{outline:2px solid var(--brand);outline-offset:3px}
@@ -776,7 +776,7 @@ details[open]>summary::before{content:'\2212'}
 /* Which unit cell is showing, said by the button and not only by the
    readout. Shape as well as colour: the pressed one gains a filled edge. */
 [data-cell][aria-pressed="true"]{
-  border-color:var(--brand);background:var(--brand);color:#fff;
+  border-color:var(--brand);background:var(--brand);color:var(--on-brand);
 }
 
 /* ---------- three depths ----------
@@ -793,7 +793,7 @@ html:not([data-depth="maths"]) .depth-only-maths{display:none}
 }
 .depth-btn:hover{border-color:var(--brand);color:var(--brand)}
 .depth-btn[aria-pressed="true"]{
-  border-color:var(--brand);background:var(--brand);color:#fff;
+  border-color:var(--brand);background:var(--brand);color:var(--on-brand);
 }
 
 /* the crystal is draggable and now focusable, so it says so */

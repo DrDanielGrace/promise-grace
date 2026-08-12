@@ -83,6 +83,11 @@
   --brand-deep:  #2A458F;   /* hover, and a heavier state */
   --brand-lift:  #5273CE;   /* on a dark surface */
   --brand-wash:  #EDF1FB;   /* the faintest possible blue fill */
+  /* What text is when it is sitting ON the brand rather than beside it.
+     White, on a 6.30:1 blue, in light. In dark the blue lifts to #6B8DE8
+     and white on that is 3.09:1, so it goes to the page colour instead,
+     which is 5.35:1. One token, so no component has to know which. */
+  --on-brand:    #FFFFFF;
 
   /* ---- accents, in the order they are allowed to appear -------------- */
   --orchid:      #D98BCB;   /* the notebook, and the personal */
@@ -169,6 +174,7 @@
   --brand-deep:  #8AA5EE;
   --brand-lift:  #A8BDF3;
   --brand-wash:  #1D2740;
+  --on-brand:    #171A24;
 
   --orchid:      #D99BD0;
   --orchid-ink:  #E4B4DC;
@@ -220,6 +226,8 @@
     --brand-deep:  #8AA5EE;
     --brand-lift:  #A8BDF3;
     --brand-wash:  #1D2740;
+    --on-brand:    #171A24;
+  --on-brand:    #171A24;
 
     --orchid:      #D99BD0;
     --orchid-ink:  #E4B4DC;
@@ -278,7 +286,7 @@ img { max-width: 100%; height: auto; }
 .skip {
   position: absolute; left: -9999px; top: 0;
   z-index: 100;
-  background: var(--brand); color: #fff;
+  background: var(--brand); color: var(--on-brand);
   padding: 0.6em 1em;
   font-family: var(--f-mono); font-size: 0.8125rem;
   text-decoration: none;

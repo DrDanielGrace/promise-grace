@@ -719,25 +719,32 @@ window.Aud = (function () {
     if (document.getElementById("aud-css")) return;
     var s = document.createElement("style");
     s.id = "aud-css";
+    /* Every colour here is a token. This panel was the last hard coded dark
+       box on the site: it appeared over a paper page in the colours of an
+       interface that no longer exists anywhere else. */
     s.textContent = [
       ".aud{position:fixed;right:0.75rem;bottom:4.1rem;z-index:60;width:15.5rem;",
-      "background:#16171b;color:#e7e4dd;border:1px solid #33353c;border-radius:2px;",
-      "padding:0.85rem 0.9rem 0.95rem;font:400 12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;",
-      "box-shadow:0 8px 26px rgba(0,0,0,0.34);display:none}",
+      "background:var(--surface);color:var(--ink);border:1px solid var(--rule);",
+      "border-radius:var(--radius-lg);",
+      "padding:0.85rem 0.9rem 0.95rem;font:400 12px/1.4 var(--f-mono);",
+      "box-shadow:0 8px 26px rgba(var(--shadow),0.20);display:none}",
       ".aud[data-open=\"1\"]{display:block}",
-      ".aud h2{margin:0 0 0.65rem;font:inherit;letter-spacing:0.09em;color:#8d8a83;text-transform:uppercase}",
+      ".aud h2{margin:0 0 0.65rem;font:inherit;letter-spacing:0.09em;",
+      "color:var(--ink-far);text-transform:uppercase}",
       ".aud-row{display:grid;grid-template-columns:5.4rem 1fr 2.4rem;align-items:center;gap:0.5rem;margin:0 0 0.5rem}",
-      ".aud-row:last-of-type{margin-bottom:0;padding-top:0.5rem;border-top:1px solid #2a2c32}",
-      ".aud-row label{letter-spacing:0.07em;color:#b4b0a8;font-size:11px}",
-      ".aud-row output{text-align:right;font-variant-numeric:tabular-nums;color:#e7e4dd}",
+      ".aud-row:last-of-type{margin-bottom:0;padding-top:0.5rem;border-top:1px solid var(--rule-soft)}",
+      ".aud-row label{letter-spacing:0.07em;color:var(--ink-soft);font-size:11px}",
+      ".aud-row output{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}",
       ".aud-row input[type=range]{width:100%;min-height:44px;background:transparent;margin:0;",
-      "accent-color:#c78f4a}",
-      ".aud-note{margin:0.7rem 0 0;color:#77746e;font-size:11px;line-height:1.45}",
+      "accent-color:var(--brand)}",
+      ".aud-note{margin:0.7rem 0 0;color:var(--ink-far);font-size:11px;line-height:1.45}",
       ".aud-levels{position:fixed;right:0.75rem;bottom:0.75rem;z-index:60;",
-      "min-height:44px;min-width:44px;padding:0.5rem 0.8rem;background:#16171b;color:#c8c4bc;",
-      "border:1px solid #33353c;border-radius:2px;font:400 11px/1 ui-monospace,monospace;",
+      "min-height:44px;min-width:44px;padding:0.5rem 0.8rem;",
+      "background:var(--surface);color:var(--ink-soft);",
+      "border:1px solid var(--rule);border-radius:var(--radius);",
+      "font:400 11px/1 var(--f-mono);",
       "letter-spacing:0.08em;cursor:pointer}",
-      ".aud-levels[aria-expanded=\"true\"]{color:#e7e4dd;border-color:#5a5d66}",
+      ".aud-levels[aria-expanded=\"true\"]{color:var(--brand);border-color:var(--brand)}",
       "@media (max-width:480px){.aud{left:0.75rem;width:auto}}"
     ].join("");
     document.head.appendChild(s);

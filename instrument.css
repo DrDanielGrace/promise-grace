@@ -590,7 +590,7 @@ body.inst[data-stage="2"] .lab-views { grid-template-columns: minmax(0, 1fr); }
 }
 .depth-btn:hover { color: var(--brand); border-color: var(--brand); }
 .depth-btn[aria-pressed="true"] {
-  color: #fff;
+  color: var(--on-brand);
   background: var(--brand);
   border-color: var(--brand);
 }

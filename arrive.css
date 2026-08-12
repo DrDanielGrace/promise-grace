@@ -125,9 +125,9 @@ body.arrival-body {
 .btn-go {
   background: var(--brand);
   border-color: var(--brand);
-  color: #fff;
+  color: var(--on-brand);
 }
-.btn-go:hover { background: var(--brand-deep); border-color: var(--brand-deep); color: #fff; }
+.btn-go:hover { background: var(--brand-deep); border-color: var(--brand-deep); color: var(--on-brand); }
 
 
 /* ----------------------------------------------------------------------
@@ -222,7 +222,7 @@ body.arrival-body {
   stroke: var(--brand);
 }
 .rmap-node.is-lit .rmap-label,
-.rmap-node:hover .rmap-label { fill: #fff; }
+.rmap-node:hover .rmap-label { fill: var(--on-brand); }
 
 .rmap-say {
   margin: 0.7rem 0 0;

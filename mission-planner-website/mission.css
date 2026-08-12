@@ -69,7 +69,7 @@
 .mission-do .btn-go {
   background: var(--brand);
   border-color: var(--brand);
-  color: #fff;
+  color: var(--on-brand);
 }
 .mission-do .btn-go:hover { background: var(--brand-deep); border-color: var(--brand-deep); }
 

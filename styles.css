@@ -392,7 +392,7 @@ em { font-style: italic; }
 .panel-tag { margin: 0 0 0.5rem; }
 /* The constrained case, marked the way she marks a thing that goes wrong. */
 .tag-correction { color: var(--correction); }
-.tag-sage { color: var(--brand); }
+.tag-brand { color: var(--brand); }
 
 .stage { width: 100%; height: auto; display: block; border-radius: 2px; }
 

@@ -150,7 +150,12 @@
     bar.appendChild(tools);
     bar.appendChild(more);
 
-    document.body.insertBefore(bar, document.body.firstChild);
+    /* After the skip link, never before it. Inserting at firstChild put the
+       bar in front of it, which made the first thing a keyboard reader
+       reached the seven destinations they were trying to skip past. */
+    var skip = document.querySelector("body > .skip");
+    if (skip) skip.parentNode.insertBefore(bar, skip.nextSibling);
+    else document.body.insertBefore(bar, document.body.firstChild);
     document.body.classList.add("has-sitenav");
 
     crumbs(bar, base, current);
