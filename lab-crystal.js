@@ -147,12 +147,27 @@
     if (redraw && typeof drawAll === "function") drawAll();
   });
 
-  function px(v, w) { return (v / R_MAX) * (w * 0.42); }
+  /* Metres to pixels.
+
+     This scaled by width alone, which meant the fully grown crystal fitted
+     only while the canvas was narrower than about 286 pixels. Every panel
+     on the site is wider than that, so at the end of a run the crystal was
+     drawn through the top and bottom edges of its own box and the depleted
+     shell around it was cut into two arcs. It had been that way at every
+     width including the desktop one.
+
+     The shorter side is what decides whether a circle fits in a box, so it
+     is the shorter side that sets the scale. Nothing computed changes: R,
+     the shell, the Peclet and Sherwood numbers and the growth rate are all
+     in metres and are untouched. This is the drawing, not the physics. */
+  function px(v, box) { return (v / R_MAX) * (box * 0.42); }
+  function fitBox(w, h) { return Math.min(w, h); }
 
   function drawCrystal(c) {
     var f = Sim.fitCanvas(c, tier.res), ctx = f.ctx, w = f.w, h = f.h;
     ctx.clearRect(0, 0, w, h);
-    var cx = w / 2, cy = h / 2, r = px(R, w);
+    var box = fitBox(w, h);
+    var cx = w / 2, cy = h / 2, r = px(R, box);
 
     /* Unsteady flow chops the face into facets that do not match. That is the
        visible face of the defect proxy, and it is drawn, not measured. */
@@ -182,7 +197,8 @@
   function drawConc(c) {
     var f = Sim.fitCanvas(c, tier.res), ctx = f.ctx, w = f.w, h = f.h;
     ctx.clearRect(0, 0, w, h);
-    var cx = w / 2, cy = h / 2, r = px(R, w), sh = px(shell(), w);
+    var box = fitBox(w, h);
+    var cx = w / 2, cy = h / 2, r = px(R, box), sh = px(shell(), box);
 
     /* Concentration rises from the face out to the bulk across the shell.
        Drawn as rings rather than a per pixel field so it stays inside budget
@@ -213,7 +229,8 @@
   function drawFlow(c) {
     var f = Sim.fitCanvas(c, tier.res), ctx = f.ctx, w = f.w, h = f.h;
     ctx.clearRect(0, 0, w, h);
-    var cx = w / 2, cy = h / 2, r = px(R, w);
+    var box = fitBox(w, h);
+    var cx = w / 2, cy = h / 2, r = px(R, box);
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.fillStyle = rgba("ink", 0.08); ctx.fill();
     ctx.strokeStyle = INK; ctx.lineWidth = 1; ctx.stroke();

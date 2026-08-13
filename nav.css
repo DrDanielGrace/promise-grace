@@ -221,9 +221,19 @@ body[data-sound-invite] .sound-invite { display: block; }
     padding-left: 0.3rem;
     padding-right: 0.3rem;
   }
-  /* the sound mark carries the state on its own at this width, so it stops
-     being a 7 pixel dot */
-  .site-nav .sound-mark { width: 11px; height: 11px; }
+  /* The sound control, with its label gone, was an 11 pixel ring sitting
+     between a magnifier, a menu and a half moon. It read as a bullet
+     rather than as a control, and nothing said what it was for. The ring
+     stays, because filled or open is how it carries its state without
+     relying on colour, and it gains three letters so it is recognisable as
+     something. The button's real label is still "Sound off" or "Sound on",
+     so nothing a screen reader gets has changed. */
+  .site-nav .sound-mark { width: 10px; height: 10px; }
+  .site-nav .sound-toggle::after {
+    content: "SND";
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
 }
 
 /* ----------------------------------------------------------------------

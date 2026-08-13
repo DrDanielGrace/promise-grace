@@ -873,7 +873,12 @@ em { font-style: italic; }
    device stepping down a quality tier never moves the layout.
    ========================================================================= */
 
-.lab { margin: var(--baseline) 0; }
+/* A figure should be wider than the column of prose it sits in, because it
+   is a figure. It should not be nearly twice as wide, which is what it was:
+   the prose is capped at 66ch and the lab was taking the whole sheet, so at
+   1280 the readout rows ran for eleven hundred pixels with the label at one
+   end and the value at the other. */
+.lab { margin: var(--baseline) 0; max-width: 52rem; }
 
 .lab-views {
   display: grid;
@@ -1798,3 +1803,15 @@ details.assumptions > summary {
 @media print {
   .nbx, .nb-turn, .nb-also { display: none; }
 }
+
+/* The cover's second row: the two ways out of the notebook, set quieter
+   than the two ways in, so the row reads as a hierarchy rather than as
+   five links of equal weight that happened to wrap. */
+.cover-links-quiet { margin-top: 0; gap: 1.4rem; }
+.cover-links-quiet .ulink {
+  font-family: var(--f-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-decoration-color: var(--rule);
+}
+.cover-links-quiet .ulink:hover { text-decoration-color: var(--brand); }

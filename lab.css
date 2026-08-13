@@ -425,3 +425,29 @@
   .ix-list { display: block; }
   .ix-item { border: 0; border-bottom: 1px solid #999; border-radius: 0; }
 }
+
+/* ----------------------------------------------------------------------
+   THE KEY
+
+   Three labels, as a key. It was a sixty word paragraph with the three tags
+   buried inside it, which made the densest thing on the page also the
+   least scannable. A reader wanting to know what MEASURED means is looking
+   things up, not reading.
+   ---------------------------------------------------------------------- */
+.ix-key {
+  display: grid;
+  gap: 0.3rem 0.9rem;
+  margin: 0 0 1.6rem;
+  max-width: 46rem;
+  align-items: baseline;
+}
+@media (min-width: 560px) {
+  .ix-key { grid-template-columns: auto minmax(0, 1fr); }
+}
+.ix-key dt { margin: 0; }
+.ix-key dd {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}

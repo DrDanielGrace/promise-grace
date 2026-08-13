@@ -48,6 +48,7 @@
     card:          "EXPLAINER",
     transcription: "HANDWRITTEN SCAN",
     research:      "RESEARCH",
+    mission:       "MISSION CONTROL",
     page:          "DESTINATION"
   };
 
@@ -98,6 +99,7 @@
       ".sf-list a[data-k=\"entry\"] .sf-k,",
       ".sf-list a[data-k=\"transcription\"] .sf-k{color:var(--orchid-ink)}",
       ".sf-list a[data-k=\"mission\"] .sf-k{color:var(--gold-ink)}",
+      ".sf-list a[data-k=\"card\"] .sf-k{color:var(--ink-far)}",
       ".sf-list a[data-k=\"research\"] .sf-k,",
       ".sf-list a[data-k=\"page\"] .sf-k{color:var(--brand)}",
       ".sf-t{display:block;margin:0.26rem 0 0;color:var(--ink);font:400 15px/1.35 var(--f-body)}",

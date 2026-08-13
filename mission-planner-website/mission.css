@@ -176,3 +176,39 @@
 .cover { padding-top: 1.5rem; }
 section { scroll-margin-top: calc(var(--nav-h) + 3.2rem); }
 .viz { scroll-margin-top: calc(var(--nav-h) + 3.2rem); }
+
+
+/* ----------------------------------------------------------------------
+   THE SECTION BAR, WHEN IT SCROLLS
+
+   Below 40rem the six section links keep their 44 pixel height and scroll
+   sideways rather than stacking, which is the right trade: six rows of
+   sticky header would eat a third of a phone screen. But the scrollbar is
+   hidden, so on a 390 pixel screen "Solar lab" and "Writing" sat 126 and
+   146 pixels past the right edge with nothing at all to say they were
+   there.
+
+   A fade on the right edge is the honest signal. It costs no height, it
+   disappears as soon as the row is scrolled to the end, and it says "more
+   this way" without a control that has to be discovered first.
+   ---------------------------------------------------------------------- */
+@media (max-width: 40rem) {
+  /* "ON THIS PAGE" wrapped onto two lines and took a third of the row for
+     a label the six links underneath it already imply. The row needs that
+     width more than the label does. */
+  .topbar-in > .topbar-name { display: none; }
+
+  .topbar-in { position: relative; }
+  .topbar-in::after {
+    content: "";
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 2.2rem;
+    pointer-events: none;
+    background: linear-gradient(to right, transparent, var(--paper) 80%);
+  }
+  /* the scroll position is not knowable in CSS, so the row is given a
+     little end padding instead: the last link can always be brought clear
+     of the fade */
+  .topbar-nav { padding-right: 1.8rem; }
+}

@@ -307,8 +307,12 @@ window.Pages = (function () {
     t.type = "button";
     t.className = "pages-toggle";
     t.setAttribute("aria-pressed", "true");
+    /* The word is in its own span so a phone can drop it and keep the mark,
+       which takes the control from 110 pixels wide to a 44 square and off
+       the top of whatever the page has in its own bottom right corner. The
+       button's accessible name comes from this text either way. */
     t.innerHTML = '<span class="pages-mark" aria-hidden="true"></span>' +
-                  '<span data-pages-label>Pages on</span>';
+                  '<span class="pages-word" data-pages-label>Pages on</span>';
     t.addEventListener("click", function () {
       set(!on);
       t.setAttribute("aria-pressed", String(on));

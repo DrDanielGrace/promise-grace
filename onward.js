@@ -35,6 +35,7 @@
     notebook: "Notebook entry",
     mission:  "Mission Control",
     archive:  "Archive",
+    atlas:    "Research atlas",
     about:    "About",
     cv:       "CV",
     guide:    "How to use this"

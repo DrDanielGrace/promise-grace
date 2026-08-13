@@ -127,6 +127,21 @@ html[data-pages="off"] .page-edges { display: none; }
   .page-edges.is-decorative { pointer-events: none; }
   .page-edges.is-decorative .page-edge { min-height: 0; }
   .page-edges.is-decorative .page-edge-name { display: none; }
+
+  /* The switch is pinned to the bottom right of the viewport, and on a
+     phone that is where a page's own buttons are. It was sitting on top of
+     Mission Control's "go straight to the physics". Dropping the word and
+     keeping the mark takes it from 110 pixels wide to a 44 square, which
+     clears the content it was landing on while staying a real target. */
+  .pages-toggle {
+    right: 0.6rem;
+    bottom: 4.1rem;
+    min-width: 2.75rem;
+    justify-content: center;
+    padding: 0.5rem;
+    gap: 0;
+  }
+  .pages-toggle .pages-word { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

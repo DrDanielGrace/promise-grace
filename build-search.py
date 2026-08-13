@@ -119,15 +119,46 @@ for m in re.finditer(entry_pat, nb, re.S):
 # ---- the research areas -------------------------------------------------
 #      Read out of map.js, which is where they are declared, rather than out
 #      of research.html, which renders them.
+#
+#      The concepts go in as quantities. Without them a search for
+#      "perovskite" found nothing at all, which is absurd on a site whose
+#      current status line is about perovskites: the word was declared under
+#      the solar area and simply never indexed.
 mp = read("map.js")
 for m in re.finditer(
-        r'id:\s*"([a-z-]+)",\s*\n\s*name:\s*"([^"]+)",\s*\n\s*question:\s*"([^"]+)"',
-        mp):
+        r'id:\s*"([a-z-]+)",\s*\n\s*name:\s*"([^"]+)",\s*\n\s*question:\s*"([^"]+)"'
+        r'(.*?)concepts:\s*\[(.*?)\]',
+        mp, re.S):
+    concepts = re.findall(r'"([^"]+)"', m.group(5))
     rows.append({
         "k": "research",
         "t": m.group(2),
         "u": "research.html#" + m.group(1),
         "s": m.group(3),
+        "q": concepts,
+    })
+
+# ---- the Mission Control modules ----------------------------------------
+#      Seven of the seventeen instruments live on that page, and the prose
+#      around them was the largest unindexed body of writing on the site.
+try:
+    mc = read("mission-planner-website/index.html")
+except IOError:
+    mc = ""
+for m in re.finditer(
+        r'<article class="viz" id="(viz-[a-z]+)"[^>]*>(.*?)</article>', mc, re.S):
+    vid, body = m.group(1), m.group(2)
+    h = re.search(r"<h3[^>]*>(.*?)</h3>", body, re.S)
+    if not h:
+        continue
+    # the prose, without the controls and the readouts, which are noise in a
+    # list of search results
+    prose = re.sub(r'<(figure|div class="viz-controls").*?</\1>', " ", body, flags=re.S)
+    rows.append({
+        "k": "mission",
+        "t": text(h.group(1)),
+        "u": "mission-planner-website/index.html#" + vid,
+        "s": text(prose)[:300],
         "q": [],
     })
 

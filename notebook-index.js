@@ -215,7 +215,17 @@
     });
   }
 
+  /* Anything on this page that states a number reads it from map.js, the
+     same as everywhere else. The notebook's own bar is the only one here. */
+  function counts() {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-count]"), function (el) {
+      var n = M.COUNTS[el.getAttribute("data-count")];
+      if (typeof n === "number") el.textContent = M.word(n);
+    });
+  }
+
   function go() {
+    counts();
     index();
     links();
     turns();
