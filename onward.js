@@ -50,14 +50,22 @@
     var spec = raw.trim();
     if (!spec) return null;
 
-    /* the written-out form */
+    /* The written-out form. `asIs` matters: a page that wrote its own href
+       wrote it relative to itself, so it must not be given the base prefix
+       a mapped href needs. Mission Control declares "../simulations.html"
+       and was getting "../" put in front of it, which came out as
+       "../../simulations.html". On a server rooted at the site that still
+       landed on the site root and looked fine. On GitHub Pages, where the
+       site is served from /promise-grace/, it climbed one level too far and
+       four of that page's onward links 404'd in production. */
     if (spec.indexOf("|") >= 0) {
       var bits = spec.split("|");
       return {
         kind: bits[0].trim(),
         name: (bits[1] || "").trim(),
         href: (bits[2] || "").trim(),
-        say:  (bits[3] || "").trim()
+        say:  (bits[3] || "").trim(),
+        asIs: true
       };
     }
 
@@ -116,9 +124,11 @@
     items.forEach(function (it) {
       var li = document.createElement("li");
       var a = document.createElement("a");
-      /* a written-out href that is already relative to this page is left
-         alone; a mapped one is always relative to the site root */
-      a.href = /^(https?:|mailto:|#)/.test(it.href) ? it.href : b + it.href;
+      /* A written-out href is already relative to this page and is left
+         alone. A mapped one comes out of map.js relative to the site root,
+         so it is the only kind that gets the base prefix. */
+      a.href = (it.asIs || /^(https?:|mailto:|#)/.test(it.href))
+        ? it.href : b + it.href;
       a.setAttribute("data-kind", it.kind);
 
       var k = document.createElement("span");
