@@ -78,6 +78,21 @@
      Mission Control writes the current line into `.status-now`, with the
      superseded ones struck through above it. Only the current one is worth
      bringing over.
+
+     WHY THE DAY IS COMPUTED HERE RATHER THAN COPIED
+
+     This fetches that page and reads it with DOMParser, which builds a
+     document and runs none of its scripts. So anything Mission Control's own
+     JavaScript writes at load is invisible from here. The day count is
+     exactly that: the markup used to carry "Phase 2, day 4." as a
+     placeholder and app.js replaced the number on load. Mission Control
+     showed day 13 and this page showed day 4, both presenting themselves as
+     the same fact.
+
+     The sentence in the markup carries no numbers now. The phase and the
+     start date are attributes, which DOMParser does see, so the prefix is
+     built here from the same two values Mission Control builds it from, with
+     the same arithmetic. Neither page holds a day number of its own.
      ---------------------------------------------------------------------- */
   var now = document.querySelector("[data-now]");
   if (now && window.fetch) {
@@ -85,14 +100,38 @@
       .then(function (r) { return r.ok ? r.text() : Promise.reject(); })
       .then(function (html) {
         var doc = new DOMParser().parseFromString(html, "text/html");
-        var line = doc.querySelector(".status-now");
-        if (!line) return;
+        var el = doc.querySelector(".status-now");
+        if (!el) return;
+
         /* the label is a separate span and reads "RIGHT NOW", which this
            section already says above the sentence */
-        var lab = line.querySelector(".status-label");
+        var lab = el.querySelector(".status-label");
         if (lab) lab.remove();
-        var text = line.textContent.replace(/\s+/g, " ").trim();
-        if (text) now.textContent = text;
+        /* and so is the "I wrote this N days ago" note, which belongs on the
+           page that carries the sentence rather than on a summary of it */
+        var age = el.querySelector(".status-age");
+        if (age) age.remove();
+
+        var sentence = el.textContent.replace(/\s+/g, " ").trim();
+        if (!sentence) return;
+
+        /* The same arithmetic as daysRunning() in the planner's app.js:
+           whole days since the start, counting the first day as day one. If
+           either of these two ever changes, change it in both. The check in
+           the scratchpad asserts all four surfaces agree. */
+        var phase = el.getAttribute("data-phase");
+        var start = el.getAttribute("data-start");
+        var prefix = "";
+        if (phase) {
+          prefix = "Phase " + phase;
+          var began = start ? new Date(start + "T00:00:00") : null;
+          if (began && !isNaN(began.getTime())) {
+            var day = Math.max(0, Math.floor((Date.now() - began.getTime()) / 86400000)) + 1;
+            prefix += ", day " + day;
+          }
+          prefix += ". ";
+        }
+        now.textContent = prefix + sentence;
       })
       .catch(function () {});
   }

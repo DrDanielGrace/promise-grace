@@ -37,32 +37,45 @@
   /* ----------------------------------------------------------------------
      THE FIRST SCREEN
 
-     The status block is authored as one sentence, "Phase 2, day 4. Reading
-     about why perovskites fall apart in sunlight." The phase and the
-     question are both inside it, so they are taken from it rather than
-     written out again above it.
+     The three facts at the top of the page come from the status block below
+     it, which is the one place any of this is written down.
+
+     This used to read them back out of the rendered sentence, splitting
+     "Phase 2, day 13. Reading about..." on its full stop. That worked only
+     because app.js had already built that string, and it would have taken
+     the whole sentence as the phase the moment the prefix was not there. The
+     phase and the start date are attributes, so they are read as attributes,
+     and the sentence is read as the sentence.
      ---------------------------------------------------------------------- */
   (function first() {
+    var status = document.querySelector(".status-now");
     var line = document.getElementById("status-line");
     var now = document.querySelector("[data-mission-now]");
-    if (!line || !now) return;
-
-    var text = (line.textContent || "").replace(/\s+/g, " ").trim();
+    if (!status || !line || !now) return;
 
     var phaseEl = now.querySelector("[data-mission-phase]");
     var qEl = now.querySelector("[data-mission-q]");
 
-    var phase = text.match(/Phase\s+(\d+)/i);
+    var phase = status.getAttribute("data-phase");
+    var start = status.getAttribute("data-start");
+
     if (phase && phaseEl) {
-      var day = text.match(/day\s+(\d+)/i);
-      phaseEl.textContent = "Phase " + phase[1] + (day ? ", day " + day[1] : "");
+      var said = "Phase " + phase;
+      var began = start ? new Date(start + "T00:00:00") : null;
+      if (began && !isNaN(began.getTime())) {
+        /* the same arithmetic as daysRunning() in app.js and arrive.js */
+        var day = Math.max(0, Math.floor((Date.now() - began.getTime()) / 86400000)) + 1;
+        said += ", day " + day;
+      }
+      phaseEl.textContent = said;
     }
 
-    /* the second sentence is what she is actually on */
-    var rest = text.split(/\.\s+/).slice(1).join(". ").trim();
-    if (rest && qEl) {
-      qEl.textContent = rest.replace(/\.$/, "");
-    }
+    /* The sentence, with any prefix app.js has already put on the front of
+       it taken back off, because this panel states the phase in its own
+       right one row above. */
+    var text = (line.textContent || "").replace(/\s+/g, " ").trim();
+    text = text.replace(/^Phase\s+\d+(,\s*day\s+\d+)?\.\s*/i, "");
+    if (text && qEl) qEl.textContent = text.replace(/\.$/, "");
   })();
 
   /* ----------------------------------------------------------------------

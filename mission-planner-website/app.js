@@ -36,7 +36,23 @@ var PEN = { ink:'#30243A', brand:'#3557B7', corr:'#8C2F45',
 })();
 
 var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-var NUCLEATED = new Date('2026-08-01T00:00:00');
+
+/* The day the run began. It lives on .status-now in the markup, next to the
+   phase and the date the sentence was written, because the markup is the one
+   thing every consumer of this status can read: this page reads it live, and
+   the homepage fetches this file and parses it without running any of this.
+   A constant in here would be invisible to the second of those, which is
+   exactly how the two pages ended up disagreeing.
+
+   The literal below is the fallback for the case where the attribute is
+   missing, and nothing else should ever read it. */
+function nucleatedOn() {
+  var el = document.querySelector('.status-now');
+  var iso = el && el.getAttribute('data-start');
+  var d = iso ? new Date(iso + 'T00:00:00') : null;
+  return (d && !isNaN(d.getTime())) ? d : new Date('2026-08-01T00:00:00');
+}
+var NUCLEATED = nucleatedOn();
 
 /* ---------------- the plan ---------------- */
 var PHASES = [
@@ -570,10 +586,14 @@ function defectList(){
 }
 
 /* ---------------- the status line ----------------
-   The day count is worked out from the nucleation date rather than typed,
-   so it cannot go stale. Only the phase and the sentence are hand written,
-   and the page says how old the sentence is rather than letting an old one
-   pass as current. */
+   The day count is worked out from data-start rather than typed, so it
+   cannot go stale. Only the phase and the sentence are hand written, and the
+   page says how old the sentence is rather than letting an old one pass as
+   current.
+
+   The same arithmetic is in arrive.js, because the homepage reads this file
+   with DOMParser and so cannot call anything in here. If one changes, change
+   both. Whole days since the start, counting the first day as day one. */
 function daysRunning(){
   return Math.max(0,Math.floor((Date.now()-NUCLEATED.getTime())/86400000))+1;
 }
