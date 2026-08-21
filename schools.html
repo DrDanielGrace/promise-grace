@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en" data-where="schools"
+      data-onward="cv|Research CV|cv.html|Education, training, publication, and what she is applying for.; research|The research|research.html|One question, and the five areas underneath it.; about|About|about.html|Who she is, in four lines and then at length.">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schools I am applying to · Promise Oluwatosin Grace</title>
+<meta name="description" content="The programmes Promise is applying to for 2027 entry, what each one requires, what each one funds, and the visa position for each country. Every claim checked against an official source.">
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Caveat:wght@500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="nav.css">
+<link rel="stylesheet" href="arrive.css">
+<link rel="stylesheet" href="research.css">
+<link rel="stylesheet" href="paper.css">
+<script src="theme.js"></script>
+
+<style>
+/* =========================================================================
+   schools.html · page-local styling only
+
+   Everything here consumes tokens.css. No colour is decided in this file.
+   Three things this page needs that no other page on the site needed: a
+   confidence badge, a comparison table wide enough to need its own scroll,
+   and a deadline that counts itself down.
+   ========================================================================= */
+
+/* ---- the verdict, at the top ------------------------------------------ */
+.sch-verdict{
+  display:grid; grid-template-columns:1fr; gap:0;
+  border:1px solid var(--rule); border-top:3px solid var(--brand);
+  background:var(--surface); border-radius:2px; overflow:hidden;
+  margin:0 0 2.6rem;
+}
+@media (min-width:760px){ .sch-verdict{ grid-template-columns:1.6fr 1fr } }
+.sch-verdict-main{ padding:1.5rem 1.6rem }
+.sch-verdict-side{
+  padding:1.5rem 1.6rem; background:var(--brand-wash);
+  border-top:1px solid var(--rule);
+  display:flex; flex-direction:column; gap:1.1rem; justify-content:center;
+}
+@media (min-width:760px){
+  .sch-verdict-side{ border-top:0; border-left:1px solid var(--rule) }
+}
+.sch-verdict h2{
+  font-family:Fraunces,Georgia,serif; font-weight:600;
+  font-size:1.5rem; line-height:1.15; margin:.35rem 0 .6rem; color:var(--ink);
+}
+.sch-verdict p{ margin:0; color:var(--ink-soft) }
+.sch-stat-n{
+  font-family:"IBM Plex Mono",monospace; font-size:1.6rem; font-weight:500;
+  line-height:1; color:var(--ink); font-variant-numeric:tabular-nums; display:block;
+}
+.sch-stat-l{
+  font-family:"IBM Plex Mono",monospace; font-size:.65rem; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-far); display:block; margin-top:.3rem;
+}
+
+/* ---- confidence badges ------------------------------------------------ */
+.sch-b{
+  display:inline-block; font-family:"IBM Plex Mono",monospace;
+  font-size:.62rem; letter-spacing:.1em; text-transform:uppercase;
+  padding:.16rem .45rem; border-radius:2px; white-space:nowrap;
+  border:1px solid currentColor; vertical-align:middle;
+}
+.sch-b-ok{ color:var(--checked) }
+.sch-b-no{ color:var(--blocked) }
+.sch-b-tbc{ color:var(--pending) }
+.sch-b-info{ color:var(--brand) }
+
+/* ---- cards ------------------------------------------------------------ */
+.sch-card{
+  border:1px solid var(--rule); border-left:3px solid var(--rule);
+  background:var(--surface); border-radius:2px;
+  padding:1.15rem 1.3rem; margin:1.2rem 0;
+}
+.sch-card.is-ok{ border-left-color:var(--checked) }
+.sch-card.is-no{ border-left-color:var(--blocked) }
+.sch-card.is-tbc{ border-left-color:var(--pending) }
+.sch-card > :last-child{ margin-bottom:0 }
+.sch-card h3{
+  font-family:Fraunces,Georgia,serif; font-weight:600; font-size:1.12rem;
+  margin:0 0 .6rem; color:var(--ink); display:flex; gap:.6rem;
+  align-items:center; flex-wrap:wrap;
+}
+.sch-card h4{
+  font-family:"IBM Plex Mono",monospace; font-size:.68rem; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--ink-far); margin:1.1rem 0 .4rem;
+}
+
+/* ---- quoted regulation ------------------------------------------------ */
+.sch-quote{
+  border-left:2px solid var(--brand); background:var(--brand-wash);
+  padding:.7rem .95rem; margin:1rem 0; border-radius:0 2px 2px 0;
+}
+.sch-quote p{ margin:0 }
+.sch-quote cite{
+  display:block; font-family:"IBM Plex Mono",monospace; font-size:.64rem;
+  letter-spacing:.09em; text-transform:uppercase; font-style:normal;
+  color:var(--ink-far); margin-top:.5rem;
+}
+
+/* ---- tables ----------------------------------------------------------- */
+.sch-scroll{
+  overflow-x:auto; margin:1.2rem 0; max-width:100%;
+  border:1px solid var(--rule); border-radius:2px; background:var(--surface);
+}
+.sch-scroll table{ border-collapse:collapse; width:100%; min-width:640px; font-size:.87rem }
+.sch-scroll th,.sch-scroll td{
+  padding:.6rem .8rem; text-align:left; vertical-align:top;
+  border-bottom:1px solid var(--rule-soft);
+}
+.sch-scroll thead th{
+  background:var(--soft-blue); color:var(--ink-soft);
+  font-family:"IBM Plex Mono",monospace; font-size:.62rem;
+  letter-spacing:.1em; text-transform:uppercase; font-weight:500; white-space:nowrap;
+}
+.sch-scroll tbody tr:last-child td,.sch-scroll tbody tr:last-child th{ border-bottom:0 }
+.sch-scroll tbody th{ font-weight:600; white-space:nowrap; color:var(--ink) }
+.sch-scroll .n{ font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap }
+.sch-scroll tr.is-pick td,.sch-scroll tr.is-pick th{ background:var(--brand-wash) }
+
+/* ---- numbered actions ------------------------------------------------- */
+.sch-steps{ list-style:none; padding:0; counter-reset:s }
+.sch-steps li{ counter-increment:s; position:relative; padding-left:2.3rem; margin-bottom:.9rem }
+.sch-steps li::before{
+  content:counter(s,decimal-leading-zero); position:absolute; left:0; top:.15rem;
+  font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--brand); font-weight:500;
+}
+.sch-when{
+  font-family:"IBM Plex Mono",monospace; font-size:.65rem; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-far);
+  margin:1.8rem 0 .8rem; padding-bottom:.3rem; border-bottom:1px solid var(--rule-soft);
+}
+</style>
+</head>
+<body class="paper-body">
+
+<a class="skip" href="#schools">Skip to the page</a>
+
+<main class="pg" id="schools">
+
+  <header class="pg-head">
+    <p class="mono pg-eyebrow">APPLICATIONS · 2027 ENTRY</p>
+    <h1 class="pg-h1">Schools I am applying to</h1>
+    <p class="pg-lede">The programmes on the list, what each one asks for, what each one funds, and
+    where each country stands on letting a spouse come and work. Every claim here was read off an
+    official government page or the institution's own, and anything not yet checked says so.</p>
+  </header>
+
+  <!-- ── THE VERDICT ─────────────────────────────────────────────────── -->
+  <section class="pg-sec" aria-labelledby="s-verdict">
+    <h2 class="mono pg-sec-h" id="s-verdict">Where this comes out</h2>
+
+    <div class="sch-verdict">
+      <div class="sch-verdict-main">
+        <p class="mono sch-stat-l" style="margin-top:0">The recommendation</p>
+        <h2>ISTA, Chemistry &amp; Materials</h2>
+        <p>Institute of Science and Technology Austria. Bachelor's holders are admitted directly
+        into a funded PhD. No tuition, no application fee, and no English test of any kind. A real
+        salary on a five-year employment contract. One route clears the Bachelor's barrier, the
+        funding barrier and the spouse work barrier at the same time, and everything else on this
+        page fails at least one of them.</p>
+      </div>
+      <div class="sch-verdict-side">
+        <div><span class="sch-stat-n" id="sch-days">&mdash;</span><span class="sch-stat-l">days to the deadline</span></div>
+        <div><span class="sch-stat-n">8 Jan 2027</span><span class="sch-stat-l">applications close</span></div>
+        <div><span class="sch-stat-n">&euro;0</span><span class="sch-stat-l">cost to apply</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── THE VISA QUESTION ───────────────────────────────────────────── -->
+  <section class="pg-sec" aria-labelledby="s-visa">
+    <h2 class="mono pg-sec-h" id="s-visa">The visa question, which decides the rest</h2>
+
+    <p>A funded offer is only usable if it comes with a way for both of us to be in the country and
+    for both of us to earn. That constraint is settled first, because it eliminates more programmes
+    than any academic requirement does.</p>
+
+    <h3 style="font-family:Fraunces,Georgia,serif;font-weight:600;font-size:1.15rem;margin:1.8rem 0 .5rem">Austria <span class="sch-b sch-b-ok">Verified</span></h3>
+
+    <p>The whole thing turns on one clause. ISTA PhD students hold a <strong>Settlement Permit
+    &ndash; Researcher</strong>, and that permit is not restricted to people who already hold a
+    doctorate:</p>
+
+    <div class="sch-quote">
+      <p>The &ldquo;Settlement Permit &ndash; Researcher&rdquo; is intended for nationals of third
+      countries who are in possession of a doctoral/PhD degree <strong>or a degree allowing access
+      to doctoral/PhD programmes</strong>&hellip;</p>
+      <cite>OeAD, Austrian Agency for Education and Internationalisation</cite>
+    </div>
+
+    <p>A B.Sc.(Ed.) is a degree allowing access to a doctoral programme, and being admitted is the
+    proof of it. The family members of that permit then receive a <strong>Red-White-Red Card
+    Plus</strong>, which the Austrian government's migration portal describes as granting
+    &ldquo;unlimited labour market access (as a self-employed or an employed person, not limited to
+    a specific employer)&rdquo;.</p>
+
+    <dl class="pg-facts">
+      <dt>German</dt>
+      <dd>None required to arrive. Ordinary Austrian family reunification needs A1; family members
+      of a researcher are explicitly exempt. Module 1 of the Integration Agreement is needed within
+      two years to renew, so the language course belongs in year one.</dd>
+      <dt>Quota</dt>
+      <dd>None. No quotas apply to family members of a Settlement Permit &ndash; Researcher holder.</dd>
+      <dt>Cost</dt>
+      <dd>EUR 218 each, about EUR 436 for two, plus the Visa D fee and document legalisation.</dd>
+      <dt>Decision</dt>
+      <dd>Within eight weeks of a complete application, for both permits.</dd>
+      <dt>Funds test</dt>
+      <dd>EUR 2,064.12 per month for a couple. The ISTA starting salary is EUR 3,053 per month gross
+      paid fourteen times a year, so it clears with room.</dd>
+    </dl>
+
+    <div class="sch-card is-tbc">
+      <h3>The one open risk <span class="sch-b sch-b-tbc">To confirm</span></h3>
+      <p>Austria has two relevant permits and which one applies depends on status: researchers doing
+      scientific work get the researcher permit, people enrolled in a doctoral programme get a
+      student permit, and only the first carries the family work rights. ISTA's own Welcome Services
+      page names the researcher route and ISTA employs its PhD students under contract, which is the
+      trigger for it, so the evidence points the right way.</p>
+      <p>But a Bachelor's entrant spends roughly the first eighteen months on Master's-level
+      coursework before the Qualifying Exam, and that phase is where the classification could go the
+      other way. One email to ISTA's HR settles it, and it is the first thing on the list below.</p>
+    </div>
+
+    <h3 style="font-family:Fraunces,Georgia,serif;font-weight:600;font-size:1.15rem;margin:1.8rem 0 .5rem">United States <span class="sch-b sch-b-no">Closed for a spouse</span></h3>
+
+    <div class="sch-quote">
+      <p>The F-2 spouse and children of an F-1 student <strong>may not accept employment</strong>.</p>
+      <cite>8 CFR 214.2(f)(15)(i)</cite>
+    </div>
+
+    <p>There is no application to file and no exception in the text. Funded US PhD students are
+    almost always on F-1, which puts a spouse on F-2. A J-2 spouse of a J-1 exchange visitor may
+    apply for employment authorization on Form I-765, but which category a department sponsors
+    follows from how the student is funded, and a departmental assistantship usually means F-1.</p>
+
+    <p>A second problem arrived in July. A DHS final rule effective <strong>15 September 2026</strong>
+    replaces duration of status with a fixed admission period capped at four years. A chemistry PhD
+    runs five to six, so it would mean filing an extension of stay with USCIS mid-degree.</p>
+
+    <h3 style="font-family:Fraunces,Georgia,serif;font-weight:600;font-size:1.15rem;margin:1.8rem 0 .5rem">New Zealand <span class="sch-b sch-b-no">Entry closed</span></h3>
+
+    <p>The best spouse terms found anywhere: a Partner of a Student Work Visa lets the partner do
+    &ldquo;any work, in any job, anywhere in New Zealand&rdquo; with no job offer needed, NZD 1,630,
+    decided in about five weeks, and international PhD candidates pay domestic tuition.</p>
+
+    <p>And it is shut. Otago requires a Bachelor's with first or upper second class honours at a B+
+    average including a research component, or a Master's with one. This one reopens after a
+    research Master's, and when it does it is arguably the best destination on the list.</p>
+
+    <h3 style="font-family:Fraunces,Georgia,serif;font-weight:600;font-size:1.15rem;margin:1.8rem 0 .5rem">Germany, Australia, Canada</h3>
+
+    <p><strong>Germany</strong> works on the same logic as Austria: a researcher permit &ldquo;also
+    applies to doctoral candidates if they are employed by an academic institution&rdquo;, and a
+    researcher's spouse may take any job with no German language requirement. Whether a given Max
+    Planck school employs or stipends is a per-school question. <strong>Australia</strong> gives
+    dependants unlimited work hours where the student is on a doctoral degree, but the visa costs
+    from AUD 2,500 and the entry bar is probably New Zealand's. <strong>Canada</strong> is the route
+    already in motion: a spousal open work permit where the programme is a master's of sixteen
+    months or longer, or a PhD, at a designated learning institution.</p>
+
+    <p class="mono sch-when">Side by side</p>
+    <div class="sch-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Country</th>
+            <th scope="col">Spouse work rights</th>
+            <th scope="col">Language asked of him</th>
+            <th scope="col" class="n">Permit cost</th>
+            <th scope="col">Open now</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="is-pick">
+            <th scope="row">Austria &middot; ISTA</th>
+            <td>Any job, any employer, or self-employed, with no work permit</td>
+            <td>None to arrive; German within two years to renew</td>
+            <td class="n">EUR 218</td>
+            <td><span class="sch-b sch-b-ok">Yes</span></td>
+          </tr>
+          <tr>
+            <th scope="row">USA &middot; F-1 / F-2</th>
+            <td>None, barred by regulation</td>
+            <td>None</td>
+            <td class="n">USD 185</td>
+            <td><span class="sch-b sch-b-tbc">4-year cap</span></td>
+          </tr>
+          <tr>
+            <th scope="row">USA &middot; J-1 / J-2</th>
+            <td>Yes, via Form I-765</td>
+            <td>None</td>
+            <td class="n">USD 185</td>
+            <td><span class="sch-b sch-b-tbc">Only if J-1</span></td>
+          </tr>
+          <tr>
+            <th scope="row">New Zealand</th>
+            <td>Any job, no job offer needed</td>
+            <td>None</td>
+            <td class="n">NZD 1,630</td>
+            <td><span class="sch-b sch-b-no">No</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Germany</th>
+            <td>Any job, where she holds a researcher permit</td>
+            <td>None for a researcher's spouse</td>
+            <td class="n">Varies</td>
+            <td><span class="sch-b sch-b-tbc">Per school</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Australia</th>
+            <td>Unlimited hours on a doctoral degree</td>
+            <td>None</td>
+            <td class="n">AUD 2,500</td>
+            <td><span class="sch-b sch-b-tbc">Unverified</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Canada</th>
+            <td>Open work permit</td>
+            <td>None</td>
+            <td class="n">CAD 340</td>
+            <td><span class="sch-b sch-b-info">Via the MSc</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── THE PROGRAMMES ──────────────────────────────────────────────── -->
+  <section class="pg-sec" aria-labelledby="s-progs">
+    <h2 class="mono pg-sec-h" id="s-progs">The programmes</h2>
+
+    <div class="sch-card is-ok">
+      <h3>ISTA &middot; Chemistry &amp; Materials <span class="sch-b sch-b-ok">Applying</span></h3>
+      <p>Klosterneuburg, outside Vienna.</p>
+      <dl class="pg-facts">
+        <dt>Bachelor's entry</dt><dd>Yes. &ldquo;A bachelor's or a master's degree in science.&rdquo; Bachelor's holders enter a combined Master's-PhD track</dd>
+        <dt>English test</dt><dd>Not required at all. &ldquo;A formal proof of competence in English (IELTS, CPE or TOEFL) is not required&rdquo;</dd>
+        <dt>Tuition</dt><dd>None</dd>
+        <dt>Application fee</dt><dd>None</dd>
+        <dt>Salary</dt><dd>EUR 3,053 to 3,673 per month gross, paid fourteen times a year, on a five-year contract</dd>
+        <dt>GPA floor</dt><dd>None published</dd>
+        <dt>Deadline</dt><dd>8 January 2027</dd>
+      </dl>
+
+      <h4>Why the research fits</h4>
+      <p>Chemistry &amp; Materials is a named track with thirteen groups, and two of them sit
+      directly on what she already works towards. <strong>Stefan Freunberger</strong> leads
+      Materials Electrochemistry: new materials and reaction mechanisms in electrochemical energy
+      storage, metal-oxygen and metal-sulfur batteries, electrocatalysis, studied with in-situ
+      spectroscopy, diffraction and microscopy. <strong>Maria Ib&aacute;&ntilde;ez</strong> leads
+      Functional Nanomaterials and runs the Werner Siemens Thermoelectric Laboratory on
+      high-efficiency thermoelectric materials. <strong>Bartholom&auml;us Pieber</strong> works on
+      heterogeneous photocatalysis with semiconductors. Electrochemical materials, thermoelectrics
+      and solar energy materials are three of the five things on her research list, and each is a
+      group name rather than a stretch.</p>
+      <p>Crystal growth is not on the track page, and nothing at ISTA touches microgravity. That
+      interest belongs in the statement of purpose, where nucleation, solidification and phase
+      transitions connect to it honestly. It is not something to search on.</p>
+    </div>
+
+    <div class="sch-card is-tbc">
+      <h3>Wayne State University &middot; Chemistry <span class="sch-b sch-b-tbc">Spouse blocked</span></h3>
+      <p>Detroit. Full funding at roughly USD 29,000 plus tuition and health insurance, twelve
+      months a year, and the department states that all admitted PhD students receive support. Its
+      published requirement is a &ldquo;minimum of 3.0 or its equivalent in upper division
+      coursework&rdquo;, which is the criterion her upper-division record meets. English is the
+      hurdle: TOEFL iBT 90 with every subsection at 20 or better, with no waiver mentioned.
+      Deadline 1 December.</p>
+    </div>
+
+    <div class="sch-card is-tbc">
+      <h3>Tufts University &middot; Chemistry <span class="sch-b sch-b-tbc">Spouse blocked</span></h3>
+      <p>Medford, Massachusetts. The department states plainly that &ldquo;there are no specific
+      requirements for grade point average&rdquo;, and asks for &ldquo;an undergraduate degree in
+      chemistry, or in a related subject with appropriate chemistry courses&rdquo;, which is the
+      most accommodating wording found anywhere for a B.Sc.(Ed.) holder. Unilorin teaches in
+      English, so the TOEFL is worth asking about before paying for it.</p>
+    </div>
+
+    <div class="sch-card">
+      <h3>Max Planck Schools and IMPRS <span class="sch-b sch-b-info">Autumn 2026</span></h3>
+      <p>Direct-track and fast-track routes from a Bachelor's exist, and IMPRS-CMS at Stuttgart runs
+      a bachelor fellowship. Not every school offers the route, so this is a list to work through
+      when 2027 projects are announced, asking each one whether doctoral candidates are employed or
+      stipended, because that is what decides the spouse position in Germany.</p>
+    </div>
+  </section>
+
+  <!-- ── DEFERRED ────────────────────────────────────────────────────── -->
+  <section class="pg-sec" aria-labelledby="s-later">
+    <h2 class="mono pg-sec-h" id="s-later">On the list for later</h2>
+    <p>These need a Master's first, which the Canadian route already in motion supplies.</p>
+    <dl class="pg-facts">
+      <dt>New Zealand</dt><dd>Blocked on degree class. Reopens with a research Master's, and then the terms are the best of any country here</dd>
+      <dt>China, CSC</dt><dd>Doctoral applicants must hold a Master's and be under 40, so the direct route often quoted for it does not exist</dd>
+      <dt>Continental Europe</dt><dd>A Master's is usually a legal precondition for doctoral enrolment. Austria's ISTA and the Max Planck direct tracks are the deliberate exceptions</dd>
+      <dt>Australia</dt><dd>Probably here, for the same reason as New Zealand, though not yet checked against a named university</dd>
+    </dl>
+  </section>
+
+  <!-- ── ACTIONS ─────────────────────────────────────────────────────── -->
+  <section class="pg-sec" aria-labelledby="s-do">
+    <h2 class="mono pg-sec-h" id="s-do">What happens next</h2>
+
+    <p class="mono sch-when">Now</p>
+    <ol class="sch-steps">
+      <li><strong>Treat ISTA as the primary application.</strong> No fee, no TOEFL, no tuition. The only cost is the time to write it well.</li>
+      <li><strong>Ask ISTA HR, in writing,</strong> whether a student admitted with a Bachelor's is sponsored on the Settlement Permit &ndash; Researcher route from the start, or on a student permit during the coursework phase. Everything in the Austrian section rests on this.</li>
+      <li><strong>Write to Freunberger and Ib&aacute;&ntilde;ez</strong> about their actual work, not about the institute.</li>
+      <li><strong>Ask WES whether the evaluation states an upper-division GPA</strong>, since the trajectory argument is far stronger as their figure than as a reconstruction.</li>
+    </ol>
+
+    <p class="mono sch-when">Within the month</p>
+    <ol class="sch-steps" start="5">
+      <li><strong>Start the Austrian documents.</strong> Police clearance must be under three months old at application, legalised and then translated, and so must the marriage certificate. These are slow from Nigeria and cannot be left to December.</li>
+      <li><strong>Begin German.</strong> Nothing is needed to arrive, but Integration Agreement module 1 is needed within two years, and doing it early removes a deadline from a busy second year.</li>
+    </ol>
+
+    <p class="mono sch-when">In parallel</p>
+    <ol class="sch-steps" start="7">
+      <li><strong>Ask Tufts and Wayne State two questions:</strong> whether admitted international students are sponsored on F-1 or J-1, and whether a Unilorin medium-of-instruction letter is accepted in place of the TOEFL. The first decides whether the offer is usable; the second decides whether a test needs paying for.</li>
+      <li><strong>Work the IMPRS list</strong> when 2027 projects are announced in autumn.</li>
+    </ol>
+  </section>
+
+  <!-- ── HONESTY ─────────────────────────────────────────────────────── -->
+  <section class="pg-sec" aria-labelledby="s-open">
+    <h2 class="mono pg-sec-h" id="s-open">What is not settled</h2>
+    <p>Kept on the page rather than tidied off it, because a plan that hides its own gaps is not a
+    plan.</p>
+    <ul>
+      <li>Whether ISTA sponsors Bachelor's entrants as researchers from day one. The most important open question here.</li>
+      <li>The exact Austrian net salary against the EUR 2,064.12 couple threshold. The gross clears it comfortably; the net was not checked against a tax table.</li>
+      <li>Australian doctoral entry requirements, against a named university.</li>
+      <li>Whether any Max Planck school employs rather than stipends its doctoral candidates.</li>
+      <li>Tufts' funding amount and deadline, neither of which is published on the department page.</li>
+    </ul>
+    <p class="pg-note">Rules and figures were current on 21 August 2026. Immigration rules change,
+    so anything load-bearing is worth re-checking against the source before it is acted on.</p>
+  </section>
+
+</main>
+
+<script src="nav.js"></script>
+<script src="onward.js"></script>
+<script>
+/* The deadline counts itself down, so the page cannot quietly go stale. */
+(function () {
+  var el = document.getElementById("sch-days");
+  if (!el) return;
+  var days = Math.ceil((new Date("2027-01-08T00:00:00") - new Date()) / 86400000);
+  el.textContent = days > 0 ? days : "Closed";
+})();
+</script>
+</body>
+</html>

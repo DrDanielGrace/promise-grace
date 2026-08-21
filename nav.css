@@ -127,9 +127,9 @@
 /* ----------------------------------------------------------------------
    THE SECOND RANK
 
-   Archive, About and CV are reference rather than argument. On a wide
+   Archive, About, CV and Schools are reference rather than argument. On a wide
    screen they simply sit in the bar. Below 900 they go behind one control,
-   because seven destinations plus three tools across a 375 pixel screen is
+   because eight destinations plus three tools across a 375 pixel screen is
    four rows of bar and no page.
    ---------------------------------------------------------------------- */
 /* Specificity has to beat ".site-nav button" above, which is why the parent
@@ -156,7 +156,7 @@
    THE TOOLS
 
    Search, theme and sound. Each is a mark and a word; below 560 the words
-   go and the marks stay, because four words plus seven destinations is a
+   go and the marks stay, because four words plus eight destinations is a
    bar taller than the thing it sits above.
 
    sound.js and audio.js each pin a control to a corner of the viewport,

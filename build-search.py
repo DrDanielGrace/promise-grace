@@ -180,6 +180,8 @@ PAGES = [
      "Chemistry graduate, chemistry educator in Lagos, teaching herself materials science."),
     ("Archive", "archive.html",
      "The publication, the certificates, the handwritten pages and the reference data."),
+    ("Schools I am applying to", "schools.html",
+     "The programmes on the list for 2027 entry, what each funds, and the visa position country by country."),
     ("How to use this site", "guide.html",
      "Three ways in, the three depths every simulation has, and one question worked all the way through."),
 ]

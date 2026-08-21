@@ -3,8 +3,8 @@
 
    WHY THIS IS BUILT RATHER THAN WRITTEN INTO EACH PAGE
 
-   There are now eleven pages and the bar has to be identical on all of
-   them, including the one that lives in a subdirectory. Eleven copies of
+   There are now twelve pages and the bar has to be identical on all of
+   them, including the one that lives in a subdirectory. Twelve copies of
    the same markup is eleven places for it to drift, and it had already
    drifted twice: the notebook carried its own hidden top bar listing five
    anchors, and the mission planner carried a third bar listing its own
@@ -13,10 +13,10 @@
    So it is built here, once, from one list, and the relative paths are
    worked out from how deep the page is rather than hand written.
 
-   SEVEN DESTINATIONS, IN TWO RANKS
+   EIGHT DESTINATIONS, IN TWO RANKS
 
    Research, Lab, Notebook and Mission are the argument the site is making
-   and are visible at every width. Archive, About and CV are what somebody
+   and are visible at every width. Archive, About, CV and Schools are what somebody
    reaches for after they are convinced, and they fold behind one control on
    a phone. Guide is neither: it explains the interface, so it belongs with
    About rather than beside Research, which is where it used to sit.
@@ -46,7 +46,8 @@
   var MORE = [
     { id: "archive", label: "Archive", href: "archive.html" },
     { id: "about",   label: "About",   href: "about.html" },
-    { id: "cv",      label: "CV",      href: "cv.html" }
+    { id: "cv",      label: "CV",      href: "cv.html" },
+    { id: "schools", label: "Schools", href: "schools.html" }
   ];
 
   /* A unit cell: eight corners and one atom in the middle of the body. The
@@ -69,7 +70,7 @@
     return /mission-planner-website/.test(location.pathname) ? "../" : "";
   }
 
-  /* Which of the seven this page is. Declared by the page when it is not
+  /* Which of the eight this page is. Declared by the page when it is not
      obvious, guessed from the filename when it is. */
   function here() {
     var declared = document.documentElement.getAttribute("data-where");
@@ -86,6 +87,7 @@
     if (/about\.html/.test(p))             return "about";
     if (/guide\.html/.test(p))             return "about";
     if (/cv\.html/.test(p))                return "cv";
+    if (/schools\.html/.test(p))           return "schools";
     return "";
   }
 
@@ -152,7 +154,7 @@
 
     /* After the skip link, never before it. Inserting at firstChild put the
        bar in front of it, which made the first thing a keyboard reader
-       reached the seven destinations they were trying to skip past. */
+       reached the eight destinations they were trying to skip past. */
     var skip = document.querySelector("body > .skip");
     if (skip) skip.parentNode.insertBefore(bar, skip.nextSibling);
     else document.body.insertBefore(bar, document.body.firstChild);
@@ -177,6 +179,7 @@
     mission:  { label: "Mission Control", href: "mission-planner-website/index.html" },
     archive:  { label: "Archive",  href: "archive.html" },
     about:    { label: "About",    href: "about.html" },
+    schools:  { label: "Schools",  href: "schools.html" },
     home:     { label: "Promise Grace", href: "index.html" }
   };
 

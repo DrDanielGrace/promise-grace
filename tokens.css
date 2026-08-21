@@ -107,6 +107,22 @@
   --correction:  #8C2F45;   /* corrections only */
   --aside:       #8A5A2B;   /* margin notes only */
 
+  /* ---- how sure we are ----------------------------------------------- *
+     A third semantic family, added for the applications page, where every
+     claim about a visa rule or a deadline carries a confidence. This is not
+     the same axis as --correction, which marks chemistry a student gets
+     wrong; this marks whether a statement was read off an official source.
+     Keeping them apart is the whole point, so --correction stays reserved.
+
+     --pending deliberately carries gold's value. On this site "not verified
+     yet" and "still being learned" are the same signal, and giving them two
+     near-identical browns would be a distinction with nothing behind it.
+
+     Measured on #FCFAF7:  checked 6.54:1   pending 5.22:1   blocked 6.02:1  */
+  --checked:     #1B6446;   /* read off an official source */
+  --pending:     #8A6414;   /* stated, not yet verified */
+  --blocked:     #A33A2A;   /* a door that is shut */
+
   /* ---- state --------------------------------------------------------- */
   --focus:       var(--brand);
   --selection:   var(--butter);
@@ -191,6 +207,11 @@
 
   --correction:  #E39AA9;
   --aside:       #D9AE7C;
+
+  /* how sure we are, lifted the same amount as everything else */
+  --checked:     #6BC79B;
+  --pending:     #D9B978;
+  --blocked:     #E99A88;
 
   --selection:   #3D4A6B;
   --shadow:      0, 0, 0;
